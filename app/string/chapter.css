@@ -1,0 +1,179 @@
+/* 第 2 章 · 字符串 —— 章节专属样式(全部 .str- 前缀,颜色只用 token) */
+
+/* ---------- EncodeLab:逐字符编码表 ---------- */
+
+.str-enc-input {
+  width: 100%;
+  max-width: 420px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border-strong);
+  background: var(--panel-2);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.str-enc-input:focus {
+  border-color: var(--acc);
+  box-shadow: 0 0 12px var(--acc-glow);
+}
+
+.str-enc-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.str-enc-row {
+  display: grid;
+  grid-template-columns: 52px 100px 1fr 120px;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--panel-2);
+  font-family: var(--font-mono);
+}
+
+.str-enc-ch {
+  font-size: 22px;
+  text-align: center;
+  line-height: 1;
+}
+
+.str-enc-cp {
+  font-size: 12.5px;
+  color: var(--acc-ink);
+  font-weight: 600;
+}
+
+.str-enc-bytes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.str-byte {
+  display: inline-flex;
+  padding: 3px 7px;
+  border-radius: 7px;
+  border: 1px solid var(--acc-border);
+  background: var(--acc-soft);
+  color: var(--acc-ink);
+  font-size: 11.5px;
+  font-weight: 600;
+}
+
+.str-byte[data-kind="ascii"] {
+  border-color: var(--border-strong);
+  background: transparent;
+  color: var(--text-2);
+}
+
+.str-enc-meta {
+  font-size: 11.5px;
+  color: var(--text-3);
+  text-align: right;
+  line-height: 1.5;
+}
+
+.str-enc-total {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 12px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--text-2);
+}
+
+.str-enc-total b {
+  color: var(--acc-ink);
+}
+
+/* ---------- ConcatLab:累计拷贝对比条 ---------- */
+
+.str-race {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.str-race-row {
+  display: grid;
+  grid-template-columns: 150px 1fr 130px;
+  align-items: center;
+  gap: 14px;
+}
+
+.str-race-label {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--text-2);
+  text-align: right;
+}
+
+.str-race-track {
+  height: 20px;
+  border-radius: 10px;
+  border: 1px dashed var(--border);
+  overflow: hidden;
+  position: relative;
+}
+
+.str-race-bar {
+  height: 100%;
+  border-radius: 10px;
+  transition: width 0.18s linear;
+  min-width: 2px;
+}
+
+.str-race-bar[data-kind="naive"] {
+  background: linear-gradient(90deg, var(--risk-bg), var(--risk));
+}
+
+.str-race-bar[data-kind="builder"] {
+  background: linear-gradient(90deg, var(--ok-bg), var(--ok));
+}
+
+.str-race-num {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--text-2);
+}
+
+/* ---------- KMP next 数组示意表 ---------- */
+
+.str-kmp-grid {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 14px 0;
+}
+
+.str-kmp-col {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+}
+
+.str-kmp-col .idx {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--text-3);
+}
+
+.str-kmp-col .nextv {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--acc-ink);
+}

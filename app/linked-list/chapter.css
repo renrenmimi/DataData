@@ -1,0 +1,47 @@
+/* 第 3 章 · 链表 —— 章节专属样式(全部 .ll- 前缀,颜色只用 token) */
+
+.ll-svg {
+  width: 100%;
+  max-width: 660px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+.ll-svg text {
+  font-family: var(--font-mono);
+  user-select: none;
+}
+
+/* 图例小圆点 */
+.ll-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 10px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--text-3);
+}
+
+.ll-legend i {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  margin-right: 5px;
+  vertical-align: -1px;
+}
+
+.ll-legend i[data-tone="acc"] {
+  background: var(--acc);
+}
+
+.ll-legend i[data-tone="ok"] {
+  background: var(--ok);
+}
+
+.ll-legend i[data-tone="risk"] {
+  background: var(--risk);
+}

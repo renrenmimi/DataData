@@ -1,0 +1,363 @@
+/* 第 13 章 · 组合与进阶 —— 本章专属样式。
+   规则:全部类名带 .adv- 前缀;颜色只用设计系统 token,深浅主题自动适配。 */
+
+/* ---------- 通用:滑杆(章节内自备,不用 home 的 .bigo-slider) ---------- */
+
+.adv-slider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 180px;
+  max-width: 260px;
+}
+
+.adv-slider .mono {
+  font-size: 12px;
+  color: var(--text-2);
+  white-space: nowrap;
+}
+
+.adv-slider input[type="range"] {
+  flex: 1;
+  accent-color: var(--acc);
+}
+
+/* ---------- §02 逐步排除法 ---------- */
+
+.adv-elim {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 18px 0;
+}
+
+.adv-elim-row {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px 16px;
+  background: var(--panel);
+}
+
+.adv-elim-row[data-verdict="ok"] {
+  border-color: var(--ok);
+  background: var(--ok-bg);
+}
+
+.adv-elim-badge {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border-strong);
+  color: var(--text-2);
+  margin-top: 2px;
+  white-space: nowrap;
+}
+
+.adv-elim-row[data-verdict="no"] .adv-elim-badge {
+  color: var(--risk);
+  border-color: var(--risk);
+  background: var(--risk-bg);
+}
+
+.adv-elim-row[data-verdict="ok"] .adv-elim-badge {
+  color: var(--ok);
+  border-color: var(--ok);
+  background: var(--ok-bg);
+}
+
+.adv-elim-row p {
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--text-2);
+  line-height: 1.75;
+}
+
+.adv-elim-row p .t {
+  display: block;
+  font-weight: 650;
+  color: var(--text);
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+
+/* ---------- §02 LRU 实验室 ---------- */
+
+.adv-lru-hash {
+  border: 1px dashed var(--border-strong);
+  border-radius: 14px;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 210px;
+}
+
+.adv-lru-hash .hd {
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  color: var(--text-3);
+  margin-bottom: 4px;
+}
+
+.adv-hrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--text-2);
+  border-radius: 8px;
+  padding: 3px 8px;
+  border: 1px solid transparent;
+  transition: all 0.25s;
+}
+
+.adv-hrow .kk {
+  font-weight: 700;
+  color: var(--text);
+}
+
+.adv-hrow[data-state="off"] {
+  opacity: 0.4;
+}
+
+.adv-hrow[data-state="lit"] {
+  border-color: var(--acc);
+  background: var(--acc-soft);
+  color: var(--acc-ink);
+}
+
+.adv-hrow[data-state="lit"] .kk {
+  color: var(--acc-ink);
+}
+
+.adv-hrow[data-state="bad"] {
+  border-color: var(--risk);
+  background: var(--risk-bg);
+  color: var(--risk);
+}
+
+.adv-hrow[data-state="bad"] .kk {
+  color: var(--risk);
+}
+
+.adv-lru-list {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.adv-lnode {
+  min-width: 62px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  border: 1.5px solid var(--border-strong);
+  background: var(--panel-2);
+  font-family: var(--font-mono);
+  text-align: center;
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.adv-lnode .k {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.adv-lnode .v {
+  font-size: 10.5px;
+  color: var(--text-3);
+}
+
+.adv-lnode[data-state="lit"] {
+  border-color: var(--acc);
+  background: var(--acc-soft);
+  box-shadow: 0 0 16px var(--acc-glow);
+  transform: translateY(-3px);
+}
+
+.adv-lnode[data-state="lit"] .k {
+  color: var(--acc-ink);
+}
+
+.adv-lnode[data-state="bad"] {
+  border-color: var(--risk);
+  background: var(--risk-bg);
+  opacity: 0.8;
+}
+
+.adv-lnode[data-state="bad"] .k {
+  color: var(--risk);
+}
+
+.adv-lnode.adv-dummy {
+  border-style: dashed;
+  opacity: 0.55;
+}
+
+.adv-arrow {
+  color: var(--text-3);
+  font-size: 14px;
+  font-family: var(--font-mono);
+}
+
+.adv-legend {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-3);
+}
+
+/* ---------- §03 LFU 频次分桶图解 ---------- */
+
+.adv-buckets {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  align-items: stretch;
+  margin: 18px 0;
+}
+
+.adv-bucket {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px 14px;
+  background: var(--panel);
+  min-width: 132px;
+}
+
+.adv-bucket.min {
+  border-color: var(--acc-border);
+  background: var(--acc-soft);
+}
+
+.adv-bucket .fq {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-3);
+}
+
+.adv-bucket.min .fq {
+  color: var(--acc-ink);
+}
+
+.adv-bkeys {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.adv-bkey {
+  min-width: 38px;
+  height: 38px;
+  padding: 0 6px;
+  border-radius: 10px;
+  border: 1.5px solid var(--border-strong);
+  display: grid;
+  place-items: center;
+  font-family: var(--font-mono);
+  font-weight: 650;
+  font-size: 13px;
+  background: var(--panel-2);
+  color: var(--text);
+}
+
+.adv-bkey.bad {
+  border-color: var(--risk);
+  background: var(--risk-bg);
+  color: var(--risk);
+}
+
+.adv-bucket .bnote {
+  margin-top: 8px;
+  font-size: 11px;
+  color: var(--text-3);
+  line-height: 1.5;
+}
+
+/* ---------- §07 布隆过滤器实验室 ---------- */
+
+.adv-bits {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  padding-bottom: 20px;
+  justify-content: center;
+}
+
+.adv-bit {
+  width: 32px;
+  height: 42px;
+  border-radius: 9px;
+  border: 1.5px solid var(--border-strong);
+  background: var(--panel-2);
+  display: grid;
+  place-items: center;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--text-3);
+  position: relative;
+  transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.adv-bit .bi {
+  position: absolute;
+  bottom: -18px;
+  font-size: 9.5px;
+  color: var(--text-3);
+  font-weight: 500;
+}
+
+.adv-bit[data-on="1"] {
+  color: var(--acc-ink);
+  border-color: var(--acc-border);
+  background: var(--acc-soft);
+}
+
+.adv-bit[data-state="lit"] {
+  border-color: var(--acc);
+  box-shadow: 0 0 14px var(--acc-glow);
+  transform: translateY(-3px);
+}
+
+.adv-bit[data-state="bad"] {
+  border-color: var(--risk);
+  background: var(--risk-bg);
+  color: var(--risk);
+}
+
+.adv-input {
+  border-radius: 10px;
+  border: 1px solid var(--border-strong);
+  background: var(--panel-2);
+  color: var(--text);
+  padding: 7px 12px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  min-width: 130px;
+  max-width: 170px;
+}
+
+.adv-input:focus {
+  outline: none;
+  border-color: var(--acc);
+  box-shadow: 0 0 0 3px var(--acc-soft);
+}
+
+.adv-words {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--text-2);
+}

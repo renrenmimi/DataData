@@ -1,0 +1,474 @@
+/* 序章(首页)专属样式:变形 hero / Big-O 实验室 / 世界地图 */
+
+.home-hero {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 30px;
+  align-items: center;
+  padding: 64px 0 30px;
+  position: relative;
+}
+
+.home-hero .hero-title {
+  font-size: clamp(38px, 5.4vw, 58px);
+}
+
+.home-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.24em;
+  color: var(--acc-ink);
+  border: 1px solid var(--acc-border);
+  background: var(--acc-soft);
+  border-radius: 999px;
+  padding: 6px 14px;
+  margin-bottom: 22px;
+}
+
+.home-kicker .pulse {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--acc);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { box-shadow: 0 0 0 0 var(--acc-glow); }
+  50% { box-shadow: 0 0 0 7px transparent; }
+}
+
+.home-cta {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 28px;
+}
+
+.home-stats {
+  display: flex;
+  gap: 28px;
+  flex-wrap: wrap;
+  margin-top: 38px;
+  padding-top: 22px;
+  border-top: 1px solid var(--border);
+}
+
+.home-stat .v {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 26px;
+  background: var(--grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.home-stat .k {
+  font-size: 12px;
+  color: var(--text-3);
+  letter-spacing: 0.05em;
+}
+
+/* — 变形动画 — */
+
+.hm-wrap {
+  position: relative;
+  border-radius: 24px;
+  border: 1px solid var(--border);
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 0%, var(--acc-soft), transparent 75%),
+    var(--panel);
+  backdrop-filter: blur(12px);
+  padding: 18px 14px 10px;
+  box-shadow: var(--shadow-soft);
+}
+
+.hm-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.hm-node {
+  fill: var(--acc-soft);
+  stroke: var(--acc);
+  stroke-width: 1.6;
+}
+
+.hm-edge {
+  stroke: var(--acc);
+  stroke-opacity: 0.4;
+  stroke-width: 1.6;
+  stroke-dasharray: 5 5;
+  animation: dash-flow 1.1s linear infinite;
+}
+
+.hm-label {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 700;
+  fill: var(--acc-ink);
+}
+
+.hm-caption {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 12px;
+  padding: 8px 0 10px;
+}
+
+.hm-caption-zh {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.hm-caption-en {
+  font-size: 10.5px;
+  letter-spacing: 0.3em;
+  color: var(--acc-ink);
+}
+
+/* — 内存模型 — */
+
+.mem-strip {
+  display: flex;
+  gap: 3px;
+  overflow-x: auto;
+  padding: 18px 4px 26px;
+}
+
+.mem-cell {
+  flex: 0 0 54px;
+  height: 54px;
+  border-radius: 10px;
+  border: 1.5px solid var(--border-strong);
+  background: var(--panel-2);
+  display: grid;
+  place-items: center;
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  font-weight: 600;
+  position: relative;
+  transition: all 0.25s;
+}
+
+.mem-cell .addr {
+  position: absolute;
+  bottom: -20px;
+  font-size: 9.5px;
+  color: var(--text-3);
+  font-weight: 400;
+}
+
+.mem-cell.used {
+  border-color: var(--acc);
+  background: var(--acc-soft);
+  color: var(--acc-ink);
+}
+
+.mem-cell.scattered {
+  border-color: var(--acc-2);
+  background: oklch(var(--acc-l) var(--acc-c) var(--hue2) / 0.13);
+}
+
+/* — 引用实验室 — */
+
+.ref-tag {
+  fill: var(--panel-2);
+  stroke: var(--border-strong);
+  stroke-width: 1.5;
+}
+
+.ref-tag-text {
+  font-family: var(--font-mono);
+  font-size: 17px;
+  font-weight: 700;
+  fill: var(--acc-ink);
+}
+
+.ref-arrow {
+  stroke: var(--acc);
+  stroke-width: 1.8;
+  stroke-dasharray: 6 5;
+  animation: dash-flow 1s linear infinite;
+  transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.ref-arrow-head {
+  fill: var(--acc);
+}
+
+.ref-box {
+  fill: var(--panel-2);
+  stroke: var(--border-strong);
+  stroke-width: 1.5;
+  transition: all 0.4s;
+}
+
+.ref-box.lit {
+  fill: var(--acc-soft);
+  stroke: var(--acc);
+}
+
+.ref-box-label {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  fill: var(--text);
+}
+
+.ref-box-addr {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  fill: var(--text-3);
+}
+
+/* — Big-O 实验室 — */
+
+.bigo-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.bigo-key {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--text-3);
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+
+.bigo-key i {
+  width: 16px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--c);
+  opacity: 0.35;
+  transition: opacity 0.18s;
+}
+
+.bigo-key.on {
+  color: var(--text);
+  border-color: color-mix(in oklab, var(--c) 45%, transparent);
+}
+
+.bigo-key.on i {
+  opacity: 1;
+  box-shadow: 0 0 8px var(--c);
+}
+
+.bigo-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.bigo-grid {
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+.bigo-tick {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  fill: var(--text-3);
+}
+
+.bigo-curve {
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 5px currentColor);
+}
+
+.bigo-slider {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 1;
+  min-width: 240px;
+}
+
+.bigo-slider span {
+  font-size: 13px;
+  color: var(--acc-ink);
+  font-weight: 700;
+  flex: 0 0 76px;
+}
+
+.bigo-slider input {
+  flex: 1;
+  accent-color: var(--acc);
+}
+
+/* — 世界地图 — */
+
+.map-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.map-card {
+  --hue: var(--ch-hue);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 18px;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.28s, box-shadow 0.28s;
+}
+
+.map-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 90% 70% at 20% 0%,
+    oklch(var(--acc-l) var(--acc-c) var(--hue) / 0.1),
+    transparent 65%
+  );
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.map-card:hover {
+  transform: translateY(-4px);
+  border-color: oklch(var(--acc-l) var(--acc-c) var(--hue) / 0.45);
+  box-shadow: 0 14px 40px oklch(var(--acc-l) var(--acc-c) var(--hue) / 0.22);
+}
+
+.map-card:hover::before {
+  opacity: 1;
+}
+
+.map-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.map-num {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 14px;
+  color: oklch(var(--acc-l) var(--acc-c) var(--hue));
+}
+
+.map-title {
+  font-weight: 700;
+  font-size: 15.5px;
+}
+
+.map-en {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--text-3);
+  text-transform: uppercase;
+}
+
+.map-essence {
+  font-size: 12.8px;
+  color: var(--text-2);
+  margin: 0;
+  flex: 1;
+  line-height: 1.6;
+}
+
+.map-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.map-level {
+  display: flex;
+  gap: 3px;
+}
+
+.map-level i {
+  width: 11px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--border-strong);
+}
+
+.map-level i.on {
+  background: oklch(var(--acc-l) var(--acc-c) var(--hue));
+  box-shadow: 0 0 6px oklch(var(--acc-l) var(--acc-c) var(--hue) / 0.6);
+}
+
+.map-freq {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-3);
+  letter-spacing: 0.08em;
+}
+
+.map-freq b {
+  color: oklch(var(--acc-l) var(--acc-c) var(--hue));
+}
+
+/* — 三步用法 — */
+
+.howto {
+  counter-reset: step;
+}
+
+.howto .card {
+  counter-increment: step;
+}
+
+.howto .card::after {
+  content: counter(step, decimal-leading-zero);
+  position: absolute;
+  top: 10px;
+  right: 16px;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 34px;
+  background: linear-gradient(
+    160deg,
+    oklch(var(--acc-l) var(--acc-c) var(--hue) / 0.4),
+    transparent 90%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  pointer-events: none;
+}
+
+@media (max-width: 1080px) {
+  .map-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 960px) {
+  .home-hero { grid-template-columns: 1fr; padding-top: 40px; }
+}
+
+@media (max-width: 620px) {
+  .map-grid { grid-template-columns: 1fr; }
+}

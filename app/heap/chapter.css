@@ -1,0 +1,106 @@
+/* 第 9 章 · 堆与优先队列 专属样式(前缀 .hp-,颜色只用 token) */
+
+[data-ch="heap"] .hp-svg {
+  width: 100%;
+  max-width: 640px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+[data-ch="heap"] .hp-edge {
+  stroke: var(--border-strong);
+  stroke-width: 1.5;
+}
+
+/* 树节点 → 数组格 的投影虚线 */
+[data-ch="heap"] .hp-proj {
+  stroke: var(--border-strong);
+  stroke-width: 1;
+  stroke-dasharray: 3 5;
+  opacity: 0.6;
+}
+[data-ch="heap"] .hp-proj.lit {
+  stroke: var(--acc);
+  opacity: 0.9;
+}
+
+[data-ch="heap"] .hp-node circle,
+[data-ch="heap"] .hp-node rect {
+  fill: var(--panel-2);
+  stroke: var(--border-strong);
+  stroke-width: 1.5;
+  transition:
+    fill 0.3s ease,
+    stroke 0.3s ease;
+}
+
+[data-ch="heap"] .hp-node text {
+  fill: var(--text);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  text-anchor: middle;
+  dominant-baseline: central;
+  transition: fill 0.3s ease;
+}
+
+[data-ch="heap"] .hp-node .hp-tag {
+  fill: var(--text-3);
+  font-size: 10px;
+  font-weight: 500;
+}
+
+[data-ch="heap"] .hp-node.lit circle,
+[data-ch="heap"] .hp-node.lit rect {
+  stroke: var(--acc);
+  fill: var(--acc-soft);
+}
+[data-ch="heap"] .hp-node.lit text {
+  fill: var(--acc-ink);
+}
+[data-ch="heap"] .hp-node.lit .hp-tag {
+  fill: var(--acc);
+}
+
+[data-ch="heap"] .hp-node.ok circle,
+[data-ch="heap"] .hp-node.ok rect {
+  stroke: var(--ok);
+  fill: var(--ok-bg);
+}
+[data-ch="heap"] .hp-node.ok text {
+  fill: var(--ok);
+}
+
+[data-ch="heap"] .hp-empty {
+  fill: var(--text-3);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  text-anchor: middle;
+}
+
+/* 数组视图行 */
+[data-ch="heap"] .hp-array {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: center;
+  padding-bottom: 26px;
+}
+
+/* 实验室数字输入框 */
+[data-ch="heap"] .hp-input {
+  width: 92px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border-strong);
+  background: var(--panel-2);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+[data-ch="heap"] .hp-input:focus {
+  outline: none;
+  border-color: var(--acc);
+  box-shadow: 0 0 0 3px var(--acc-soft);
+}

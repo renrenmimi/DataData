@@ -1,0 +1,481 @@
+/* 第 12 章 · 图 专属样式(前缀 .gr-,颜色全部走 token,深浅主题自适配)*/
+
+/* ---------- 通用 SVG 图 ---------- */
+
+[data-ch="graph"] .gr-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+[data-ch="graph"] .gr-edge {
+  stroke: var(--border-strong);
+  stroke-width: 1.6;
+  transition: stroke 0.3s;
+}
+
+[data-ch="graph"] .gr-edge.active {
+  stroke: var(--acc);
+  stroke-width: 2.6;
+}
+
+[data-ch="graph"] .gr-edge.cyc {
+  stroke: var(--risk);
+  stroke-width: 2;
+  stroke-dasharray: 5 4;
+}
+
+[data-ch="graph"] .gr-arrowhead {
+  fill: var(--border-strong);
+  transition: fill 0.3s;
+}
+
+[data-ch="graph"] .gr-arrowhead.active {
+  fill: var(--acc);
+}
+
+[data-ch="graph"] .gr-nd circle {
+  fill: var(--panel-2);
+  stroke: var(--border-strong);
+  stroke-width: 1.6;
+  transition: fill 0.3s, stroke 0.3s, filter 0.3s;
+}
+
+[data-ch="graph"] .gr-nd text {
+  fill: var(--text);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  transition: fill 0.3s;
+  user-select: none;
+}
+
+[data-ch="graph"] .gr-nd.pick {
+  cursor: pointer;
+}
+
+[data-ch="graph"] .gr-nd.lit circle {
+  stroke: var(--acc);
+  fill: var(--acc-soft);
+  filter: drop-shadow(0 0 9px var(--acc-glow));
+}
+
+[data-ch="graph"] .gr-nd.lit text {
+  fill: var(--acc-ink);
+}
+
+[data-ch="graph"] .gr-nd.ok circle {
+  stroke: var(--ok);
+  fill: var(--ok-bg);
+}
+
+[data-ch="graph"] .gr-nd.ok text {
+  fill: var(--ok);
+}
+
+[data-ch="graph"] .gr-nd.fringe circle {
+  stroke: var(--acc);
+  fill: var(--panel-2);
+  stroke-dasharray: 4 3;
+}
+
+[data-ch="graph"] .gr-nd.dim {
+  opacity: 0.34;
+}
+
+[data-ch="graph"] .gr-sub {
+  fill: var(--text-3);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+[data-ch="graph"] .gr-weight {
+  fill: var(--text-2);
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 700;
+  paint-order: stroke;
+  stroke: var(--panel-solid);
+  stroke-width: 3.5px;
+  stroke-linejoin: round;
+}
+
+[data-ch="graph"] .gr-lab {
+  fill: var(--text-3);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+[data-ch="graph"] .gr-lab.acc {
+  fill: var(--acc-ink);
+  font-weight: 700;
+}
+
+[data-ch="graph"] .gr-lab.ok {
+  fill: var(--ok);
+  font-weight: 700;
+}
+
+[data-ch="graph"] .gr-lab.risk {
+  fill: var(--risk);
+  font-weight: 700;
+}
+
+/* ---------- 遍历/拓扑:图 + 侧栏两列布局 ---------- */
+
+[data-ch="graph"] .gr-wrap {
+  display: flex;
+  gap: 22px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+[data-ch="graph"] .gr-canvas {
+  flex: 1 1 320px;
+  max-width: 520px;
+  min-width: 260px;
+}
+
+[data-ch="graph"] .gr-lanes {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 200px;
+  max-width: 280px;
+}
+
+[data-ch="graph"] .gr-lane {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+[data-ch="graph"] .gr-lane-cap {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+[data-ch="graph"] .gr-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-height: 30px;
+  align-content: flex-start;
+}
+
+[data-ch="graph"] .gr-chip {
+  min-width: 26px;
+  height: 28px;
+  padding: 0 9px;
+  border-radius: 8px;
+  display: inline-grid;
+  place-items: center;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  font-weight: 600;
+  border: 1px solid var(--border-strong);
+  background: var(--panel-2);
+  color: var(--text-2);
+  animation: fade-up 0.25s ease;
+}
+
+[data-ch="graph"] .gr-chip.top {
+  border-color: var(--acc);
+  background: var(--acc-soft);
+  color: var(--acc-ink);
+  box-shadow: 0 0 10px var(--acc-glow);
+}
+
+[data-ch="graph"] .gr-chip.done {
+  border-color: color-mix(in oklab, var(--ok) 45%, transparent);
+  background: var(--ok-bg);
+  color: var(--ok);
+}
+
+[data-ch="graph"] .gr-empty {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-3);
+  padding: 3px 0;
+}
+
+/* ---------- §02 邻接矩阵 vs 邻接表 ---------- */
+
+[data-ch="graph"] .gr-repr {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+[data-ch="graph"] .gr-repr-graph {
+  flex: 1 1 240px;
+  max-width: 320px;
+  min-width: 220px;
+}
+
+[data-ch="graph"] .gr-repr-hint {
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-3);
+  margin-top: 4px;
+}
+
+[data-ch="graph"] .gr-repr-col {
+  flex: 1 1 220px;
+  min-width: 210px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+[data-ch="graph"] .gr-matrix {
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+[data-ch="graph"] .gr-matrix th,
+[data-ch="graph"] .gr-matrix td {
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  border: 1px solid var(--border);
+}
+
+[data-ch="graph"] .gr-matrix th {
+  color: var(--text-3);
+  font-weight: 600;
+}
+
+[data-ch="graph"] .gr-matrix th.hl {
+  color: var(--acc-ink);
+}
+
+[data-ch="graph"] .gr-matrix td.one {
+  color: var(--text);
+  font-weight: 700;
+}
+
+[data-ch="graph"] .gr-matrix td.zero {
+  color: var(--text-3);
+}
+
+[data-ch="graph"] .gr-matrix td.rowsel {
+  background: var(--acc-soft);
+}
+
+[data-ch="graph"] .gr-matrix td.on {
+  color: var(--acc-ink);
+  outline: 1.5px solid var(--acc);
+  outline-offset: -1.5px;
+}
+
+[data-ch="graph"] .gr-adjlist {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+[data-ch="graph"] .gr-adjrow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 8px;
+  border-radius: 9px;
+  border: 1px solid transparent;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+[data-ch="graph"] .gr-adjrow.hl {
+  border-color: var(--acc-border);
+  background: var(--acc-soft);
+}
+
+[data-ch="graph"] .gr-adjkey {
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border-radius: 6px;
+  background: var(--panel-2);
+  border: 1px solid var(--border-strong);
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+[data-ch="graph"] .gr-adjarrow {
+  color: var(--text-3);
+  font-family: var(--font-mono);
+}
+
+[data-ch="graph"] .gr-repr-note {
+  font-size: 12px;
+  color: var(--text-3);
+  line-height: 1.6;
+}
+
+/* ---------- §01 三连图小卡 ---------- */
+
+[data-ch="graph"] .gr-mini3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 18px;
+}
+
+[data-ch="graph"] .gr-mini3 .gr-svg {
+  margin: 6px auto 10px;
+  max-width: 185px;
+}
+
+/* ---------- §06 岛屿网格 ---------- */
+
+[data-ch="graph"] .gr-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+[data-ch="graph"] .gr-grow {
+  display: flex;
+  gap: 5px;
+}
+
+[data-ch="graph"] .gr-gcell {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 700;
+  border: 1.5px solid var(--border-strong);
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+[data-ch="graph"] .gr-gcell.sea {
+  background: var(--panel);
+  color: var(--text-3);
+  border-style: dashed;
+  opacity: 0.6;
+}
+
+[data-ch="graph"] .gr-gcell.land {
+  background: var(--acc-soft);
+  border-color: var(--acc-border);
+  color: var(--acc-ink);
+}
+
+[data-ch="graph"] .gr-gcell.cur {
+  background: var(--acc);
+  border-color: var(--acc);
+  color: var(--panel-solid);
+  box-shadow: 0 0 18px var(--acc-glow);
+  transform: translateY(-3px);
+}
+
+[data-ch="graph"] .gr-gcell.sunk {
+  background: var(--ok-bg);
+  border-color: color-mix(in oklab, var(--ok) 45%, transparent);
+  color: var(--ok);
+}
+
+[data-ch="graph"] .gr-gcell.scan {
+  outline: 2.5px solid var(--warn);
+  outline-offset: 2px;
+}
+
+[data-ch="graph"] .gr-count {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-2);
+}
+
+[data-ch="graph"] .gr-count b {
+  color: var(--acc-ink);
+  font-size: 18px;
+}
+
+/* ---------- §06 Dijkstra 距离表 ---------- */
+
+[data-ch="graph"] .gr-djpanel {
+  width: 100%;
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+[data-ch="graph"] .gr-dist {
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+}
+
+[data-ch="graph"] .gr-dist th,
+[data-ch="graph"] .gr-dist td {
+  min-width: 42px;
+  height: 32px;
+  padding: 0 8px;
+  text-align: center;
+  border: 1px solid var(--border);
+}
+
+[data-ch="graph"] .gr-dist th {
+  color: var(--text-3);
+  font-weight: 600;
+  background: var(--panel);
+}
+
+[data-ch="graph"] .gr-dist th.settled,
+[data-ch="graph"] .gr-dist td.settled {
+  background: var(--ok-bg);
+  color: var(--ok);
+}
+
+[data-ch="graph"] .gr-dist td {
+  color: var(--text);
+  font-weight: 700;
+}
+
+[data-ch="graph"] .gr-dist td.upd {
+  background: var(--acc-soft);
+  color: var(--acc-ink);
+  outline: 1.5px solid var(--acc);
+  outline-offset: -1.5px;
+}
+
+/* ---------- 响应式 ---------- */
+
+@media (max-width: 720px) {
+  [data-ch="graph"] .gr-mini3 {
+    grid-template-columns: 1fr;
+  }
+  [data-ch="graph"] .gr-lanes {
+    max-width: none;
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  [data-ch="graph"] .gr-lane {
+    flex: 1 1 160px;
+  }
+  [data-ch="graph"] .gr-gcell {
+    width: 40px;
+    height: 40px;
+    font-size: 13px;
+  }
+}

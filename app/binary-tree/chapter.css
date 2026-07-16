@@ -1,0 +1,228 @@
+/* 第 7 章 · 二叉树 专属样式(前缀 .bt-,颜色全部走 token)*/
+
+/* ---------- SVG 树通用 ---------- */
+
+[data-ch="binary-tree"] .bt-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+[data-ch="binary-tree"] .bt-edge {
+  stroke: var(--border-strong);
+  stroke-width: 1.5;
+}
+
+[data-ch="binary-tree"] .bt-guide {
+  stroke: var(--border);
+  stroke-dasharray: 4 5;
+  stroke-width: 1;
+}
+
+[data-ch="binary-tree"] .bt-nd circle {
+  fill: var(--panel-2);
+  stroke: var(--border-strong);
+  stroke-width: 1.5;
+  transition: fill 0.3s, stroke 0.3s;
+}
+
+[data-ch="binary-tree"] .bt-nd text {
+  fill: var(--text);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  transition: fill 0.3s;
+}
+
+[data-ch="binary-tree"] .bt-nd.path circle {
+  stroke: var(--acc);
+  stroke-dasharray: 4 3;
+}
+
+[data-ch="binary-tree"] .bt-nd.lit circle {
+  stroke: var(--acc);
+  fill: var(--acc-soft);
+  filter: drop-shadow(0 0 8px var(--acc-glow));
+}
+
+[data-ch="binary-tree"] .bt-nd.lit text {
+  fill: var(--acc-ink);
+}
+
+[data-ch="binary-tree"] .bt-nd.ok circle {
+  stroke: var(--ok);
+  fill: var(--ok-bg);
+}
+
+[data-ch="binary-tree"] .bt-nd.ok text {
+  fill: var(--ok);
+}
+
+[data-ch="binary-tree"] .bt-nd.dim {
+  opacity: 0.32;
+}
+
+[data-ch="binary-tree"] .bt-retv {
+  fill: var(--ok);
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 700;
+}
+
+[data-ch="binary-tree"] .bt-lab {
+  fill: var(--text-3);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+[data-ch="binary-tree"] .bt-lab.acc {
+  fill: var(--acc-ink);
+  font-weight: 700;
+}
+
+/* ---------- 输出序列 / 栈 / 队列条 ---------- */
+
+[data-ch="binary-tree"] .bt-stage-col {
+  flex-direction: column;
+  gap: 10px;
+}
+
+[data-ch="binary-tree"] .bt-strip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 520px;
+  min-height: 28px;
+}
+
+[data-ch="binary-tree"] .bt-strip-label {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  min-width: 58px;
+  flex-shrink: 0;
+}
+
+[data-ch="binary-tree"] .bt-outchip {
+  min-width: 26px;
+  height: 26px;
+  padding: 0 7px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  font-weight: 600;
+  border: 1px solid var(--acc-border);
+  background: var(--acc-soft);
+  color: var(--acc-ink);
+  animation: fade-up 0.25s ease;
+}
+
+[data-ch="binary-tree"] .bt-auxchip {
+  padding: 3px 9px;
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  border: 1px solid var(--border-strong);
+  background: var(--panel-2);
+  color: var(--text-2);
+  animation: fade-up 0.25s ease;
+}
+
+[data-ch="binary-tree"] .bt-auxchip.top {
+  border-color: var(--acc);
+  color: var(--acc-ink);
+  background: var(--acc-soft);
+}
+
+/* ---------- 调用栈(FactorialLab / RecurLab)---------- */
+
+[data-ch="binary-tree"] .bt-stackwrap {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+[data-ch="binary-tree"] .bt-stackcol {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 210px;
+  max-width: 260px;
+}
+
+[data-ch="binary-tree"] .bt-stackcap {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  text-align: center;
+}
+
+[data-ch="binary-tree"] .bt-frame {
+  border: 1px solid var(--border-strong);
+  background: var(--panel-2);
+  border-radius: 10px;
+  padding: 7px 11px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  animation: fade-up 0.25s ease;
+}
+
+[data-ch="binary-tree"] .bt-frame.lit {
+  border-color: var(--acc);
+  background: var(--acc-soft);
+  color: var(--acc-ink);
+  box-shadow: 0 0 12px var(--acc-glow);
+}
+
+[data-ch="binary-tree"] .bt-frame .r {
+  color: var(--ok);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+[data-ch="binary-tree"] .bt-stackempty {
+  border: 1.5px dashed var(--border);
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--text-3);
+}
+
+/* ---------- 层序结果面板(LevelLab)---------- */
+
+[data-ch="binary-tree"] .bt-levels {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--text-2);
+}
+
+[data-ch="binary-tree"] .bt-levels b {
+  color: var(--acc-ink);
+}
+
+@media (max-width: 640px) {
+  [data-ch="binary-tree"] .bt-stackcol {
+    min-width: 170px;
+  }
+}

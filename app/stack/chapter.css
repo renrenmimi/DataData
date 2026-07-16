@@ -1,0 +1,268 @@
+/* ============================================================
+   第 4 章 · 栈 —— 章节专属样式
+   所有类名带 .stk- 前缀,颜色一律使用设计 token,深浅主题自动适配。
+   ============================================================ */
+
+/* ---------- StackLab:一摞盘子 ---------- */
+
+.stk-well-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+/* U 形容器:左右+底封死,只有顶端开口 —— “一端封死”的视觉化 */
+.stk-well {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 6px;
+  width: 180px;
+  min-height: 254px;
+  padding: 10px 12px 12px;
+  border: 2px solid var(--border-strong);
+  border-top: none;
+  border-radius: 0 0 18px 18px;
+  background: linear-gradient(to top, var(--acc-soft), transparent 75%);
+}
+
+.stk-plate {
+  width: 100%;
+  height: 28px;
+  flex: none;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  border: 1.5px solid var(--border-strong);
+  background: var(--panel-2);
+  color: var(--text);
+  animation: stk-drop 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: all 0.25s ease;
+}
+
+.stk-plate.top {
+  border-color: var(--acc);
+  background: var(--acc-soft);
+  color: var(--acc-ink);
+  box-shadow: 0 0 14px var(--acc-glow);
+}
+
+.stk-plate.peeking {
+  border-color: var(--ok);
+  box-shadow: 0 0 14px var(--ok-bg);
+}
+
+.stk-top-tag {
+  position: absolute;
+  left: calc(100% + 18px);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--acc);
+  font-family: var(--font-mono);
+  white-space: nowrap;
+}
+
+.stk-top-tag::before {
+  content: "◀ ";
+  font-size: 9px;
+}
+
+@keyframes stk-drop {
+  from {
+    transform: translateY(-26px);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+.stk-empty {
+  color: var(--text-3);
+  font-size: 12px;
+  font-family: var(--font-mono);
+  padding: 14px 0;
+}
+
+.stk-base {
+  font-size: 11px;
+  color: var(--text-3);
+  font-family: var(--font-mono);
+  letter-spacing: 0.08em;
+}
+
+/* ---------- CallStackDemo:调用栈 ---------- */
+
+.stk-cs {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.stk-cs-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: stretch;
+  gap: 6px;
+  width: 270px;
+  min-height: 236px;
+}
+
+.stk-cframe {
+  border: 1.5px solid var(--border-strong);
+  background: var(--panel-2);
+  border-radius: 10px;
+  padding: 8px 14px;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  animation: stk-drop 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.stk-cframe b {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text);
+  font-weight: 700;
+}
+
+.stk-cframe span {
+  font-size: 11px;
+  color: var(--text-3);
+}
+
+.stk-cframe.on {
+  border-color: var(--acc);
+  background: var(--acc-soft);
+}
+
+.stk-cframe.on b {
+  color: var(--acc-ink);
+}
+
+.stk-cframe.ghosty {
+  opacity: 0.45;
+  border-style: dashed;
+}
+
+.stk-cframe.boom {
+  border-color: var(--risk);
+  background: var(--risk-bg);
+  color: var(--risk);
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  animation: none;
+}
+
+.stk-cs-lab {
+  font-size: 11px;
+  color: var(--text-3);
+  font-family: var(--font-mono);
+  letter-spacing: 0.08em;
+}
+
+/* ---------- §02 内存图解:数组栈 vs 链表栈 ---------- */
+
+.stk-figptrs {
+  display: grid;
+  grid-template-columns: repeat(6, 50px);
+  gap: 4px;
+  min-height: 28px;
+  margin-top: 14px;
+}
+
+.stk-figptrs > span {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.stk-figcells {
+  display: grid;
+  grid-template-columns: repeat(6, 50px);
+  gap: 4px;
+  padding-bottom: 28px;
+}
+
+.stk-figcells .cell {
+  width: 46px;
+  height: 46px;
+  font-size: 14px;
+}
+
+.stk-figlist {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+  padding-bottom: 6px;
+}
+
+.stk-lnode {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  min-height: 78px;
+  justify-content: flex-end;
+}
+
+.stk-arrow {
+  color: var(--text-3);
+  font-size: 15px;
+  padding-bottom: 13px;
+}
+
+.stk-null {
+  color: var(--text-3);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  padding-bottom: 15px;
+}
+
+.stk-fignote {
+  font-size: 12.5px;
+  color: var(--text-2);
+  margin: 4px 0 0;
+  line-height: 1.7;
+}
+
+.stk-fignote b {
+  color: var(--text);
+}
+
+/* ---------- 精讲 B(最小栈):格子里的“值 + 影子 min” ---------- */
+
+.stk-mc {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.15;
+  font-size: 13px;
+}
+
+.stk-mc i {
+  font-style: normal;
+  font-size: 9px;
+  font-weight: 500;
+  color: var(--text-3);
+  letter-spacing: 0.02em;
+}
+
+.cell.lit .stk-mc i,
+.cell.ok .stk-mc i {
+  color: inherit;
+  opacity: 0.75;
+}

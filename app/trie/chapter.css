@@ -1,0 +1,223 @@
+/* 第 10 章 · 前缀树(Trie)专属样式(前缀 .tr-,颜色只用 token) */
+
+[data-ch="trie"] .tr-svg {
+  width: 100%;
+  max-width: 700px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+/* ---- 边 ---- */
+[data-ch="trie"] .tr-edge {
+  stroke: var(--border-strong);
+  stroke-width: 1.5;
+  transition: stroke 0.3s ease;
+}
+[data-ch="trie"] .tr-edge.on {
+  stroke: var(--acc);
+  stroke-width: 2.5;
+}
+[data-ch="trie"] .tr-edge-label {
+  fill: var(--text-3);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  text-anchor: middle;
+  dominant-baseline: central;
+  paint-order: stroke;
+  stroke: var(--bg);
+  stroke-width: 3px;
+}
+
+/* ---- 节点 ---- */
+[data-ch="trie"] .tr-node circle {
+  fill: var(--panel-2);
+  stroke: var(--border-strong);
+  stroke-width: 1.5;
+  transition:
+    fill 0.3s ease,
+    stroke 0.3s ease,
+    opacity 0.3s ease;
+}
+[data-ch="trie"] .tr-node text {
+  fill: var(--text);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  text-anchor: middle;
+  dominant-baseline: central;
+  transition: fill 0.3s ease;
+}
+[data-ch="trie"] .tr-node .tr-tag {
+  fill: var(--text-3);
+  font-size: 10px;
+  font-weight: 500;
+}
+[data-ch="trie"] .tr-node .tr-word {
+  fill: var(--text-2);
+  font-size: 10.5px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+}
+
+/* isEnd 的「接受态」外环(自动机里的双圈终态) */
+[data-ch="trie"] .tr-node.end .tr-ring {
+  fill: none;
+  stroke: var(--ok);
+  stroke-width: 1.5;
+  opacity: 0.85;
+}
+[data-ch="trie"] .tr-node.end circle:not(.tr-ring) {
+  stroke: var(--ok);
+}
+[data-ch="trie"] .tr-node.end .tr-word {
+  fill: var(--ok);
+}
+
+/* 高亮态 —— 路径经过 */
+[data-ch="trie"] .tr-node.lit circle {
+  stroke: var(--acc);
+  fill: var(--acc-soft);
+}
+[data-ch="trie"] .tr-node.lit text {
+  fill: var(--acc-ink);
+}
+
+/* 命中(单词 / 前缀) */
+[data-ch="trie"] .tr-node.ok circle {
+  stroke: var(--ok);
+  fill: var(--ok-bg);
+}
+[data-ch="trie"] .tr-node.ok text {
+  fill: var(--ok);
+}
+[data-ch="trie"] .tr-node.ok .tr-ring {
+  stroke: var(--ok);
+  opacity: 1;
+}
+
+/* 是前缀、但不是单词 */
+[data-ch="trie"] .tr-node.pre circle {
+  stroke: var(--warn);
+  fill: var(--warn-bg);
+}
+[data-ch="trie"] .tr-node.pre text {
+  fill: var(--warn);
+}
+
+/* 断路 / 未命中 */
+[data-ch="trie"] .tr-node.bad circle {
+  stroke: var(--risk);
+  fill: var(--risk-bg);
+}
+[data-ch="trie"] .tr-node.bad text {
+  fill: var(--risk);
+}
+
+[data-ch="trie"] .tr-node.dim {
+  opacity: 0.32;
+}
+
+/* 新节点弹入动画 */
+[data-ch="trie"] .tr-born {
+  animation: tr-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform-box: fill-box;
+  transform-origin: center;
+}
+@keyframes tr-pop {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+}
+
+/* ---- 图例 ---- */
+[data-ch="trie"] .tr-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  justify-content: center;
+  padding: 4px 6px 12px;
+  font-size: 12px;
+  color: var(--text-2);
+}
+[data-ch="trie"] .tr-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+[data-ch="trie"] .tr-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border-strong);
+  background: var(--panel-2);
+  flex: none;
+}
+[data-ch="trie"] .tr-dot.lit {
+  border-color: var(--acc);
+  background: var(--acc-soft);
+}
+[data-ch="trie"] .tr-dot.ok {
+  border-color: var(--ok);
+  background: var(--ok-bg);
+}
+[data-ch="trie"] .tr-dot.pre {
+  border-color: var(--warn);
+  background: var(--warn-bg);
+}
+[data-ch="trie"] .tr-dot.bad {
+  border-color: var(--risk);
+  background: var(--risk-bg);
+}
+[data-ch="trie"] .tr-dot.end {
+  border-color: var(--ok);
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 3.5px var(--ok);
+}
+
+/* ---- 实验室输入框 ---- */
+[data-ch="trie"] .tr-input {
+  width: 150px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border-strong);
+  background: var(--panel-2);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+[data-ch="trie"] .tr-input:focus {
+  outline: none;
+  border-color: var(--acc);
+  box-shadow: 0 0 0 3px var(--acc-soft);
+}
+[data-ch="trie"] .tr-lab-title {
+  line-height: 1.5;
+}
+
+/* ---- 静态结构图容器 ---- */
+[data-ch="trie"] .tr-fig {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  padding: 12px 0 4px;
+}
+[data-ch="trie"] .tr-fig-cap {
+  font-size: 12.5px;
+  color: var(--text-2);
+  line-height: 1.65;
+  text-align: center;
+  max-width: 640px;
+}
+
+/* ---- 哈希 vs Trie 对照小卡里的强调色 ---- */
+[data-ch="trie"] .tr-vs-yes {
+  color: var(--ok);
+  font-weight: 700;
+}
+[data-ch="trie"] .tr-vs-no {
+  color: var(--risk);
+  font-weight: 700;
+}

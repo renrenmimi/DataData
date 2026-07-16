@@ -1,0 +1,163 @@
+/* 第 8 章 · 二叉搜索树 专属样式(前缀 .bst-,颜色只用 token) */
+
+[data-ch="bst"] .bst-svg {
+  width: 100%;
+  max-width: 680px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+[data-ch="bst"] .bst-edge {
+  stroke: var(--border-strong);
+  stroke-width: 1.5;
+}
+
+[data-ch="bst"] .bst-edge.ghost {
+  stroke-dasharray: 4 4;
+  opacity: 0.45;
+}
+
+/* 垂直投影虚线(中序图解) */
+[data-ch="bst"] .bst-proj {
+  stroke: var(--acc-border);
+  stroke-width: 1;
+  stroke-dasharray: 3 5;
+}
+
+[data-ch="bst"] .bst-node circle,
+[data-ch="bst"] .bst-node rect {
+  fill: var(--panel-2);
+  stroke: var(--border-strong);
+  stroke-width: 1.5;
+  transition:
+    fill 0.3s ease,
+    stroke 0.3s ease,
+    opacity 0.3s ease;
+}
+
+[data-ch="bst"] .bst-node text {
+  fill: var(--text);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  text-anchor: middle;
+  dominant-baseline: central;
+  transition: fill 0.3s ease;
+}
+
+[data-ch="bst"] .bst-node .bst-tag {
+  fill: var(--text-3);
+  font-size: 10px;
+  font-weight: 500;
+}
+
+[data-ch="bst"] .bst-node.lit circle,
+[data-ch="bst"] .bst-node.lit rect {
+  stroke: var(--acc);
+  fill: var(--acc-soft);
+}
+[data-ch="bst"] .bst-node.lit text {
+  fill: var(--acc-ink);
+}
+[data-ch="bst"] .bst-node.lit .bst-tag {
+  fill: var(--acc);
+}
+
+[data-ch="bst"] .bst-node.ok circle,
+[data-ch="bst"] .bst-node.ok rect {
+  stroke: var(--ok);
+  fill: var(--ok-bg);
+}
+[data-ch="bst"] .bst-node.ok text {
+  fill: var(--ok);
+}
+[data-ch="bst"] .bst-node.ok .bst-tag {
+  fill: var(--ok);
+}
+
+[data-ch="bst"] .bst-node.bad circle,
+[data-ch="bst"] .bst-node.bad rect {
+  stroke: var(--risk);
+  fill: var(--risk-bg);
+}
+[data-ch="bst"] .bst-node.bad text {
+  fill: var(--risk);
+}
+[data-ch="bst"] .bst-node.bad .bst-tag {
+  fill: var(--risk);
+}
+
+[data-ch="bst"] .bst-node.dim {
+  opacity: 0.3;
+}
+
+[data-ch="bst"] .bst-node.ghost circle {
+  stroke-dasharray: 4 4;
+  opacity: 0.4;
+}
+[data-ch="bst"] .bst-node.ghost text {
+  opacity: 0.4;
+}
+
+/* 新节点落位的弹入动画 */
+[data-ch="bst"] .bst-born {
+  animation: bst-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@keyframes bst-pop {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+}
+
+[data-ch="bst"] .bst-empty {
+  fill: var(--text-3);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  text-anchor: middle;
+}
+
+/* 实验室数字输入框 */
+[data-ch="bst"] .bst-input {
+  width: 92px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border-strong);
+  background: var(--panel-2);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+[data-ch="bst"] .bst-input:focus {
+  outline: none;
+  border-color: var(--acc);
+  box-shadow: 0 0 0 3px var(--acc-soft);
+}
+
+/* 静态小图(删除三情况 / 旋转)容器 */
+[data-ch="bst"] .bst-fig {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  padding: 8px 0 2px;
+}
+
+[data-ch="bst"] .bst-fig-cap {
+  font-size: 12.5px;
+  color: var(--text-2);
+  line-height: 1.6;
+  text-align: center;
+}
+
+[data-ch="bst"] .bst-arrow {
+  text-align: center;
+  color: var(--acc);
+  font-size: 13px;
+  font-family: var(--font-mono);
+  padding: 2px 0 6px;
+}

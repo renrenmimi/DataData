@@ -1,0 +1,197 @@
+/* 第 6 章 · 哈希表 专属样式(前缀 .hs-,颜色全部走 token)*/
+
+/* ---------- HashLab:哈希函数流水线 ---------- */
+
+[data-ch="hash"] .hs-pipeline {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  width: 100%;
+}
+
+[data-ch="hash"] .hs-run {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  font-family: var(--font-mono);
+  min-height: 64px;
+}
+
+[data-ch="hash"] .hs-char {
+  width: 40px;
+  height: 40px;
+  border-radius: 11px;
+  border: 1.5px solid var(--border-strong);
+  background: var(--panel-2);
+  display: grid;
+  place-items: center;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+[data-ch="hash"] .hs-char.lit {
+  border-color: var(--acc);
+  background: var(--acc-soft);
+  color: var(--acc-ink);
+  box-shadow: 0 0 16px var(--acc-glow);
+  transform: translateY(-3px);
+}
+
+[data-ch="hash"] .hs-char.done {
+  border-color: var(--ok);
+  color: var(--ok);
+}
+
+[data-ch="hash"] .hs-char .hs-code {
+  position: absolute;
+  bottom: -19px;
+  font-size: 10px;
+  color: var(--text-3);
+  white-space: nowrap;
+}
+
+[data-ch="hash"] .hs-acc {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--acc-ink);
+  font-family: var(--font-mono);
+  min-height: 22px;
+  text-align: center;
+}
+
+[data-ch="hash"] .hs-buckets {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(52px, 1fr));
+  gap: 8px;
+  width: 100%;
+  max-width: 660px;
+}
+
+[data-ch="hash"] .hs-bucket {
+  border: 1.5px dashed var(--border-strong);
+  border-radius: 12px;
+  min-height: 104px;
+  padding: 8px 4px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+[data-ch="hash"] .hs-bucket.hot {
+  border-style: solid;
+  border-color: var(--acc);
+  background: var(--acc-soft);
+  box-shadow: 0 0 18px var(--acc-glow);
+}
+
+[data-ch="hash"] .hs-bucket-idx {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--text-3);
+}
+
+[data-ch="hash"] .hs-item {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 3px 7px;
+  border-radius: 8px;
+  border: 1px solid var(--acc-border);
+  background: var(--acc-soft);
+  color: var(--acc-ink);
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  animation: fade-up 0.3s ease;
+}
+
+[data-ch="hash"] .hs-item.clash {
+  border-color: var(--risk);
+  background: var(--risk-bg);
+  color: var(--risk);
+}
+
+[data-ch="hash"] .hs-input {
+  background: var(--panel-2);
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  padding: 7px 12px;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  width: 130px;
+}
+
+[data-ch="hash"] .hs-input:focus {
+  outline: none;
+  border-color: var(--acc);
+  box-shadow: 0 0 0 3px var(--acc-soft);
+}
+
+/* ---------- CollisionLab:链地址 / 线性探测 ---------- */
+
+[data-ch="hash"] .hs-chains {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  width: 100%;
+  max-width: 560px;
+}
+
+[data-ch="hash"] .hs-chainrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+}
+
+[data-ch="hash"] .hs-chainhead {
+  width: 44px;
+  height: 30px;
+  border-radius: 9px;
+  border: 1.5px solid var(--border-strong);
+  background: var(--panel-2);
+  display: grid;
+  place-items: center;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--text-3);
+  flex-shrink: 0;
+  transition: all 0.3s;
+}
+
+[data-ch="hash"] .hs-chainrow.hot .hs-chainhead {
+  border-color: var(--acc);
+  color: var(--acc-ink);
+  background: var(--acc-soft);
+  box-shadow: 0 0 12px var(--acc-glow);
+}
+
+[data-ch="hash"] .hs-arrow {
+  color: var(--text-3);
+  font-size: 12px;
+  font-family: var(--font-mono);
+}
+
+/* 探测视图:一排格子 + 扫描痕迹 */
+
+[data-ch="hash"] .hs-probe-scan {
+  color: var(--warn);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+@media (max-width: 640px) {
+  [data-ch="hash"] .hs-buckets {
+    grid-template-columns: repeat(4, minmax(52px, 1fr));
+  }
+}
