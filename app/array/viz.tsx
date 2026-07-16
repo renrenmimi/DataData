@@ -20,6 +20,7 @@ export function IndexLab() {
     <div className="viz">
       <div className="viz-title">下标寻址实验室 —— 点任意一格</div>
       <div className="viz-stage" style={{ flexDirection: "column", gap: 4 }}>
+        <div className="viz-scroll">
         <div style={{ display: "flex", gap: 4, paddingBottom: 30 }}>
           {IDX_VALUES.map((v, i) => (
             <button
@@ -36,6 +37,7 @@ export function IndexLab() {
               </span>
             </button>
           ))}
+        </div>
         </div>
       </div>
       <div className="viz-msg">
@@ -333,6 +335,7 @@ export function GrowLab() {
     <div className="viz">
       <div className="viz-title">动态数组扩容实验室</div>
       <div className="viz-stage" style={{ flexDirection: "column", gap: 26 }}>
+        <div className="viz-scroll" style={{ display: "flex", flexDirection: "column", gap: 26 }}>
         {phase === "growing" && (
           <div style={{ display: "flex", gap: 4, opacity: 0.65 }}>
             {oldSnapshot.map((v, i) => (
@@ -357,6 +360,7 @@ export function GrowLab() {
               </div>
             );
           })}
+        </div>
         </div>
       </div>
       <div className="viz-msg">{msg}</div>

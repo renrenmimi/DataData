@@ -42,6 +42,7 @@ export function ProblemSet({
           <div
             key={p.lc}
             className={`prob${done ? " done" : ""}${expanded ? " open" : ""}`}
+            data-d={p.d}
           >
             <div
               className="prob-head"

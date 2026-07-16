@@ -90,7 +90,7 @@
 .atl-result-name {
   font-family: var(--font-display);
   font-size: 26px;
-  font-weight: 800;
+  font-weight: 900;
   margin: 6px 0 10px;
   background: var(--grad);
   -webkit-background-clip: text;
@@ -132,7 +132,7 @@
 
 .atl-group-num {
   font-family: var(--font-display);
-  font-weight: 800;
+  font-weight: 900;
   font-size: 14px;
   color: oklch(var(--acc-l) var(--acc-c) var(--gh, 292));
 }
@@ -168,7 +168,7 @@
 
 .atl-banner .big {
   font-family: var(--font-display);
-  font-weight: 800;
+  font-weight: 900;
   font-size: 40px;
   background: var(--grad);
   -webkit-background-clip: text;

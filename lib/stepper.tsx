@@ -123,6 +123,7 @@ export function ArrayStepper({
     <div className="viz">
       <div className="viz-title">{title}</div>
       <div className="viz-stage" style={{ flexDirection: "column", gap: 6 }}>
+        <div className="viz-scroll" style={{ display: "flex", flexDirection: "column", gap: 6 }}>
         {/* 指针行 */}
         <div
           style={{
@@ -177,6 +178,7 @@ export function ArrayStepper({
               </div>
             );
           })}
+        </div>
         </div>
       </div>
       <div className="viz-msg" aria-live="polite">

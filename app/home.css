@@ -59,7 +59,7 @@
 
 .home-stat .v {
   font-family: var(--font-display);
-  font-weight: 800;
+  font-weight: 900;
   font-size: 26px;
   background: var(--grad);
   -webkit-background-clip: text;
@@ -78,13 +78,18 @@
 .hm-wrap {
   position: relative;
   border-radius: 24px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--acc-border);
   background:
-    radial-gradient(ellipse 70% 55% at 50% 0%, var(--acc-soft), transparent 75%),
-    var(--panel);
-  backdrop-filter: blur(12px);
+    radial-gradient(
+      ellipse 82% 62% at 50% 0%,
+      oklch(var(--acc-l) var(--acc-c) var(--hue) / 0.2),
+      transparent 72%
+    ),
+    color-mix(in oklab, var(--elevated) 82%, transparent);
+  backdrop-filter: blur(14px);
   padding: 18px 14px 10px;
-  box-shadow: var(--shadow-soft);
+  box-shadow: var(--shadow-soft),
+    0 24px 60px oklch(var(--acc-l) var(--acc-c) var(--hue) / 0.14);
 }
 
 .hm-svg {
@@ -94,9 +99,10 @@
 }
 
 .hm-node {
-  fill: var(--acc-soft);
+  fill: oklch(var(--acc-l) var(--acc-c) var(--hue) / 0.22);
   stroke: var(--acc);
-  stroke-width: 1.6;
+  stroke-width: 2;
+  filter: drop-shadow(0 0 6px var(--acc-glow));
 }
 
 .hm-edge {
@@ -370,7 +376,7 @@
 
 .map-num {
   font-family: var(--font-display);
-  font-weight: 800;
+  font-weight: 900;
   font-size: 14px;
   color: oklch(var(--acc-l) var(--acc-c) var(--hue));
 }
@@ -448,7 +454,7 @@
   top: 10px;
   right: 16px;
   font-family: var(--font-display);
-  font-weight: 800;
+  font-weight: 900;
   font-size: 34px;
   background: linear-gradient(
     160deg,

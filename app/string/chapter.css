@@ -82,6 +82,18 @@
   line-height: 1.5;
 }
 
+/* 窄屏:四列固定网格会溢出 → 堆成单列 */
+@media (max-width: 560px) {
+  .str-enc-row {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  .str-enc-ch,
+  .str-enc-meta {
+    text-align: left;
+  }
+}
+
 .str-enc-total {
   display: flex;
   flex-wrap: wrap;

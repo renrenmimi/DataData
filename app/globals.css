@@ -23,10 +23,10 @@
 
   --bg: #05060c;
   --bg-2: #090b14;
-  --panel: rgba(255, 255, 255, 0.032);
-  --panel-2: rgba(255, 255, 255, 0.055);
+  --panel: rgba(255, 255, 255, 0.03);
+  --panel-2: rgba(255, 255, 255, 0.062);
   --panel-solid: #0d1019;
-  --elevated: #131727;
+  --elevated: #171c30;
   --text: #eef1f8;
   --text-2: #a6afc2;
   --text-3: #667089;
@@ -68,16 +68,16 @@
   --tk-type: #6fd6d0;
   --tk-op: #90a0be;
 
-  --blob-a: 0.16;
-  --blob-b: 0.1;
-  --grid-o: 0.05;
+  --blob-a: 0.2;
+  --blob-b: 0.13;
+  --grid-o: 0.055;
 }
 
 [data-theme="light"] {
   color-scheme: light;
 
-  --bg: #eef0f5;
-  --bg-2: #f6f7fa;
+  --bg: #f1f0f6;
+  --bg-2: #fafaff;
   --panel: rgba(255, 255, 255, 0.72);
   --panel-2: rgba(255, 255, 255, 0.95);
   --panel-solid: #ffffff;
@@ -92,10 +92,10 @@
     0 16px 48px rgba(23, 28, 45, 0.09);
   --shadow-soft: 0 8px 28px rgba(23, 28, 45, 0.07);
 
-  --acc-l: 50%;
-  --acc-c: 0.16;
-  --acc-strong-l: 44%;
-  --acc-strong-c: 0.18;
+  --acc-l: 49%;
+  --acc-c: 0.17;
+  --acc-strong-l: 43%;
+  --acc-strong-c: 0.19;
 
   --ok: #14915f;
   --ok-bg: rgba(20, 145, 95, 0.1);
@@ -186,17 +186,26 @@ body {
 }
 
 :root {
-  --font-display: var(--font-syne), "PingFang SC", "Hiragino Sans GB",
-    "Microsoft YaHei", sans-serif;
-  --font-ui: var(--font-grotesk), -apple-system, BlinkMacSystemFont,
-    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --font-display: var(--font-syne), var(--font-noto-sc), "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --font-ui: var(--font-grotesk), var(--font-noto-sc), -apple-system,
+    BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+    sans-serif;
   --font-mono: var(--font-jb), ui-monospace, SFMono-Regular, "SF Mono", Menlo,
     Consolas, monospace;
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
 }
 
 body {
   margin: 0;
-  background: var(--bg);
+  background:
+    radial-gradient(
+      ellipse 120% 90% at 50% -10%,
+      var(--bg-2),
+      transparent 55%
+    ),
+    var(--bg);
+  background-attachment: fixed;
   color: var(--text);
   font-family: var(--font-ui);
   font-size: 15.5px;
@@ -249,6 +258,14 @@ button {
 .mono {
   font-family: var(--font-mono);
   font-size: 0.92em;
+  font-variant-numeric: tabular-nums;
+}
+
+.hero-title,
+.sec-title,
+.kp-title,
+.brand-name {
+  letter-spacing: 0.005em;
 }
 
 .dim {
@@ -371,7 +388,7 @@ html[data-sidebar="collapsed"] .sidebar {
 
 .brand-name {
   font-family: var(--font-display);
-  font-weight: 800;
+  font-weight: 900;
   font-size: 19px;
   letter-spacing: 0.02em;
   display: block;
@@ -703,7 +720,7 @@ html[data-sidebar="collapsed"] .sidebar {
 .hero-title {
   font-family: var(--font-display);
   font-size: clamp(40px, 6.2vw, 64px);
-  font-weight: 800;
+  font-weight: 900;
   letter-spacing: 0.005em;
   line-height: 1.08;
   margin: 0 0 6px;
@@ -743,20 +760,23 @@ html[data-sidebar="collapsed"] .sidebar {
 /* 巨型章节编号水印 */
 .hero-watermark {
   position: absolute;
-  top: -8px;
-  right: -10px;
+  top: -12px;
+  right: -6px;
   font-family: var(--font-display);
-  font-weight: 800;
-  font-size: clamp(120px, 22vw, 230px);
+  font-weight: 900;
+  font-size: clamp(110px, 19vw, 188px);
   line-height: 1;
   background: linear-gradient(
     160deg,
-    oklch(var(--acc-l) var(--acc-c) var(--hue) / 0.16),
-    transparent 72%
+    oklch(var(--acc-l) var(--acc-c) var(--hue) / 0.17),
+    transparent 70%
   );
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+  /* 左下(靠近正文一侧)淡出,消除与 essence 的视觉打架 */
+  -webkit-mask-image: linear-gradient(215deg, #000 34%, transparent 70%);
+  mask-image: linear-gradient(215deg, #000 34%, transparent 70%);
   pointer-events: none;
   user-select: none;
   z-index: -1;
@@ -813,7 +833,7 @@ html[data-sidebar="collapsed"] .sidebar {
 
 .sec-index {
   font-family: var(--font-display);
-  font-weight: 800;
+  font-weight: 900;
   font-size: 15px;
   color: var(--acc);
   letter-spacing: 0.08em;
@@ -875,6 +895,19 @@ li code {
   white-space: nowrap;
 }
 
+/* 窄屏:长行内代码允许折行,避免撑破卡片/正文 */
+@media (max-width: 640px) {
+  .prose code,
+  .callout code,
+  .card code,
+  td code,
+  li code {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+}
+
 /* — 卡片与网格 — */
 
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
@@ -888,14 +921,20 @@ li code {
   background: var(--panel);
   backdrop-filter: blur(10px);
   padding: 18px 20px;
-  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
-    border-color 0.25s, box-shadow 0.25s;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.045);
+  transition: transform 0.28s var(--ease-spring), border-color 0.25s,
+    box-shadow 0.25s;
+}
+
+[data-theme="light"] .card {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 
 .card.hoverable:hover {
-  transform: translateY(-3px);
+  transform: translateY(-4px) scale(1.012);
   border-color: var(--acc-border);
-  box-shadow: 0 12px 36px var(--acc-glow);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 16px 42px var(--acc-glow);
 }
 
 .card-kicker {
@@ -1114,15 +1153,25 @@ li code {
 
 .btn-primary {
   border: none;
-  background: var(--grad);
+  background: linear-gradient(
+    100deg,
+    var(--acc) 0%,
+    var(--acc-2) 50%,
+    var(--acc) 100%
+  );
+  background-size: 200% 100%;
+  background-position: 0% 0;
   color: #fff;
   box-shadow: 0 4px 18px var(--acc-glow);
+  transition: background-position 0.6s ease, box-shadow 0.25s,
+    transform 0.2s var(--ease-spring);
 }
 
 .btn-primary:hover {
-  background: var(--grad);
-  filter: brightness(1.1);
-  box-shadow: 0 6px 24px var(--acc-glow);
+  background-position: 100% 0;
+  filter: brightness(1.06);
+  box-shadow: 0 8px 28px var(--acc-glow);
+  transform: translateY(-1px);
 }
 
 .btn-ghost {
@@ -1475,16 +1524,30 @@ li code {
   align-items: center;
   gap: 14px;
   border-radius: 18px;
-  border: 1px solid var(--acc-border);
-  background: var(--acc-soft);
+  border: 1px solid transparent;
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in oklab, var(--acc) 13%, var(--panel-solid)),
+      var(--panel-solid) 82%
+    )
+      padding-box,
+    linear-gradient(
+      135deg,
+      oklch(72% 0.16 var(--hue) / 0.6),
+      transparent 55%,
+      oklch(66% 0.14 var(--hue2) / 0.42)
+    )
+      border-box;
   padding: 16px 20px;
   font-size: 14px;
   color: var(--text);
+  box-shadow: 0 14px 40px oklch(var(--acc-l) var(--acc-c) var(--hue) / 0.12);
 }
 
 .quiz-score .big {
   font-family: var(--font-display);
-  font-weight: 800;
+  font-weight: 900;
   font-size: 30px;
   background: var(--grad);
   -webkit-background-clip: text;
@@ -1671,6 +1734,22 @@ li code {
   padding: 10px 0;
 }
 
+/* 横向可滚舞台:内容窄则居中,内容宽于视口则从左起可横滑(修复窄屏逐帧行溢出) */
+.viz-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 2px;
+  scrollbar-width: thin;
+}
+.viz-scroll > * {
+  width: max-content;
+  margin-inline: auto;
+}
+.viz-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+
 .viz-ctl {
   display: flex;
   flex-wrap: wrap;
@@ -1712,7 +1791,8 @@ li code {
   border-color: var(--acc);
   background: var(--acc-soft);
   color: var(--acc-ink);
-  box-shadow: 0 0 18px var(--acc-glow);
+  box-shadow: 0 0 0 1px var(--acc), 0 6px 20px var(--acc-glow),
+    inset 0 0 12px oklch(var(--acc-l) var(--acc-c) var(--hue) / 0.15);
   transform: translateY(-4px);
 }
 
@@ -1795,19 +1875,29 @@ li code {
 
 .kp {
   border-radius: 20px;
-  border: 1px solid var(--acc-border);
-  background: linear-gradient(
-    150deg,
-    oklch(var(--acc-l) var(--acc-c) var(--hue) / 0.1),
-    transparent 60%
-  );
+  border: 1px solid transparent;
+  background:
+    linear-gradient(
+      150deg,
+      oklch(var(--acc-l) var(--acc-c) var(--hue) / 0.13),
+      var(--panel-solid) 66%
+    )
+      padding-box,
+    linear-gradient(
+      135deg,
+      oklch(72% 0.16 var(--hue) / 0.6),
+      transparent 52%,
+      oklch(66% 0.14 var(--hue2) / 0.42)
+    )
+      border-box;
   padding: 24px 26px;
   margin: 24px 0;
+  box-shadow: 0 18px 44px oklch(var(--acc-l) var(--acc-c) var(--hue) / 0.1);
 }
 
 .kp-title {
   font-family: var(--font-display);
-  font-weight: 800;
+  font-weight: 900;
   font-size: 17px;
   letter-spacing: 0.04em;
   margin-bottom: 14px;
@@ -1898,14 +1988,17 @@ li code {
 
 .reveal {
   opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+  transform: translateY(22px);
+  filter: blur(7px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .reveal.in {
   opacity: 1;
   transform: none;
+  filter: none;
 }
 
 @keyframes fade-in {
@@ -2016,5 +2109,164 @@ li code {
     transition-duration: 0.01ms !important;
   }
   html { scroll-behavior: auto; }
-  .reveal { opacity: 1; transform: none; }
+  .reveal { opacity: 1; transform: none; filter: none; }
+}
+
+/* ============================================================
+   13. UI 2.0 精修增补(细节密度层)
+   ============================================================ */
+
+/* — 代码窗:顶栏发丝渐变线 + 行号分隔 + 行 hover — */
+.codewin-bar {
+  position: relative;
+}
+.codewin-bar::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--acc-border) 25%,
+    var(--acc-border) 75%,
+    transparent
+  );
+  opacity: 0.55;
+}
+.cl-n {
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+}
+.cl:hover {
+  background: rgba(255, 255, 255, 0.022);
+}
+.cl.hl:hover {
+  background: var(--code-hl);
+}
+
+/* — 可视化舞台:点阵底纹(伪元素,不影响内容) — */
+.viz-stage {
+  position: relative;
+}
+.viz-stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(var(--border) 1px, transparent 1.3px);
+  background-size: 22px 22px;
+  -webkit-mask-image: radial-gradient(
+    ellipse 82% 76% at 50% 50%,
+    #000 48%,
+    transparent
+  );
+  mask-image: radial-gradient(
+    ellipse 82% 76% at 50% 50%,
+    #000 48%,
+    transparent
+  );
+  opacity: 0.7;
+  pointer-events: none;
+  z-index: 0;
+}
+.viz-stage > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* — 控制条:玻璃化 — */
+.viz-ctl {
+  margin-top: 16px;
+  padding: 11px 14px;
+  border-top: none;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: color-mix(in oklab, var(--panel-solid) 55%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* — 题单:左缘难度色条 — */
+.prob {
+  position: relative;
+}
+.prob::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--text-3);
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+.prob[data-d="easy"]::before {
+  background: var(--ok);
+}
+.prob[data-d="medium"]::before {
+  background: var(--warn);
+}
+.prob[data-d="hard"]::before {
+  background: var(--risk);
+}
+.prob:hover::before,
+.prob.open::before {
+  opacity: 1;
+}
+
+/* — 表格:表头字距 + 行 hover 左缘光条 — */
+.t-table th {
+  letter-spacing: 0.08em;
+}
+.t-table tbody tr:hover {
+  box-shadow: inset 2px 0 0 var(--acc);
+}
+
+/* — 侧栏:当前项左缘竖光条 — */
+.side-link.active::before {
+  content: "";
+  position: absolute;
+  left: 1px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 58%;
+  border-radius: 3px;
+  background: oklch(var(--acc-l) var(--acc-c) var(--hue));
+  box-shadow: 0 0 8px oklch(var(--acc-l) var(--acc-c) var(--hue) / 0.6);
+}
+
+/* — Hero:眉线入场动画 + 渐变标题缓慢流动 — */
+.hero-eyebrow::before {
+  animation: eyebrow-line 0.9s var(--ease-spring) both;
+}
+@keyframes eyebrow-line {
+  from {
+    width: 0;
+    opacity: 0;
+  }
+  to {
+    width: 26px;
+    opacity: 1;
+  }
+}
+.hero-title .grad {
+  background-size: 220% auto;
+  animation: grad-shift 9s ease-in-out infinite;
+}
+@keyframes grad-shift {
+  0%,
+  100% {
+    background-position: 0% center;
+  }
+  50% {
+    background-position: 100% center;
+  }
+}
+
+/* — 段落编号呼吸微光 — */
+.sec-index {
+  text-shadow: 0 0 16px var(--acc-glow);
 }

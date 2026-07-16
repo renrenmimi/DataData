@@ -1,5 +1,10 @@
 import type { Metadata, Viewport } from "next";
-import { Syne, Space_Grotesk, JetBrains_Mono } from "next/font/google";
+import {
+  Syne,
+  Space_Grotesk,
+  JetBrains_Mono,
+  Noto_Sans_SC,
+} from "next/font/google";
 import "./globals.css";
 import {
   ThemeProvider,
@@ -31,6 +36,14 @@ const jetbrains = JetBrains_Mono({
   variable: "--font-jb",
   display: "swap",
 });
+// 中文黑体:给标题 900 字重的冲击力(系统 PingFang 最粗仅 600)。
+// CJK 字形按 unicode-range 分片,浏览器只下载页面用到的字。
+const notoSC = Noto_Sans_SC({
+  subsets: ["latin"],
+  weight: ["400", "500", "700", "900"],
+  variable: "--font-noto-sc",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: {
@@ -56,7 +69,7 @@ export default function RootLayout({
     <html
       lang="zh-CN"
       suppressHydrationWarning
-      className={`${syne.variable} ${grotesk.variable} ${jetbrains.variable}`}
+      className={`${syne.variable} ${grotesk.variable} ${jetbrains.variable} ${notoSC.variable}`}
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
