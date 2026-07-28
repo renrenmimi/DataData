@@ -1697,8 +1697,9 @@ li code {
   backdrop-filter: blur(12px);
   padding: 22px;
   margin: 20px 0;
-  overflow: hidden;
   position: relative;
+  /* 不用 overflow:hidden —— 圆角背景由 border-radius 裁;
+     节点标签 / top 标注 / tooltip 等可外溢,不被切掉 */
 }
 
 .viz-title {
@@ -1734,12 +1735,13 @@ li code {
   padding: 10px 0;
 }
 
-/* 横向可滚舞台:内容窄则居中,内容宽于视口则从左起可横滑(修复窄屏逐帧行溢出) */
+/* 横向可滚舞台:内容窄则居中,内容宽于视口则从左起可横滑(修复窄屏逐帧行溢出)。
+   overflow-x:auto 会把 overflow-y 也算成 auto,故用底部 padding 容纳 cell-idx 下标
+   (bottom:-22px)与指针标签,避免它们被裁。 */
 .viz-scroll {
   max-width: 100%;
   overflow-x: auto;
-  overflow-y: hidden;
-  padding-bottom: 2px;
+  padding: 4px 2px 30px;
   scrollbar-width: thin;
 }
 .viz-scroll > * {

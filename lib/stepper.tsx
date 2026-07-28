@@ -160,7 +160,7 @@ export function ArrayStepper({
             display: "grid",
             gridTemplateColumns: `repeat(${n}, ${cellW}px)`,
             gap: 4,
-            paddingBottom: 26,
+            paddingBottom: 4,
           }}
         >
           {Array.from({ length: n }).map((_, i) => {
