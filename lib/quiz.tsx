@@ -7,7 +7,7 @@
 //  - fill:填空,回车或按钮判定;可反复尝试,答对为止(计分按最终是否答对)。
 // 全部答完 → 结算面板,成绩写入进度系统(取历史最好成绩,决定章节「通关」状态)。
 
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { useProgress } from "@/lib/progress";
 import type { ChapterId } from "@/lib/curriculum";
 
@@ -66,25 +66,21 @@ export function Quiz({ ch, items }: { ch: ChapterId; items: QuizItem[] }) {
   ).length;
   const allDone = answered === items.length;
 
-  const finish = useMemo(
-    () => (nextStates: ItemState[]) => {
-      const done = nextStates.every((s) => s.phase !== "idle");
-      if (done && !reported) {
-        const right = nextStates.filter(
-          (s) => s.phase === "right" && s.first,
-        ).length;
-        reportQuiz(ch, right, items.length);
-        setReported(true);
-      }
-    },
-    [ch, items.length, reported, reportQuiz],
-  );
+  // 全部答完 → 上报成绩。放在 effect 里而不是 setStates 的更新函数里:
+  // 更新函数必须是纯的,严格模式/并发渲染下会被调用多次,在里面做副作用会重复上报。
+  useEffect(() => {
+    if (reported) return;
+    if (states.length === 0) return;
+    if (!states.every((s) => s.phase !== "idle")) return;
+    const right = states.filter((s) => s.phase === "right" && s.first).length;
+    reportQuiz(ch, right, items.length);
+    setReported(true);
+  }, [states, reported, reportQuiz, ch, items.length]);
 
   const setState = (i: number, st: ItemState) => {
     setStates((prev) => {
       const next = [...prev];
       next[i] = st;
-      finish(next);
       return next;
     });
   };

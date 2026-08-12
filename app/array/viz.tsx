@@ -149,6 +149,9 @@ export function ShiftLab() {
 
   const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
+  // 删除会让数组变短,idx 可能停留在越界位置 —— 统一用夹紧后的 pos
+  const pos = Math.min(idx, cells.length - 1);
+
   const insert = async () => {
     if (busy || cells.length >= 9) return;
     setBusy(true);
@@ -158,7 +161,7 @@ export function ShiftLab() {
     let moves = 0;
     // 从尾巴开始,把 idx 右侧的元素一个个往右搬
     arr = [...arr, arr[arr.length - 1]];
-    for (let j = arr.length - 2; j > idx; j--) {
+    for (let j = arr.length - 2; j > pos; j--) {
       setMoving(j);
       setMsg(
         <>
@@ -171,13 +174,13 @@ export function ShiftLab() {
       moves++;
       await sleep(420);
     }
-    setMoving(idx);
+    setMoving(pos);
     arr = [...arr];
-    arr[idx] = v;
+    arr[pos] = v;
     setCells(arr);
     setMsg(
       <>
-        在下标 {idx} 插入 <b>{v}</b> 完成 —— 一共搬了 <b>{moves}</b> 次家
+        在下标 {pos} 插入 <b>{v}</b> 完成 —— 一共搬了 <b>{moves}</b> 次家
         (数组越长、位置越靠前,搬得越多,这就是 <b>O(n)</b>)。
       </>,
     );
@@ -190,9 +193,9 @@ export function ShiftLab() {
     if (busy || cells.length <= 2) return;
     setBusy(true);
     let arr = [...cells];
-    const victim = arr[idx];
+    const victim = arr[pos];
     let moves = 0;
-    for (let j = idx; j < arr.length - 1; j++) {
+    for (let j = pos; j < arr.length - 1; j++) {
       setMoving(j);
       setMsg(
         <>
@@ -209,7 +212,7 @@ export function ShiftLab() {
     setCells(arr);
     setMsg(
       <>
-        删除 arr[{idx}]({victim})完成 —— 右侧 <b>{moves}</b>{" "}
+        删除 arr[{pos}]({victim})完成 —— 右侧 <b>{moves}</b>{" "}
         个元素集体左移填坑。删除不是“抠掉”,是“补位”。
       </>,
     );
@@ -225,7 +228,7 @@ export function ShiftLab() {
           {cells.map((v, i) => (
             <div
               key={i}
-              className={`cell${moving === i ? " lit" : ""}${i === idx && !busy ? " ok" : ""}`}
+              className={`cell${moving === i ? " lit" : ""}${i === pos && !busy ? " ok" : ""}`}
             >
               {v}
               <span className="cell-idx">{i}</span>
@@ -236,12 +239,12 @@ export function ShiftLab() {
       <div className="viz-msg">{msg}</div>
       <div className="viz-ctl">
         <label className="bigo-slider" style={{ minWidth: 200, maxWidth: 280 }}>
-          <span className="mono">位置 {idx}</span>
+          <span className="mono">位置 {pos}</span>
           <input
             type="range"
             min={0}
             max={cells.length - 1}
-            value={Math.min(idx, cells.length - 1)}
+            value={pos}
             disabled={busy}
             onChange={(e) => setIdx(Number(e.target.value))}
             aria-label="操作位置"
@@ -368,7 +371,7 @@ export function GrowLab() {
         <button type="button" className="btn btn-sm btn-primary" onClick={push} disabled={phase !== "idle" || cap >= 16}>
           push
         </button>
-        <button type="button" className="btn btn-sm" onClick={reset}>
+        <button type="button" className="btn btn-sm" onClick={reset} disabled={phase !== "idle"}>
           重置
         </button>
         <span className="mono dim" style={{ marginLeft: "auto", fontSize: 12 }}>

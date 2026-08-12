@@ -6,7 +6,7 @@
 //  - ConcatLab:同一任务两种拼法赛跑 ——「每次 += 全量重建」vs
 //    「StringBuilder 追加」,实时累计拷贝的字符数,亲眼看 O(n²) 和 O(n) 拉开差距。
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 /* ================= EncodeLab ================= */
 
@@ -174,23 +174,19 @@ export function ConcatLab() {
   const { naive, builder } = useMemo(precompute, []);
   const [step, setStep] = useState(0);
   const [playing, setPlaying] = useState(false);
-  const timer = useRef<ReturnType<typeof setInterval> | null>(null);
-
   useEffect(() => {
     if (!playing) return;
-    timer.current = setInterval(() => {
-      setStep((s) => {
-        if (s >= N) {
-          setPlaying(false);
-          return s;
-        }
-        return s + 1;
-      });
+    // 更新函数保持纯粹:只推进进度,停止播放交给下面的 effect
+    const id = setInterval(() => {
+      setStep((s) => (s >= N ? s : s + 1));
     }, 90);
-    return () => {
-      if (timer.current) clearInterval(timer.current);
-    };
+    return () => clearInterval(id);
   }, [playing]);
+
+  // 跑到终点自动停
+  useEffect(() => {
+    if (playing && step >= N) setPlaying(false);
+  }, [playing, step]);
 
   const max = naive[N]; // 用朴素法的总量做比例尺
   const nv = naive[step];

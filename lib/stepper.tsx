@@ -6,7 +6,7 @@
 // (上一步/下一步/自动播放/进度),帧数据由各章自己写。
 // 树/图等自由形态的动画请在章节内自建组件,但控制条样式(.viz-ctl)通用。
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
 export interface ArrayCell {
   v: ReactNode;
@@ -24,23 +24,26 @@ export interface ArrayFrame {
 export function useStepper(total: number, intervalMs = 1100) {
   const [step, setStep] = useState(0);
   const [playing, setPlaying] = useState(false);
-  const timer = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     if (!playing) return;
-    timer.current = setInterval(() => {
-      setStep((s) => {
-        if (s >= total - 1) {
-          setPlaying(false);
-          return s;
-        }
-        return s + 1;
-      });
+    const id = setInterval(() => {
+      // 更新函数必须是纯的:这里只推进帧号,停止播放交给下面的 effect
+      setStep((s) => (s >= total - 1 ? s : s + 1));
     }, intervalMs);
-    return () => {
-      if (timer.current) clearInterval(timer.current);
-    };
+    return () => clearInterval(id);
   }, [playing, total, intervalMs]);
+
+  // 播到最后一帧自动停
+  useEffect(() => {
+    if (playing && step >= total - 1) setPlaying(false);
+  }, [playing, step, total]);
+
+  // 帧数组被换掉(例如切换演示用例)导致总帧数变少时,把 step 拉回合法范围,
+  // 否则 frames[step] 会取到 undefined 而崩溃
+  useEffect(() => {
+    setStep((s) => (s > total - 1 ? Math.max(0, total - 1) : s));
+  }, [total]);
 
   return {
     step,
@@ -116,7 +119,9 @@ export function ArrayStepper({
   cellW?: number;
 }) {
   const stepper = useStepper(frames.length);
-  const f = frames[stepper.step];
+  // step 可能短暂落在新帧数组之外(见 useStepper 里的收敛 effect),这里再夹一次
+  const f = frames[Math.min(stepper.step, frames.length - 1)];
+  if (!f) return null; // frames 为空:不渲染,避免 Math.max() = -Infinity 与空指针
   const n = Math.max(...frames.map((fr) => fr.cells.length));
 
   return (
