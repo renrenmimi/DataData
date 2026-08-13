@@ -207,7 +207,7 @@ export const QUIZ: QuizItem[] = [
       "equals 内部就是逐字符比较,已经替你写好了,不需要手工拆数组。",
       "compareTo 返回的是字典序差值(负/零/正),用 > 0 判断“相等”逻辑就错了;判相等用 equals。",
     ],
-    why: "== 比引用,equals 比内容。字符串常量池会让 \"abc\" == \"abc\" 为 true,给人“== 能用”的错觉,一遇到 new String 或运行期拼接就翻车 —— 面试与线上事故双料高频。",
+    why: "== 比引用,equals 比内容。字符串常量池会让 \"abc\" == \"abc\" 为 true,给人“== 能用”的错觉,一遇到 new String 或运行期拼接就会失效 —— 面试与线上事故双料高频。",
   },
   {
     type: "multi",

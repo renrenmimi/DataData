@@ -244,6 +244,6 @@ export const QUIZ: QuizItem[] = [
       "同理,大根堆的数组同样只保证父子关系。",
       "元素入队时就经历了 siftUp 交换,插入顺序早被打乱了。",
     ],
-    why: "堆的承诺只有「堆顶是最值」。需要有序序列:循环 poll()(每次 O(log n)),或者一开始就选错了结构 —— 该用 TreeMap / 排序。这是 PriorityQueue 在实战里翻车率最高的坑。",
+    why: "堆的承诺只有「堆顶是最值」。需要有序序列:循环 poll()(每次 O(log n)),或者一开始就选错了结构 —— 该用 TreeMap / 排序。这是 PriorityQueue 在实战中最容易出错的一处。",
   },
 ];

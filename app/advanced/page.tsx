@@ -1023,7 +1023,7 @@ class LFUCache:
         <div className="prose">
           <p>
             换一类需求。给一个数组,反复问“下标 l 到 r 的<strong>区间和</strong>是多少”
-            —— 第 1 章的<strong>前缀和</strong>就能秒杀:预处理一遍,每次查询 O(1)。
+            —— 第 1 章的<strong>前缀和</strong>就能解决:预处理一遍,每次查询 O(1)。
             但加一个条件试试:<strong>数组元素还会被修改</strong>。改一个{" "}
             <code>a[i]</code>,它后面的所有前缀和全部作废,重建要 O(n) ——
             改 10 万次就是 10 万次重建,前缀和当场崩盘。

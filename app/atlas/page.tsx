@@ -72,7 +72,7 @@ const SIGNALS: { signal: string; struct: string; href: string; why: string }[] =
   { signal: "「朋友圈 / 岛屿合并 / 连通分量」", struct: "并查集", href: "/union-find", why: "只问分组不问路径,near-O(1) 合并查询" },
   { signal: "「先修课 / 依赖 / 编译顺序」", struct: "拓扑排序", href: "/graph", why: "DAG 上按入度剥洋葱" },
   { signal: "「最短路径 / 最少步数」", struct: "BFS / Dijkstra", href: "/graph", why: "无权 BFS 天生最短;带权交给 Dijkstra" },
-  { signal: "「范围查询 + 有序遍历」", struct: "BST / TreeMap", href: "/bst", why: "红黑树 O(log n) 全家桶,中序即有序" },
+  { signal: "「范围查询 + 有序遍历」", struct: "BST / TreeMap", href: "/bst", why: "红黑树 O(log n) 全套操作,中序即有序" },
   { signal: "「区间和 / 最值,还要改」", struct: "线段树 / BIT", href: "/advanced", why: "前缀和怕修改,分治树两头兼顾" },
   { signal: "「缓存淘汰 / 最近使用」", struct: "LRU:哈希+双向链表", href: "/advanced", why: "哈希定位 + 链表排新旧,两个 O(1) 拼出来" },
 ];
