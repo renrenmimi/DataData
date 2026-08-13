@@ -84,7 +84,7 @@ export default function LinkedListChapter() {
         <div className="grid-3" style={{ marginTop: 18 }}>
           <div className="card hoverable">
             <div className="card-kicker">RULE 01</div>
-            <div className="card-title">🏝 不连续</div>
+            <div className="card-title">不连续</div>
             <p>
               节点(node)在内存里<b>想住哪住哪</b>,彼此可以隔十万八千里。
               好处:不需要一大块连续内存,也永远不用「扩容搬家」;
@@ -93,7 +93,7 @@ export default function LinkedListChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">RULE 02</div>
-            <div className="card-title">🧵 靠引用相连</div>
+            <div className="card-title">靠引用相连</div>
             <p>
               每个节点 = <b>值 + next 引用</b>。逻辑顺序完全由引用织成,
               和物理地址无关 —— 所谓「链」,就是这一串手拉手的引用。
@@ -101,7 +101,7 @@ export default function LinkedListChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">RULE 03</div>
-            <div className="card-title">🚫 无下标</div>
+            <div className="card-title">无下标</div>
             <p>
               没有「地址 = 首地址 + i × 大小」的公式可用。想到第 i 个,
               只能从 head 开始跳 i 次 —— <b>访问是 O(n)</b>,
@@ -354,7 +354,7 @@ class MyLinkedList {
 }`,
             note: (
               <>
-                <b>坑:</b>每个会动 head/tail 的方法都要照顾空链表与单节点两种边界
+                <b>易错点:</b>每个会动 head/tail 的方法都要照顾空链表与单节点两种边界
                 —— 链表 bug 的 80% 出在边界。测试顺序:空表 → 一个元素 → 两个元素。
               </>
             ),
@@ -450,7 +450,7 @@ class MyLinkedList:
         return out`,
             note: (
               <>
-                <b>坑:</b>判空用 <code>is None</code> 而不是 <code>== None</code>;
+                <b>易错点:</b>判空用 <code>is None</code> 而不是 <code>== None</code>;
                 <code>prev, cur = cur, nxt</code> 这种多重赋值是右边先整体求值,
                 写反转时特别顺手 —— 但也别炫技把三步压成一行,可读性优先。
               </>
@@ -552,7 +552,7 @@ class MyLinkedList {
 }`,
             note: (
               <>
-                <b>坑:</b><code>if (!cur)</code> 判空很顺手,但注意 val 为 0
+                <b>易错点:</b><code>if (!cur)</code> 判空很顺手,但注意 val 为 0
                 时 <code>if (!cur.val)</code> 会误判 —— 判节点存在和判值大小要分开写。
               </>
             ),
@@ -913,16 +913,16 @@ function ListNode(val, next) {
         <div className="grid-3">
           <div className="card hoverable">
             <div className="card-kicker">招式一</div>
-            <div className="card-title">🔄 三指针反转</div>
+            <div className="card-title">三指针反转</div>
             <p>
               prev / cur / nxt 三人小队,把箭头逐个调头。
               整链反转(206)、区间反转(92)、K 组反转(25)——
-              全是它的变奏。链表第一名场面。
+              全是它的变体,是链表最核心的基本操作。
             </p>
           </div>
           <div className="card hoverable">
             <div className="card-kicker">招式二</div>
-            <div className="card-title">🐢🐇 快慢指针</div>
+            <div className="card-title">快慢指针</div>
             <p>
               速度差制造相对位移:快 2 倍 → 找中点(876)、判环(141)、
               找环入口(142);先走 n 步 → 倒数第 k(19)。
@@ -931,7 +931,7 @@ function ListNode(val, next) {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">招式三</div>
-            <div className="card-title">🎭 dummy 哨兵</div>
+            <div className="card-title">dummy 哨兵</div>
             <p>
               头节点可能变动?dummy 站到最前面,人人有前驱,
               特判归零。删除(203、19)、合并构造(21、2)、

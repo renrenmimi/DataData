@@ -303,7 +303,7 @@ export default function HeapChapter() {
         <div className="grid-3" style={{ marginTop: 18 }}>
           <div className="card hoverable">
             <div className="card-kicker">特性 01</div>
-            <div className="card-title">🎯 只承诺堆顶</div>
+            <div className="card-title">只承诺堆顶</div>
             <p>
               它<b>只</b>保证一件事:堆顶是全场最值(最小或最大)。剩下的元素
               谁前谁后、兄弟之间大小如何,一概<b>不保证</b>。承诺越少,维护越省。
@@ -319,7 +319,7 @@ export default function HeapChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">特性 03</div>
-            <div className="card-title">🚀 优先队列的引擎</div>
+            <div className="card-title">优先队列的引擎</div>
             <p>
               任务调度、Dijkstra 最短路、Huffman 编码、Top-K、合并 K 路……
               一切「反复取最值」的场景,底下几乎都是堆在转。
@@ -351,7 +351,7 @@ export default function HeapChapter() {
         <div className="grid-2" style={{ marginTop: 8 }}>
           <div className="card">
             <div className="card-kicker">规矩 ① · 管形状</div>
-            <div className="card-title">🌳 完全二叉树</div>
+            <div className="card-title">完全二叉树</div>
             <p>
               <b>完全二叉树(complete binary tree)</b>:除了最后一层,每层都塞满;
               最后一层的结点<b>全部靠左排</b>,中间不留空洞(第 7 章二叉树见过它)。
@@ -619,7 +619,7 @@ export default function HeapChapter() {
     private void siftUp(int i) {        // 和父亲比,更小就往上换
         while (i > 0) {
             int p = (i - 1) / 2;        // 父结点下标
-            if (a[i] >= a[p]) break;    // 不比爸爸小 → 到位,停
+            if (a[i] >= a[p]) break;    // 不比父节点小 → 到位,停
             swap(i, p);
             i = p;
         }
@@ -652,7 +652,7 @@ export default function HeapChapter() {
             hl: [24, 25, 26, 27, 28, 29, 30, 31],
             note: (
               <>
-                <b>坑:</b>比较用 <code>a[i] &gt;= a[p]</code>(相等时不换),
+                <b>易错点:</b>比较用 <code>a[i] &gt;= a[p]</code>(相等时不换),
                 能避免相等元素之间无意义的来回交换。想要<b>大根堆</b>?
                 把两处 <code>&lt;</code> / <code>&gt;=</code> 的方向全部反过来即可,
                 结构一模一样。
@@ -682,7 +682,7 @@ export default function HeapChapter() {
     def _sift_up(self, i):               # 和父亲比,更小就往上换
         while i > 0:
             p = (i - 1) // 2             # 父结点下标
-            if self.a[i] >= self.a[p]:   # 不比爸爸小 → 停
+            if self.a[i] >= self.a[p]:   # 不比父节点小 → 停
                 break
             self.a[i], self.a[p] = self.a[p], self.a[i]
             i = p
@@ -744,7 +744,7 @@ export default function HeapChapter() {
   #siftUp(i) {                          // 和父亲比,更小就往上换
     while (i > 0) {
       const p = (i - 1) >> 1;           // 父结点下标(>>1 = 整除 2)
-      if (this.a[i] >= this.a[p]) break;// 不比爸爸小 → 停
+      if (this.a[i] >= this.a[p]) break;// 不比父节点小 → 停
       [this.a[i], this.a[p]] = [this.a[p], this.a[i]];
       i = p;
     }
@@ -774,7 +774,7 @@ export default function HeapChapter() {
               <>
                 <b>为什么你必须会背这段:</b>JavaScript <b>没有</b>内置堆 / 优先队列
                 (§05 详述)。刷题时经常得当场手写一个,把这 40 行练到闭眼能写,
-                笔试遇到 Top-K、Dijkstra 才不慌。
+                笔试遇到 Top-K、Dijkstra 才有把握。
               </>
             ),
           }}
@@ -856,7 +856,7 @@ maxq = []
 heapq.heappush(maxq, -5)     # 存进去取负
 top = -heapq.heappop(maxq)   # 弹出来再取负还原 → 5
 
-# 现成的 Top-K,内部就是容量 k 的堆,不用手搓
+# 现成的 Top-K,内部就是容量 k 的堆,不必自己实现
 heapq.nlargest(2, nums)      # 前 2 大
 heapq.nsmallest(2, nums)     # 前 2 小
 
@@ -864,7 +864,7 @@ heapq.nsmallest(2, nums)     # 前 2 小
 heapq.heappush(pq, (freq, word))`,
             note: (
               <>
-                <b>坑:</b>元组比较到某一项是<b>不可比较类型</b>(比如两个 freq
+                <b>易错点:</b>元组比较到某一项是<b>不可比较类型</b>(比如两个 freq
                 相等,却要接着比后面的自定义对象)会抛 <code>TypeError</code>。
                 惯用解法:塞一个<b>自增序号</b>当「平局裁判」放在中间,如
                 <code>(freq, idx, obj)</code> —— 序号永不重复,绝不会比到 obj。
@@ -1001,7 +1001,7 @@ const q = new MinPriorityQueue({ priority: (x) => x.dist });`,
             道理是这样的:我们只想留住「最大的 K 个」,并随时能<b>踢掉其中最弱的</b>
             (给新来的更强者腾位)。「这 K 个里最弱的」= 这 K 个里的<b>最小值</b>,
             要随时 O(1) 拿到最小值 → <b>小根堆</b>。于是堆顶成了<b>入围门槛</b>:
-            新数只有<b>比门槛大</b>才配进来(顺手挤走旧门槛),比门槛小直接淘汰。
+            新数只有<b>比门槛大</b>才配进来(顺手弹出旧门槛),比门槛小直接淘汰。
             扫完 n 个数,堆里正是最大的 K 个,<b>堆顶就是第 K 大</b>。
             对称地:求第 K <b>小</b> → 容量 K 的<b>大根堆</b>,堆顶是「K 个里最大的」门槛。
             <b>要留谁,就用能随时报出这批人里「最该被踢者」的那种堆。</b>

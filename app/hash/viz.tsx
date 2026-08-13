@@ -265,7 +265,7 @@ function buildChainFrames(): ChainFrame[] {
       hot: b,
       msg: clash ? (
         <>
-          「{w}」也被哈希到 <b>{b} 号桶</b> —— 冲突!不慌:接到链表尾部。
+          「{w}」也被哈希到 <b>{b} 号桶</b> —— 发生冲突。处理方式:接到该桶链表的尾部。
           代价:以后查这个桶里的 key,要沿链逐个 equals 比对。
         </>
       ) : (

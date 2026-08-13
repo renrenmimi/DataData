@@ -31,7 +31,7 @@ const CHEAT: {
   del: string;
   note: string;
 }[] = [
-  { name: "数组 Array", href: "/array", access: "1", search: "n", insert: "n", del: "n", note: "按下标访问是它的超能力;中间插删要搬家" },
+  { name: "数组 Array", href: "/array", access: "1", search: "n", insert: "n", del: "n", note: "按下标访问是它的核心能力;中间插删要搬移" },
   { name: "字符串 String", href: "/string", access: "1", search: "n", insert: "n", del: "n", note: "多数语言不可变:任何“修改”都是重建" },
   { name: "链表 Linked List", href: "/linked-list", access: "n", search: "n", insert: "1", del: "1", note: "插删 O(1) 的前提:你已经站在那个位置" },
   { name: "栈 Stack", href: "/stack", access: "n", search: "n", insert: "1", del: "1", note: "只碰顶端,push/pop 都是 O(1)" },
@@ -254,7 +254,7 @@ export default function Home() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">REASON 02</div>
-            <div className="card-title">🎯 面试的通用语言</div>
+            <div className="card-title">面试的通用语言</div>
             <p>
               LeetCode 的每道题,本质都在问同一句话:“这批操作,用哪种组织方式
               成本最低?” 高频题精讲每章都有。
@@ -262,7 +262,7 @@ export default function Home() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">REASON 03</div>
-            <div className="card-title">🏗️ 工程的地基</div>
+            <div className="card-title">工程的地基</div>
             <p>
               数据库索引是 B+ 树,Redis 是哈希 + 跳表,消息队列是队列,撤销键是栈
               —— 你每天都在用它们,只是隔着一层 API。
@@ -425,7 +425,7 @@ console.log(a === b);   // true —— 比较的是纸条`,
         <div className="prose">
           <p>
             比较两个算法,不能比“谁在我电脑上跑得快”——机器不同、数据不同,结果就翻车。
-            计算机科学的做法是问:<strong>数据规模 n 变大时,操作次数以什么姿势增长?</strong>
+            计算机科学的做法是问:<strong>数据规模 n 变大时,操作次数以什么方式增长?</strong>
             增长趋势用 O(...) 记号表示,只保留最高阶项、扔掉系数和常数:
             3n²+5n+20 → O(n²)。
           </p>
@@ -449,7 +449,7 @@ console.log(a === b);   // true —— 比较的是纸条`,
         id="cheatsheet"
         index="05"
         title="复杂度速查表"
-        desc="先混个脸熟,读完全书再回来看 —— 每一格你都能讲出为什么"
+        desc="先做初步了解,读完全书再回来看 —— 每一格你都能讲出为什么"
       >
         <div className="table-wrap">
           <table className="t-table">
@@ -541,14 +541,14 @@ console.log(a === b);   // true —— 比较的是纸条`,
       >
         <div className="grid-3 howto">
           <div className="card">
-            <div className="card-title">📖 先看懂</div>
+            <div className="card-title">先看懂</div>
             <p>
               直觉类比 → 内存图解 → 操作拆解。每个结构先回答三个问题:
               长什么样?擅长什么?为什么?
             </p>
           </div>
           <div className="card">
-            <div className="card-title">🎮 再玩透</div>
+            <div className="card-title">再玩透</div>
             <p>
               每章都有可视化 Playground:亲手插入、删除、遍历,看指针怎么跳、
               内存怎么搬。玩过的结构才是你的。

@@ -44,7 +44,7 @@ export const PROBLEMS: Problem[] = [
       <>
         先遍历 magazine 给 26 个字母计数,再遍历 ransomNote 逐个扣减,
         扣成负数就是库存不足,返回 false。字符集固定时用长度 26
-        的数组代替 HashMap,常数更小 —— 「计数数组是哈希表的青春版」。
+        的数组代替 HashMap,常数更小 —— 计数数组可视为字符集有限时哈希表的简化形式。
         O(m + n) 时间、O(1) 空间(26 恒定)。
       </>
     ),

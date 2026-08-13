@@ -89,7 +89,7 @@ const F20: ArrayFrame[] = [
     cells: [],
     msg: (
       <>
-        扫描结束,栈空 → <b>true</b>。两种失败姿势:①中途对不上(如 {'"(]"'}
+        扫描结束,栈空 → <b>true</b>。两种失败做法:①中途对不上(如 {'"(]"'}
         ,栈顶是 {"'('"} 却来了 {"']'"});②扫完栈非空(如 {'"(("'}
         ,有人永远等不到另一半)。
       </>
@@ -419,7 +419,7 @@ export default function StackChapter() {
         <div className="grid-3" style={{ marginTop: 18 }}>
           <div className="card hoverable">
             <div className="card-kicker">RULE 01</div>
-            <div className="card-title">🍽️ 只碰顶端</div>
+            <div className="card-title">只碰顶端</div>
             <p>
               放(push)、拿(pop)、看(peek)都只作用于<b>栈顶</b>。
               想动中间的盘子?不存在这种操作 —— 先把上面的全拿走。
@@ -427,7 +427,7 @@ export default function StackChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">RULE 02</div>
-            <div className="card-title">🔁 后进先出</div>
+            <div className="card-title">后进先出</div>
             <p>
               最后进来的最先出去。这不是限制的副作用,而是<b>目的本身</b>:
               嵌套、撤销、回退,天然就是「最近优先」的顺序。
@@ -435,7 +435,7 @@ export default function StackChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">RULE 03</div>
-            <div className="card-title">🧱 一端封死</div>
+            <div className="card-title">一端封死</div>
             <p>
               栈底焊死,不提供从底部或中间进出的任何通道。操作越少,
               每个操作越能做到极致 —— 全部 <b>O(1)</b>。
@@ -778,7 +778,7 @@ empty = not stack     # 判空的 pythonic 写法
             hl: [3, 6],
             note: (
               <>
-                <b>坑:</b>手滑写成 <code>pop(0)</code> 就变成了 O(n)
+                <b>易错点:</b>手滑写成 <code>pop(0)</code> 就变成了 O(n)
                 的头删(数组章讲过搬家)。栈操作永远不带参数:<code>pop()</code>。
               </>
             ),
@@ -794,7 +794,7 @@ const empty = stack.length === 0;`,
             hl: [3, 6],
             note: (
               <>
-                <b>坑:</b>空数组 <code>pop()</code> 不报错,静默返回{" "}
+                <b>易错点:</b>空数组 <code>pop()</code> 不报错,静默返回{" "}
                 <code>undefined</code>。忘了判空,错误会带着 undefined
                 一路旅行到很远的地方才爆炸 —— 动手前先查 <code>length</code>。
               </>
@@ -902,7 +902,7 @@ const empty = stack.length === 0;`,
         <div className="grid-3">
           <div className="card hoverable">
             <div className="card-kicker">套路一</div>
-            <div className="card-title">🧩 配对 / 嵌套</div>
+            <div className="card-title">配对 / 嵌套</div>
             <p>
               括号匹配、相邻消除、嵌套解码:凡是「右半边要找<b>最近的</b>左半边」
               ,就把左半边压栈等着。→ LC 20、1047、394、150。
@@ -910,7 +910,7 @@ const empty = stack.length === 0;`,
           </div>
           <div className="card hoverable">
             <div className="card-kicker">套路二</div>
-            <div className="card-title">📈 找下一个更大 / 更小</div>
+            <div className="card-title">找下一个更大 / 更小</div>
             <p>
               「每个元素右边第一个比它大/小的是谁?」→ <b>单调栈</b>,
               把 O(n²) 压成 O(n)。→ LC 739、496、503、84、42。下面专题详讲。
@@ -918,7 +918,7 @@ const empty = stack.length === 0;`,
           </div>
           <div className="card hoverable">
             <div className="card-kicker">套路三</div>
-            <div className="card-title">🌀 用栈消除递归</div>
+            <div className="card-title">用栈消除递归</div>
             <p>
               递归本来就跑在调用栈上 —— 把系统栈换成自己 new 的显式栈,
               就能把任何递归改成迭代,绕开栈溢出。→ 二叉树迭代遍历(第 7 章)。

@@ -931,7 +931,7 @@ const I_FRAMES: IFrame[] = [
     state: { n4: "ok" },
     msg: (
       <>
-        第一步:交换根 4 的左右孩子 —— 注意是<b>整棵子树连锅端</b>
+        第一步:交换根 4 的左右孩子 —— 注意交换的是<b>整棵子树</b>
         (交换的是两个引用),子树内部先不管,那是递归的活。
       </>
     ),
@@ -971,7 +971,7 @@ export function InvertLab() {
   const f = I_FRAMES[s.step];
   return (
     <div className="viz">
-      <div className="viz-title">LC 226 · 翻转二叉树 —— 交换引用,子树连锅端</div>
+      <div className="viz-title">LC 226 · 翻转二叉树 —— 交换引用,子树整体移动</div>
       <div className="viz-stage">
         <TreeSvg nodes={I_NODES} w={460} h={246} state={f.state} pos={f.pos} />
       </div>
@@ -1118,7 +1118,7 @@ const L_FRAMES: LFrame[] = [
     msg: (
       <>
         第 1 层:size = 1。出队 3 → 收进本层;孩子 9、20 入队。
-        本层 1 个处理完 → 第 1 层 = [3] 收工。
+        本层 1 个处理完 → 第 1 层 = [3] 结束。
       </>
     ),
   },

@@ -341,7 +341,7 @@ export default function AtlasChapter() {
         id="bigtable"
         index="03"
         title="终极复杂度表"
-        desc="序章那张表的完全体 —— 现在每一格你都能讲出为什么"
+        desc="序章那张表的完整版 —— 现在每一格你都能讲出为什么"
       >
         <div className="table-wrap">
           <table className="t-table">
@@ -450,7 +450,7 @@ export default function AtlasChapter() {
         <div className="grid-2">
           <div className="card hoverable">
             <div className="card-kicker">NEXT 01</div>
-            <div className="card-title">🧮 算法专题</div>
+            <div className="card-title">算法专题</div>
             <p>
               沿着本课的伏笔继续:二分的边界变体(旋转数组/答案二分)→
               回溯(递归树,你在二叉树章练过的思维)→ 贪心 → 动态规划
@@ -459,7 +459,7 @@ export default function AtlasChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">NEXT 02</div>
-            <div className="card-title">🏗 系统设计</div>
+            <div className="card-title">系统设计</div>
             <p>
               把结构放大一万倍:哈希 → 一致性哈希与分片;跳表 → Redis zset;
               B+ 树 → 数据库索引;布隆过滤器 → 缓存穿透防护;队列 → Kafka。
@@ -477,7 +477,7 @@ export default function AtlasChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">NEXT 04</div>
-            <div className="card-title">🔁 间隔复习</div>
+            <div className="card-title">间隔复习</div>
             <p>
               一周后重走一遍每章的「通关测验」,一个月后只看每章的 KeyPoints
               要点卡。侧栏的绿灯会陪你记录这一切 —— 遗忘曲线不可怕,复习节奏对就行。

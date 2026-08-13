@@ -442,7 +442,7 @@ export default function StringChapter() {
         <div className="grid-3" style={{ marginTop: 18 }}>
           <div className="card hoverable">
             <div className="card-kicker">RULE 01</div>
-            <div className="card-title">🗿 不可变</div>
+            <div className="card-title">不可变</div>
             <p>
               创建之后内容焊死。replace / toUpperCase / 拼接统统返回<b>新字符串</b>,
               原件分毫未动 —— 「修改」的真实成本是重抄一遍,O(n)。
@@ -450,7 +450,7 @@ export default function StringChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">RULE 02</div>
-            <div className="card-title">🔢 字符 = 数字</div>
+            <div className="card-title">字符 = 数字</div>
             <p>
               每个字符都是编码表里的一个编号:&apos;A&apos; = 65、&apos;a&apos; = 97、
               「字」= 23383。比较、排序、大小写转换,本质全是<b>整数运算</b>。
@@ -458,7 +458,7 @@ export default function StringChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">RULE 03</div>
-            <div className="card-title">👯 字符数组孪生</div>
+            <div className="card-title">字符数组孪生</div>
             <p>
               字符串 ≈ 只读的字符数组:下标 O(1) 取字符、支持遍历和切片。
               想「原地修改」时,先转成<b>真正的字符数组</b>,改完再拼回来。
@@ -1127,7 +1127,7 @@ String s = sb.toString();   // "012"
 // StringBuffer:同 API 但方法加锁,多线程安全、单线程白付锁开销`,
             note: (
               <>
-                <b>坑:</b>== 比引用、equals 比内容 —— 字面量因常量池碰巧 ==
+                <b>易错点:</b>== 比引用、equals 比内容 —— 字面量因常量池碰巧 ==
                 为 true,最会骗新手。面试追问:StringBuilder(快,不加锁)vs
                 StringBuffer(线程安全,慢),单线程一律前者。
               </>
@@ -1143,7 +1143,7 @@ s[1:3]            # 'at':切片拷贝,O(k)
 s.upper()         # 'DATA':返回新串,s 本身不变
 ord('d'), chr(100)  # 100, 'd':字符 ↔ 数字要显式转换
 
-# f-string:格式化拼接的现代姿势(3.6+)
+# f-string:格式化拼接的现代做法(3.6+)
 name, n = "world", 42
 msg = f"hello {name}, n={n}"
 
@@ -1154,7 +1154,7 @@ for i in range(3):
 s = "".join(parts)    # "012":整体 O(n)`,
             note: (
               <>
-                <b>坑:</b><code>s[0]</code> 返回的是 str 不是数字,想拿码点要{" "}
+                <b>易错点:</b><code>s[0]</code> 返回的是 str 不是数字,想拿码点要{" "}
                 <code>ord()</code>;str 是码点序列,所以 <code>len(&quot;👍&quot;)
                 = 1</code> —— 三语言里唯一「按人眼数」的。
               </>
@@ -1168,7 +1168,7 @@ s[0];                  // 'd':O(1) 下标读
 s.slice(1, 3);         // 'at':切片拷贝,O(k)
 s.toUpperCase();       // 'DATA':新串,s 不变
 
-// 模板字符串:拼接的现代姿势
+// 模板字符串:拼接的现代做法
 const name = "world";
 const msg = \`hello \${name}, len=\${s.length}\`;
 
@@ -1180,7 +1180,7 @@ const msg = \`hello \${name}, len=\${s.length}\`;
 for (const ch of "a👍") console.log(ch); // 'a','👍' 按码点遍历`,
             note: (
               <>
-                <b>坑:</b>处理可能含 emoji 的文本,遍历用 <code>for...of</code>、
+                <b>易错点:</b>处理可能含 emoji 的文本,遍历用 <code>for...of</code>、
                 计数用 <code>Array.from(s).length</code>、取码点用{" "}
                 <code>codePointAt</code> —— charAt/length/下标都是按 UTF-16
                 单元算的,会把代理对劈成两半。
@@ -1312,7 +1312,7 @@ for (const ch of "a👍") console.log(ch); // 'a','👍' 按码点遍历`,
         <div className="grid-3">
           <div className="card hoverable">
             <div className="card-kicker">王牌一</div>
-            <div className="card-title">🤜🤛 对撞指针</div>
+            <div className="card-title">对撞指针</div>
             <p>
               两端向中间夹,每步比较一对字符。回文验证、原地反转的标配;
               「中心扩展」是它的反向版:从中间向两边推 → LC 125、344、5。
@@ -1320,7 +1320,7 @@ for (const ch of "a👍") console.log(ch); // 'a','👍' 按码点遍历`,
           </div>
           <div className="card hoverable">
             <div className="card-kicker">王牌二</div>
-            <div className="card-title">🪟 滑动窗口</div>
+            <div className="card-title">滑动窗口</div>
             <p>
               「连续子串 + 条件可增量维护」= 滑窗。窗口里养一个 Set 或计数器,
               右端吃、左端吐 → LC 3、438、76。
@@ -1328,7 +1328,7 @@ for (const ch of "a👍") console.log(ch); // 'a','👍' 按码点遍历`,
           </div>
           <div className="card hoverable">
             <div className="card-kicker">王牌三</div>
-            <div className="card-title">🔢 计数数组</div>
+            <div className="card-title">计数数组</div>
             <p>
               字符集有限(26 个小写字母 / 128 ASCII)时,用定长 int
               数组代替哈希表:更快、更省、代码更短 → LC 242、438、383。

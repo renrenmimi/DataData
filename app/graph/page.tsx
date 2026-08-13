@@ -82,7 +82,7 @@ export default function GraphChapter() {
         <div className="grid-2" style={{ marginTop: 16 }}>
           <div className="card hoverable">
             <div className="card-kicker">场景一</div>
-            <div className="card-title">🚇 地铁线路图</div>
+            <div className="card-title">地铁线路图</div>
             <p>
               每个<b>站</b>是一个点,每段<b>轨道</b>是一条边。换乘站连着好几条线,
               还能坐一圈绕回原地 —— 有分叉、有环,树画不出来。
@@ -90,7 +90,7 @@ export default function GraphChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">场景二</div>
-            <div className="card-title">👥 社交网络</div>
+            <div className="card-title">社交网络</div>
             <p>
               每个<b>人</b>是点,「是好友」是边(无向)、「关注」是有向边。A 的朋友的朋友
               可能又是 A —— 关系交织成网,不是层层向下的树。
@@ -98,7 +98,7 @@ export default function GraphChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">场景三</div>
-            <div className="card-title">📚 课程依赖</div>
+            <div className="card-title">课程依赖</div>
             <p>
               每门<b>课</b>是点,「先修」是有向边。数据结构要先学数组,操作系统要先学
               C 语言…… 这些「谁必须在谁之前」构成一张有向图。
@@ -106,7 +106,7 @@ export default function GraphChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">场景四</div>
-            <div className="card-title">🔗 网页与超链接</div>
+            <div className="card-title">网页与超链接</div>
             <p>
               每个<b>网页</b>是点,每个<b>超链接</b>是有向边。Google 当年就是把整个互联网
               建成一张巨图,靠在图上「投票」(PageRank)排出搜索结果。
@@ -306,7 +306,7 @@ export default function GraphChapter() {
         <div className="grid-2">
           <div className="card hoverable">
             <div className="card-kicker">走法一 · 呼应第 5 章队列</div>
-            <div className="card-title">🌊 BFS 广度优先</div>
+            <div className="card-title">BFS 广度优先</div>
             <p>
               像往水里丢石子,波纹<b>一圈一圈</b>往外扩:先访问起点,再访问它所有邻居,
               再访问「邻居的邻居」…… 用<b>队列(先进先出)</b>实现。天然按「离起点几步」分层,
@@ -315,7 +315,7 @@ export default function GraphChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">走法二 · 呼应第 4 章栈 / 第 7 章递归</div>
-            <div className="card-title">🧭 DFS 深度优先</div>
+            <div className="card-title">DFS 深度优先</div>
             <p>
               像走迷宫,<b>一条路走到黑</b>,撞墙了才退回上一个岔口换条路。用<b>栈</b>
               (或递归,系统调用栈就是栈)实现。适合「探索所有路径 / 连通块 / 找环」这类问题。
@@ -441,7 +441,7 @@ void bfs(List<List<Integer>> g, int start) {
             hl: [16, 17, 18],
             note: (
               <>
-                <b>坑:</b>用 <code>ArrayDeque</code> 当队列,别用 <code>LinkedList</code>
+                <b>易错点:</b>用 <code>ArrayDeque</code> 当队列,别用 <code>LinkedList</code>
                 (慢)。<code>boolean[]</code> 比 <code>HashSet</code> 快得多,
                 顶点是 0..n−1 时优先用它。
               </>
@@ -473,7 +473,7 @@ def bfs(g, start, n):
             hl: [16, 17, 18],
             note: (
               <>
-                <b>坑:</b>队列一定用 <code>collections.deque</code>,它的{" "}
+                <b>易错点:</b>队列一定用 <code>collections.deque</code>,它的{" "}
                 <code>popleft()</code> 是 O(1);千万别用 <code>list.pop(0)</code>
                 (O(n),会把 BFS 拖成 O(V·E))。
               </>
@@ -510,7 +510,7 @@ function bfs(g, start, n) {
             hl: [17, 18, 19],
             note: (
               <>
-                <b>坑:</b>JS 数组的 <code>shift()</code> 是 O(n) 搬家。数据量大时用
+                <b>易错点:</b>JS 数组的 <code>shift()</code> 是 O(n) 搬家。数据量大时用
                 「读指针 <code>head</code> 只增不减」的写法,出队 O(1)。
               </>
             ),
@@ -584,7 +584,7 @@ def dfs_iter(g, start, n):
                 stack.append(v)`,
             note: (
               <>
-                <b>坑:</b>Python 默认递归上限约 1000,图一深就 <code>RecursionError</code>。
+                <b>易错点:</b>Python 默认递归上限约 1000,图一深就 <code>RecursionError</code>。
                 要么 <code>setrecursionlimit</code> 调高,要么直接写迭代版。
               </>
             ),
@@ -688,14 +688,14 @@ function gridDfs(grid, r, c) {
         id="langs"
         index="05"
         title="三语言对照:图没有内置类型,但有习惯写法"
-        desc="没有哪个语言自带 Graph 类,大家都用「数组 / 哈希表 + 数组」手搓邻接表 —— 但各有顺手的招"
+        desc="没有哪个语言自带 Graph 类,大家都用「数组 / 哈希表 + 数组」自己实现邻接表 —— 但各有顺手的招"
       >
         <div className="prose">
           <p>
             和数组、哈希表不同,三种语言都<strong>没有开箱即用的图类型</strong>。
             但「用邻接表表示图」的写法高度统一,只是各语言有自己最顺手的容器。
             记住每种语言的<strong>建表惯用法</strong>和<strong>visited 用什么</strong>,
-            上手任何图题都不慌:
+            上手任何图题都有章可循:
           </p>
         </div>
         <CodeTabs
@@ -716,7 +716,7 @@ boolean[] visited = new boolean[n];
 Set<String> seen = new HashSet<>();`,
             note: (
               <>
-                <code>computeIfAbsent</code> 是建 <code>Map</code> 型邻接表的神器:
+                <code>computeIfAbsent</code> 是建 <code>Map</code> 型邻接表的常用方法:
                 key 不存在就先建空表再 add,一行搞定。
               </>
             ),
@@ -758,7 +758,7 @@ const visited = new Array(n).fill(false);
 const seen = new Set();`,
             note: (
               <>
-                <b>坑:</b>建数组套数组千万别写 <code>new Array(n).fill([])</code> ——
+                <b>易错点:</b>建数组套数组千万别写 <code>new Array(n).fill([])</code> ——
                 n 个格子会共享<b>同一个</b>数组!必须用{" "}
                 <code>Array.from({ "{ length: n }" }, () =&gt; [])</code> 各建各的。
               </>
@@ -1097,7 +1097,7 @@ class Solution:
         <div className="grid-2">
           <div className="card hoverable">
             <div className="card-kicker">情形一 · 无权图</div>
-            <div className="card-title">🌊 BFS 天生最短</div>
+            <div className="card-title">BFS 天生最短</div>
             <p>
               每条边「代价都是 1」时,BFS 按层扩散,<b>第一次到达某点的层数,就是最少步数</b>。
               不用任何高级算法,一个队列足矣。「最少几步 / 最少转几次」类题的首选。

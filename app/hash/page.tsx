@@ -248,7 +248,7 @@ export default function HashChapter() {
         }
         essence={
           <>
-            数组的 O(1) 只认下标,哈希表把这份超能力送给了<strong>任何东西</strong>:
+            数组的 O(1) 只认下标,哈希表把这份能力推广到了<strong>任何东西</strong>:
             把 key 算成下标,拿钥匙直接开门 —— 代价是一场与「冲突」的永恒周旋。
           </>
         }
@@ -271,7 +271,7 @@ export default function HashChapter() {
             <strong>「哈」这个字本身,经过一套固定规则(拼音),变成了一个位置</strong>。
           </p>
           <p>
-            回想数组的超能力:给下标,O(1) 直达。但下标必须是 0、1、2……
+            回想数组的核心能力:给下标,O(1) 直达。但下标必须是 0、1、2……
             这样的小整数。现在做个大胆的推广:
             <strong>如果任何东西 —— 字符串、对象、坐标 —— 都能「变成」一个下标呢?</strong>
             那任何东西都能享受 O(1) 直达。这个「变成」的过程就叫
@@ -283,7 +283,7 @@ export default function HashChapter() {
         <div className="grid-3" style={{ marginTop: 18 }}>
           <div className="card hoverable">
             <div className="card-kicker">PART 01</div>
-            <div className="card-title">🔮 哈希函数</div>
+            <div className="card-title">哈希函数</div>
             <p>
               翻译官:把任意 key 变成固定范围内的整数。同一个 key
               永远翻译出同一个数 —— 不然存进去就找不回来了。
@@ -291,7 +291,7 @@ export default function HashChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">PART 02</div>
-            <div className="card-title">🗄️ 桶数组</div>
+            <div className="card-title">桶数组</div>
             <p>
               真正存东西的地方:一个普通数组,每个格子叫一个「桶(bucket)」。
               哈希函数的输出就是桶的下标 —— O(1) 直达全靠数组这条老底。
@@ -299,9 +299,9 @@ export default function HashChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">PART 03</div>
-            <div className="card-title">💥 冲突处理</div>
+            <div className="card-title">冲突处理</div>
             <p>
-              无限多的 key 挤进有限个桶,撞车(不同 key 同一桶)在数学上
+              无限多的 key 挤进有限个桶,冲突(不同 key 同一桶)在数学上
               <b>必然发生</b>。链地址、开放寻址 —— 一半的工程智慧都花在这里。
             </p>
           </div>
@@ -321,7 +321,7 @@ export default function HashChapter() {
         id="hashfn"
         index="02"
         title="哈希函数:把任何东西变成下标"
-        desc="一台「绞肉机」:进去的是任意 key,出来的是固定范围的整数"
+        desc="一个固定的映射:输入任意 key,输出固定范围内的整数"
       >
         <div className="prose">
           <p>
@@ -380,7 +380,7 @@ export default function HashChapter() {
           <p>
             31 是奇素数:乘出来的结果分布更散,不容易和桶数(常为 2 的幂)产生公因子共振;
             而且 <code>31 × i = (i &lt;&lt; 5) − i</code>,一次移位一次减法,老 JVM
-            上就能优化成极快的指令。你刚才在实验室里看到的 Aa 和 BB 撞车不是 bug ——
+            上就能优化成极快的指令。你刚才在实验室里看到的 Aa 和 BB 冲突不是 bug ——
             它们在 Java 里的 hashCode 都是 2112,是面试里演示「冲突必然存在」的经典例子:
             无限多的字符串、只有 2³² 个 int,<b>抽屉原理保证必有两个 key 同哈希</b>。
           </p>
@@ -726,7 +726,7 @@ public class MyHashMap<K, V> {
 Map<String, Integer> cnt = new HashMap<>();
 cnt.put("apple", 1);                  // 插入 / 覆盖
 cnt.get("apple");                     // 取值,不存在返回 null
-cnt.getOrDefault("pear", 0);          // 刷题神器:不存在给默认值
+cnt.getOrDefault("pear", 0);          // 常用:key 不存在时返回默认值
 cnt.containsKey("apple");             // 有这个 key 吗
 cnt.merge("apple", 1, Integer::sum);  // 计数 +1 的优雅写法
 cnt.remove("apple");
@@ -780,7 +780,7 @@ ok = {(1, 2): "tuple 可以当 key"}
 # bad = {[1, 2]: "..."}      # TypeError: unhashable type: 'list'`,
             note: (
               <>
-                <b>坑:</b>可变对象(list / dict / set)没有 <code>__hash__</code>
+                <b>易错点:</b>可变对象(list / dict / set)没有 <code>__hash__</code>
                 ,不能当 key —— 内容一变哈希就变,数据会失联;tuple 不可变所以可以
                 (前提是里面装的也全部可哈希)。<code>d[k]</code> 与{" "}
                 <code>d.get(k)</code> 的区别(抛异常 vs 返回 None)是新手第一坑。
@@ -812,7 +812,7 @@ obj["1"];            // "a" —— key 被强转成字符串,1 和 "1" 是同一
 // 用户输入 "__proto__" 当 key → 原型链污染,真实安全漏洞`,
             note: (
               <>
-                <b>坑:</b>Object 的 key 只能是 string/symbol(数字、对象都被转成
+                <b>易错点:</b>Object 的 key 只能是 string/symbol(数字、对象都被转成
                 字符串),自带原型链幽灵 key 和 <code>__proto__</code> 污染风险,
                 顺序对「长得像整数的 key」还会重排 —— 刷题和工程一律首选
                 Map/Set。真需要纯字典对象时用 <code>Object.create(null)</code>。
@@ -926,7 +926,7 @@ obj["1"];            // "a" —— key 被强转成字符串,1 和 "1" 是同一
         <div className="grid-3">
           <div className="card hoverable">
             <div className="card-kicker">信号一</div>
-            <div className="card-title">👀 「见过吗」→ Set</div>
+            <div className="card-title">「见过吗」→ Set</div>
             <p>
               判重、判环、求交集 —— 只关心存在性,不关心附加信息。
               → LC 217、202、349、128。
@@ -934,7 +934,7 @@ obj["1"];            // "a" —— key 被强转成字符串,1 和 "1" 是同一
           </div>
           <div className="card hoverable">
             <div className="card-kicker">信号二</div>
-            <div className="card-title">🤝 「配对」→ Map</div>
+            <div className="card-title">「配对」→ Map</div>
             <p>
               找「和为 k 的另一半」「配过的下标」:key 存<b>期望被谁找到的值</b>,
               value 存下标/次数。→ LC 1、454、560。
@@ -942,7 +942,7 @@ obj["1"];            // "a" —— key 被强转成字符串,1 和 "1" 是同一
           </div>
           <div className="card hoverable">
             <div className="card-kicker">信号三</div>
-            <div className="card-title">🗂️ 「分组计数」→ Map&lt;签名, 列表&gt;</div>
+            <div className="card-title">「分组计数」→ Map&lt;签名, 列表&gt;</div>
             <p>
               把「本质相同」的东西归到同一个 key 下:设计一个签名函数,
               让同类必同 key。→ LC 49、383、299。

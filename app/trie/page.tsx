@@ -250,7 +250,7 @@ export default function TrieChapter() {
         <div className="grid-3" style={{ marginTop: 22 }}>
           <div className="card hoverable">
             <div className="card-kicker">特性 01</div>
-            <div className="card-title">🔤 边是字符,路径是前缀</div>
+            <div className="card-title">边是字符,路径是前缀</div>
             <p>
               树的每条边贴着一个字符,从根到任意节点<b>一路拼起来就是一个前缀</b>。
               「查前缀」在别处是难题,在 Trie 里退化成「顺着路往下走」。
@@ -258,7 +258,7 @@ export default function TrieChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">特性 02</div>
-            <div className="card-title">🌿 共享开头,天然省空间</div>
+            <div className="card-title">共享开头,天然省空间</div>
             <p>
               所有相同的开头只存一份。词典里前缀重叠越多(英文单词、URL、文件路径),
               叠得越省。这也是它另一个名字<b>「字典树」</b>的由来。
@@ -269,7 +269,7 @@ export default function TrieChapter() {
             <div className="card-title">⚡ 快慢只看词长,不看词数</div>
             <p>
               插入 / 查询一个词的代价 = <b>词的长度 L</b>,和词典里已经有 10 个还是 1000 万个词
-              <b>完全无关</b>。这是 Trie 最反直觉的超能力,§03 细讲。
+              <b>完全无关</b>。这是 Trie 最反直觉的核心能力,§03 细讲。
             </p>
           </div>
         </div>
@@ -438,13 +438,13 @@ export default function TrieChapter() {
         </h3>
         <div className="prose">
           <p>
-            天下没有免费的午餐。Trie 的时间超能力,是拿<strong>空间</strong>换的 —— 每个字符都要一个节点,
+            天下没有免费的午餐。Trie 的时间核心能力,是拿<strong>空间</strong>换的 —— 每个字符都要一个节点,
             而每个节点都得带一张 children 表。这张表怎么存,是 Trie 唯一真正的设计抉择:
           </p>
         </div>
         <div className="grid-2" style={{ marginTop: 6 }}>
           <div className="card">
-            <div className="card-title">📇 26 叉数组 TrieNode[26]</div>
+            <div className="card-title">26 叉数组 TrieNode[26]</div>
             <p>
               下标 = <code>字符 − &apos;a&apos;</code>,访问一步到位,常数极小、最快。
               代价:<b>不管有几个孩子,每个节点都硬占 26 个指针槽</b>。词稀疏时(比如只有几个词),
@@ -452,7 +452,7 @@ export default function TrieChapter() {
             </p>
           </div>
           <div className="card">
-            <div className="card-title">🗂️ 哈希表 Map&lt;字符, 节点&gt;</div>
+            <div className="card-title">哈希表 Map&lt;字符, 节点&gt;</div>
             <p>
               <b>有几个孩子就存几个</b>,按需分配,稀疏时省下大量内存;而且天然支持大小写混合、
               Unicode、中文等任意字符集,不受 26 限制。代价:哈希的常数比数组下标略大。
@@ -647,7 +647,7 @@ class Trie {
 }`,
             note: (
               <>
-                <b>坑:</b>用普通对象 <code>{"{}"}</code> 存 children 也行,但要防原型污染
+                <b>易错点:</b>用普通对象 <code>{"{}"}</code> 存 children 也行,但要防原型污染
                 (键若是 <code>__proto__</code> 之类)—— 建议 <code>Object.create(null)</code> 或直接用{" "}
                 <code>Map</code>。<b>26 叉数组版:</b><code>new Array(26)</code> + <code>c.charCodeAt(0)-97</code>。
               </>
@@ -1078,7 +1078,7 @@ class Solution:
         return res`,
             note: (
               <>
-                嵌套 dict 是 Python 写 Trie 最省事的姿势 —— 连节点类都不用定义。
+                嵌套 dict 是 Python 写 Trie 最省事的做法 —— 连节点类都不用定义。
                 用 <code>&apos;#&apos;</code>(非字母)当特殊键存整词,不会和普通字符冲突。
               </>
             ),

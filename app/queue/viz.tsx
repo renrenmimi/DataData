@@ -1,7 +1,7 @@
 "use client";
 
 // 第 5 章 · 队列的专属可视化:
-//  - QueueMemFig:§02 静态图解 —— 数组队列的三条路:搬家 / 躺平浪费 / 取模绕圈。
+//  - QueueMemFig:§02 静态图解 —— 数组队列的三条路:搬移 / 不搬移(空间浪费) / 取模绕圈。
 //  - RingLab:环形 SVG 循环队列(8 格),front/rear 指针动画,
 //    可切换「留一格空 / 计数器」两种满-空判定方案。
 //  - TwoStackPour:LC 232 双栈模拟队列的逐帧「倒水」动画。
@@ -74,7 +74,7 @@ export function QueueMemFig() {
         }
       />
       <FigRow
-        title="方案二 · 躺平"
+        title="方案二 · 不搬移"
         cost="出队 O(1),费空间"
         ptrs={[null, "front", null, "rear→"]}
         cells={[
@@ -255,7 +255,7 @@ export function RingLab() {
 
   return (
     <div className="viz">
-      <div className="viz-title">RingLab —— 循环队列的取模魔法</div>
+      <div className="viz-title">RingLab —— 循环队列的取模绕圈</div>
       <div className="viz-stage">
         <svg
           className="qu-ring"

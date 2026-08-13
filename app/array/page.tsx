@@ -324,7 +324,7 @@ export default function ArrayChapter() {
           <p>
             想象健身房门口那排储物柜:柜子<strong>一个挨一个</strong>、大小一致、
             从 0 开始编号。你拿着 5 号钥匙,不需要从 0 号一路看过去 ——
-            直接走到 5 号柜前开门。这就是数组唯一的、也是最强的超能力:
+            直接走到 5 号柜前开门。这就是数组唯一的、也是最强的核心能力:
             <strong>给我下标,我立刻给你元素</strong>。
           </p>
           <p>
@@ -334,7 +334,7 @@ export default function ArrayChapter() {
         <div className="grid-3" style={{ marginTop: 18 }}>
           <div className="card hoverable">
             <div className="card-kicker">RULE 01</div>
-            <div className="card-title">📏 连续</div>
+            <div className="card-title">连续</div>
             <p>
               所有元素在内存里一个挨一个,中间不许有空隙。好处:位置可以用公式算;
               代价:中间插入/删除必须搬家。
@@ -342,7 +342,7 @@ export default function ArrayChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">RULE 02</div>
-            <div className="card-title">🧩 同型</div>
+            <div className="card-title">同型</div>
             <p>
               每个元素占用的字节数相同(比如都是 4 字节的 int)。“下标 × 元素大小”
               这一步乘法,靠的就是它。
@@ -350,7 +350,7 @@ export default function ArrayChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">RULE 03</div>
-            <div className="card-title">🔒 定长(经典形态)</div>
+            <div className="card-title">定长(经典形态)</div>
             <p>
               建好后长度不可变 —— 隔壁的地盘不一定是空的。想“变长”,只能整体搬去更大的新家:
               这就是 §04 的动态数组。
@@ -500,7 +500,7 @@ public int search(int[] nums, int target) {
 }`,
             note: (
               <>
-                <b>坑:</b>Java 的 int 会溢出 —— <code>(left + right) / 2</code>{" "}
+                <b>易错点:</b>Java 的 int 会溢出 —— <code>(left + right) / 2</code>{" "}
                 在两数都接近 21 亿时会变负数,标准写法是{" "}
                 <code>left + (right - left) / 2</code>。
               </>
@@ -866,7 +866,7 @@ int x = list.get(1);               // 读元素要用 get()
 for (int v : fixed) System.out.println(v);`,
             note: (
               <>
-                <b>坑:</b>泛型装不下原始类型 —— <code>ArrayList&lt;Integer&gt;</code>{" "}
+                <b>易错点:</b>泛型装不下原始类型 —— <code>ArrayList&lt;Integer&gt;</code>{" "}
                 每个元素都是对象(自动装箱),数值密集运算比 <code>int[]</code>{" "}
                 慢且费内存。刷题时能用 <code>int[]</code> 就用它。
               </>
@@ -886,7 +886,7 @@ for v in arr:   # 遍历
     print(v)`,
             note: (
               <>
-                <b>坑:</b>list 存的是<b>对象指针</b>而非裸数值;切片会复制。
+                <b>易错点:</b>list 存的是<b>对象指针</b>而非裸数值;切片会复制。
                 真要定长数值数组用 <code>array</code> 模块或 NumPy。
                 初始化二维数组别写 <code>[[0]*m]*n</code> —— n 行共享同一个内层 list!
               </>
@@ -906,7 +906,7 @@ const sub = arr.slice(1, 4);  // 切片拷贝,不改原数组
 for (const v of arr) console.log(v);  // 遍历`,
             note: (
               <>
-                <b>坑:</b>稀疏数组(<code>arr[1000] = 1</code>)会让引擎退化成字典模式,
+                <b>易错点:</b>稀疏数组(<code>arr[1000] = 1</code>)会让引擎退化成字典模式,
                 性能骤降;<code>sort()</code> 默认按<b>字符串</b>比较 ——{" "}
                 <code>[10,9,1].sort()</code> 得到 <code>[1,10,9]</code>,记得传比较函数。
               </>
@@ -1009,29 +1009,29 @@ for (const v of arr) console.log(v);  // 遍历`,
           <p>
             暴力解数组题,十有八九是两层循环 O(n²):枚举所有下标对。而
             <strong>双指针</strong>家族的本事,是让两个下标<strong>各自单调地走</strong>,
-            每一步都用问题本身的性质排除掉一批候选,把 O(n²) 压成 O(n)。三种姿势:
+            每一步都用问题本身的性质排除掉一批候选,把 O(n²) 压成 O(n)。三种形式:
           </p>
         </div>
         <div className="grid-3">
           <div className="card hoverable">
-            <div className="card-kicker">姿势一</div>
-            <div className="card-title">🏃 同向快慢指针</div>
+            <div className="card-kicker">做法一</div>
+            <div className="card-title">同向快慢指针</div>
             <p>
               fast 负责读,slow 负责写,slow 左侧维持“已整理区”。
               原地删除/压缩类题的标配 → LC 283、26、27。
             </p>
           </div>
           <div className="card hoverable">
-            <div className="card-kicker">姿势二</div>
-            <div className="card-title">🤜🤛 对撞指针</div>
+            <div className="card-kicker">做法二</div>
+            <div className="card-title">对撞指针</div>
             <p>
               两端向中间夹,利用<b>有序性或短板原理</b>每步排除一端。
               → LC 11、167、15、42。
             </p>
           </div>
           <div className="card hoverable">
-            <div className="card-kicker">姿势三</div>
-            <div className="card-title">🪟 滑动窗口</div>
+            <div className="card-kicker">做法三</div>
+            <div className="card-title">滑动窗口</div>
             <p>
               连续子数组问题专属:右端吃、左端吐,窗口内维护一个可增量更新的量
               → LC 209、3、76。
@@ -1300,7 +1300,7 @@ for (const v of arr) console.log(v);  // 遍历`,
             遍历顺着行走才吃得到缓存红利。
           </>,
           <>
-            双指针三姿势 —— 同向(原地压缩)、对撞(有序/短板)、滑窗(连续子数组),
+            双指针三做法 —— 同向(原地压缩)、对撞(有序/短板)、滑窗(连续子数组),
             背后同一个思想:<b>用单调性排除候选,把 O(n²) 压成 O(n)</b>。
           </>,
           <>

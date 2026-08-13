@@ -710,7 +710,7 @@ const REV_FRAMES: RevFrame[] = [
       <>
         第①步 <b>备份</b>:nxt = cur.next(记住节点 2 在哪)。
         不备份的话,下一步改完 cur.next,后半条链就永远找不到了 ——
-        和 LinkedLab 反面教材同一个坑。
+        和 LinkedLab 反面教材是同一个问题。
       </>
     ),
   },
@@ -776,7 +776,7 @@ const REV_FRAMES: RevFrame[] = [
     msg: (
       <>
         第四轮:nxt = null,调头 4→3,cur 走到 null —— <b>循环条件
-        cur == null 触发,收工</b>。
+        cur == null 触发,结束</b>。
       </>
     ),
   },

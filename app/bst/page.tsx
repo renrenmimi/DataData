@@ -92,8 +92,8 @@ const F98: TreeFrame[] = [
     tags: { 3: "(10, 15)" },
     msg: (
       <>
-        15 的左孩子:区间收成 <b>(10, 15)</b> —— 既要 &lt; 15(爸爸),
-        又要 &gt; 10(爷爷!)。6 越过下界 10,<b>验证失败</b>。
+        15 的左孩子:区间收成 <b>(10, 15)</b> —— 既要 &lt; 15(父节点),
+        又要 &gt; 10(祖先节点!)。6 越过下界 10,<b>验证失败</b>。
       </>
     ),
   },
@@ -103,7 +103,7 @@ const F98: TreeFrame[] = [
     tags: { 3: "6 < 10 ✗" },
     msg: (
       <>
-        复盘:6 只和爸爸 15 比是合格的,但它住在 10 的右子树里,必须 &gt; 10。
+        复盘:6 只和父节点 15 比是合格的,但它住在 10 的右子树里,必须 &gt; 10。
         <b>「只查父子」会漏掉祖先的约束</b> —— 上下界法把祖先的要求
         一路传下来,谁也逃不掉。
       </>
@@ -161,7 +161,7 @@ const F230: TreeFrame[] = [
     tags: { 4: "count=3 ✓" },
     msg: (
       <>
-        访问 <b>4</b>:count = 3 = k —— <b>答案就是 4</b>,立刻收工!
+        访问 <b>4</b>:count = 3 = k —— <b>答案就是 4</b>,立刻返回。
       </>
     ),
   },
@@ -285,8 +285,8 @@ export default function BSTChapter() {
       <Section
         id="intuition"
         index="01"
-        title="为什么需要它:查得快和改得快,我全都要"
-        desc="有序数组与链表各瘸一条腿 —— BST 是那个两条腿都能跑的方案"
+        title="为什么需要它:同时满足快速查找与快速修改"
+        desc="有序数组与链表各有一项短板 —— BST 在两项上都能达到 O(log n)"
       >
         <div className="prose">
           <p>
@@ -351,7 +351,7 @@ export default function BSTChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">POWER 01</div>
-            <div className="card-title">🎯 查找 = 走下坡路</div>
+            <div className="card-title">查找 = 自根向下逐层比较</div>
             <p>
               每到一个节点只问一次「大还是小」,就能<b>整棵扔掉</b>一边的子树。
               比较次数 = 走过的路径长度 ≤ 树高 h。这就是长在树上的二分。
@@ -359,7 +359,7 @@ export default function BSTChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">POWER 02</div>
-            <div className="card-title">🔄 修改不用搬家</div>
+            <div className="card-title">修改不用搬家</div>
             <p>
               插入:沿查找路线走到空位,挂上去,改一根指针。删除:最多牵动一条路径。
               没有任何「集体右移」—— 这是从链表那里继承的好基因。
@@ -385,7 +385,7 @@ export default function BSTChapter() {
       >
         <div className="prose">
           <p>
-            上一章学了四种遍历。对 BST 来说,其中一种有超能力:
+            上一章学了四种遍历。对 BST 来说,其中一种有核心能力:
             <strong>中序遍历(inorder,左 → 根 → 右)输出的序列必然升序</strong>。
             为什么?把树画出来就明白了 ——
             规矩保证左子树全体在根的左边、右子树全体在根的右边,
@@ -523,7 +523,7 @@ export default function BSTChapter() {
               ]}
               caption={
                 <>
-                  70 只有一个孩子 80:让爷爷 50 直接收养 80(像链表跳过节点)。
+                  70 只有一个孩子 80:让祖先节点 50 直接接管 80(像链表跳过节点)。
                   80 那一支本来就全部 &gt; 50,接上来规矩依旧成立。
                 </>
               }
@@ -568,7 +568,7 @@ export default function BSTChapter() {
             左子树全体仍比它小(它比被删值还大),右子树剩余全体仍比它大
             (它是右子树里最小的),规矩两边都不破。
             <strong>为什么删后继很容易?</strong>后继 = 右子树一路向左的尽头,
-            它<strong>必然没有左孩子</strong> —— 删它必落入情况 ① 或 ②,不会无限套娃。
+            它<strong>必然没有左孩子</strong> —— 删它必落入情况 ① 或 ②,删除操作不会无限递归下去。
             对称地,用中序前驱(左子树最大值)也完全可行。
           </p>
         </div>
@@ -593,7 +593,7 @@ export default function BSTChapter() {
             节点还是二叉树章的 TreeNode(值 + 左右孩子指针)。四个方法里,
             insert 和 delete 用递归写:注意它们都<strong>返回「修补后的子树根」</strong>,
             由上一层接住 —— 这个「返回自己让父亲重新牵手」的模式,
-            是递归改树的标准姿势(不需要专门记录父节点)。
+            是递归改树的标准做法(不需要专门记录父节点)。
           </p>
         </div>
         <CodeTabs
@@ -739,7 +739,7 @@ class BST:
             hl: [44, 45, 46, 47, 48, 49, 50, 51, 52],
             note: (
               <>
-                <b>坑:</b>Python 默认递归深度限制约 1000 ——
+                <b>易错点:</b>Python 默认递归深度限制约 1000 ——
                 退化成链的 BST 上递归可能爆栈。刷题遇到深树,search/insert
                 用迭代写更稳(delete 因为要修补父子链,递归最顺手)。
               </>
@@ -1020,7 +1020,7 @@ TreeSet<Integer> set = new TreeSet<>(List.of(5, 1, 3));
 set.first();           // 1`,
             note: (
               <>
-                <b>坑:</b>TreeMap 的 key 必须可比较(实现 Comparable
+                <b>易错点:</b>TreeMap 的 key 必须可比较(实现 Comparable
                 或传入 Comparator),塞进不可比较的对象会在运行时抛
                 ClassCastException —— HashMap 不会提前暴露这个问题。
               </>
@@ -1048,7 +1048,7 @@ bisect.bisect_left(arr, 25)     # 查 O(log n)
 bisect.insort(arr, 25)          # 插入 O(n) —— 底层还是数组搬家!`,
             note: (
               <>
-                <b>坑:</b><code>bisect.insort</code> 查得快但插入仍是
+                <b>易错点:</b><code>bisect.insort</code> 查得快但插入仍是
                 O(n)(list 是动态数组,第 1 章的老账)。写入频繁的场景必须上
                 SortedList —— 它内部分块,插入均摊 O(log n) 附近。
               </>
@@ -1078,7 +1078,7 @@ arr.splice(lowerBound(arr, 25), 0, 25);  // 有序插入,O(n) 搬家
 // 或复用面试写法 —— 自己实现一棵树(§04)`,
             note: (
               <>
-                <b>坑:</b>对象的键遍历顺序有一套怪规则(整数键升序、字符串键按插入),
+                <b>易错点:</b>对象的键遍历顺序有一套怪规则(整数键升序、字符串键按插入),
                 千万别依赖它当有序容器 —— 需要有序就显式排序或二分维护。
               </>
             ),
@@ -1454,7 +1454,7 @@ arr.splice(lowerBound(arr, 25), 0, 25);  // 有序插入,O(n) 搬家
             (后继必无左孩子,难题自动降级)。
           </>,
           <>
-            工程里没人裸奔 BST:Java <code>TreeMap/TreeSet</code>(红黑树,
+            工程中不会直接使用无自平衡机制的 BST:Java <code>TreeMap/TreeSet</code>(红黑树,
             足够平衡就好)、Python <code>sortedcontainers</code>、JS 无内置;
             磁盘上的数据库索引则换 <b>B+ 树</b> —— 矮胖省 IO,叶子链表利于范围扫。
           </>,

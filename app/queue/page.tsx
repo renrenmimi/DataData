@@ -26,7 +26,7 @@ import { QueueMemFig, RingLab, TwoStackPour } from "./viz";
 /* ================= 精讲动画帧 ================= */
 
 // LC 239 滑动窗口最大值:nums = [5,3,1,4,2,6], k = 3
-// lit = 在单调队列中,bad = 被挤走/弹出,ghost = 已滑出窗口,ok = 收官
+// lit = 在单调队列中,bad = 被弹出/弹出,ghost = 已滑出窗口,ok = 收官
 const F239: ArrayFrame[] = [
   {
     cells: [{ v: 5 }, { v: 3 }, { v: 1 }, { v: 4 }, { v: 2 }, { v: 6 }],
@@ -108,8 +108,8 @@ const F239: ArrayFrame[] = [
     ],
     msg: (
       <>
-        i=3:4 入队前先「挤人」:队尾的 1、3 都比 4 小 —— 它们比 4 矮、
-        还比 4 早过期,<b>永无出头之日</b> → 从队尾全部挤走,4 入队。
+        i=3:4 入队前先「弹出」:队尾的 1、3 都比 4 小 —— 它们比 4 矮、
+        还比 4 早过期,<b>不可能再成为最大值</b> → 从队尾全部弹出,4 入队。
       </>
     ),
   },
@@ -129,7 +129,7 @@ const F239: ArrayFrame[] = [
     msg: (
       <>
         窗口滑到 [1..3]:队头 5(下标 0)已在窗口外 —— <b>过期,从队头弹出</b>
-        。队列:[4] → ans = [5, 4]。两端都在干活:尾端挤人,头端清过期。
+        。队列:[4] → ans = [5, 4]。两端都在干活:尾端弹出,头端清过期。
       </>
     ),
   },
@@ -168,7 +168,7 @@ const F239: ArrayFrame[] = [
     ],
     msg: (
       <>
-        i=5:6 驾到 —— 队尾的 2、4 统统比它小,全部挤走!队列:[6],窗口
+        i=5:6 驾到 —— 队尾的 2、4 统统比它小,全部弹出!队列:[6],窗口
         [3..5] → ans = [5, 4, 4, 6]。
       </>
     ),
@@ -219,7 +219,7 @@ export default function QueueChapter() {
           <>
             排队买奶茶:队尾进、队头出,<strong>先来的先被服务</strong>。
             它是一切「按到达顺序处理」系统的地基 —— 先进先出 FIFO;
-            外加一个两端全开的完全体:<strong>双端队列 deque</strong>。
+            外加一个两端均可操作的推广形式:<strong>双端队列 deque</strong>。
           </>
         }
         chips={CHIPS}
@@ -251,7 +251,7 @@ export default function QueueChapter() {
         <div className="grid-3" style={{ marginTop: 18 }}>
           <div className="card hoverable">
             <div className="card-kicker">RULE 01</div>
-            <div className="card-title">🧋 两端分工</div>
+            <div className="card-title">两端分工</div>
             <p>
               入队(enqueue)只在<b>队尾</b>,出队(dequeue)只在<b>队头</b>。
               和栈的区别就这一条:栈一端进出,队列两端各司其职。
@@ -267,7 +267,7 @@ export default function QueueChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">RULE 03</div>
-            <div className="card-title">🚧 不许插队</div>
+            <div className="card-title">不许插队</div>
             <p>
               不提供访问/修改中间元素的操作。和栈一样:<b>能力锁得越小,
               每个操作越快</b> —— 全部 O(1)。
@@ -322,13 +322,13 @@ export default function QueueChapter() {
             </p>
           </div>
           <div className="card">
-            <div className="card-kicker">完全体</div>
+            <div className="card-kicker">推广形式</div>
             <div className="card-title">双端队列 deque:两端全开</div>
             <p>
               deque(double-ended queue,读 “deck”)把限制再放开一档:
               <b>头尾都能进、都能出</b>,四个方向全 O(1)。它一人分饰两角:
               只用一端 = 栈,两端各用一个 = 队列。§06 的单调队列必须用它 ——
-              因为那套算法恰好要「尾端挤人、头端清过期」。
+              因为那套算法恰好要「尾端弹出、头端清过期」。
             </p>
           </div>
         </div>
@@ -426,7 +426,7 @@ export default function QueueChapter() {
         <div className="prose">
           <p>
             动手转几圈,重点观察三件事:①出队时<strong>没有任何元素移动</strong>
-            ;②rear 走到头怎么绕回 0;③「满」和「空」为什么会撞车,
+            ;②rear 走到头怎么绕回 0;③「满」和「空」为什么会冲突,
             以及两种拆招方案:
           </p>
         </div>
@@ -580,7 +580,7 @@ MyCircularQueue.prototype.isFull = function () {
             hl: [2, 10, 16, 26, 30, 34],
             note: (
               <>
-                <b>坑:</b>JS 的 <code>-1 % 8 === -1</code>
+                <b>易错点:</b>JS 的 <code>-1 % 8 === -1</code>
                 (结果跟被除数同号)!所以后退必须写{" "}
                 <code>(i - 1 + n) % n</code>,直接取模会得到负下标。
               </>
@@ -707,7 +707,7 @@ class LinkedQueue:
         id="langs"
         index="05"
         title="三语言对照:JS 没有真队列!"
-        desc="Java / Python 各有官配,JS 是一门需要「自带板凳」的语言"
+        desc="Java 与 Python 均有标准库实现;JavaScript 没有,需要自行构造"
       >
         <div className="prose">
           <p>
@@ -729,7 +729,7 @@ queue.offer(2);
 int head = queue.peek();     // 看队头 → 1
 int x = queue.poll();        // 出队(头)→ 1
 
-// deque 的完全体:两端随便进出
+// deque 的两端操作:头尾均可进出
 queue.offerFirst(0);         // 队头插入
 queue.offerLast(9);          // 队尾插入(= offer)
 queue.pollLast();            // 队尾弹出
@@ -756,7 +756,7 @@ q.append(2)
 head = q[0]         # 看队头 → 1(两端访问是 O(1))
 x = q.popleft()     # 出队(左端)→ 1,O(1)!
 
-# deque 的完全体:两端随便进出
+# deque 的两端操作:头尾均可进出
 q.appendleft(0)     # 左端插入 O(1)
 q.pop()             # 右端弹出 O(1)
 
@@ -769,7 +769,7 @@ bad.pop(0)          # O(n)!头部抽走,全体左移一格`,
                 <b>底层:</b>deque 是<b>块状双向链表</b> ——
                 每个节点是能装 64 个元素的小数组块。两端 O(1),
                 又比纯链表缓存友好;代价是中间随机访问 <code>q[i]</code> 退化为
-                O(n)。<b>list.pop(0) 是 Python 刷题最常见的性能事故,没有之一。</b>
+                O(n)。<b>list.pop(0) 是 Python 解题中最常见的性能问题。</b>
               </>
             ),
           }}
@@ -778,15 +778,15 @@ bad.pop(0)          # O(n)!头部抽走,全体左移一格`,
 const bad = [1, 2, 3];
 bad.shift();               // 头部抽走 → 后面全体前移,O(n)
 
-// ✅ 姿势一:下标假装出队(刷题首选,三行搞定)
+// ✅ 做法一:下标假装出队(刷题首选,三行搞定)
 const q = [];
 let head = 0;              // "队头指针"只前移,从不真删
 q.push(1); q.push(2);      // 入队:照常 push
 const x = q[head++];       // 出队:读一下,指针右移 → O(1)
 const empty = head === q.length;
 
-// ✅ 姿势二:双栈模拟(§06 精讲 A,均摊 O(1))
-// ✅ 姿势三:手写链表队列(§04 已写好)`,
+// ✅ 做法二:双栈模拟(§06 精讲 A,均摊 O(1))
+// ✅ 做法三:手写链表队列(§04 已写好)`,
             hl: [3, 7, 9, 10],
             note: (
               <>
@@ -909,7 +909,7 @@ const empty = head === q.length;
         id="patterns"
         index="06"
         title="队列的套路 + 单调队列专题"
-        desc="双栈的均摊魔法,和滑动窗口最值的终极兵器"
+        desc="双栈实现队列的均摊分析,以及滑动窗口最值的标准解法"
         badge={
           <span className="chip" data-tone="warn">
             ★ 面试核心
@@ -919,7 +919,7 @@ const empty = head === q.length;
         <div className="grid-3">
           <div className="card hoverable">
             <div className="card-kicker">套路一</div>
-            <div className="card-title">🔄 双栈模拟队列</div>
+            <div className="card-title">双栈模拟队列</div>
             <p>
               两个 LIFO 叠出一个 FIFO:两次反转 = 恢复原序。
               均摊 O(1) 的经典证明场。→ LC 232,精讲 A。
@@ -927,15 +927,15 @@ const empty = head === q.length;
           </div>
           <div className="card hoverable">
             <div className="card-kicker">套路二</div>
-            <div className="card-title">📉 单调队列</div>
+            <div className="card-title">单调队列</div>
             <p>
               滑动窗口的最大/最小值,O(1) 随取随用。
-              「挤走弱者 + 清退过期」双规则。→ LC 239、1438、862,精讲 B。
+              「弹出弱者 + 清退过期」双规则。→ LC 239、1438、862,精讲 B。
             </p>
           </div>
           <div className="card hoverable">
             <div className="card-kicker">套路三</div>
-            <div className="card-title">🛠️ deque 的百变用法</div>
+            <div className="card-title">deque 的百变用法</div>
             <p>
               回文判断(两端向中间对撞)、0-1 BFS(边权 0 插队头、1
               排队尾,第 12 章见)、工作窃取调度(自己这端当栈用,
@@ -961,8 +961,8 @@ const empty = head === q.length;
             <div className="card-kicker">规则一 · 队尾</div>
             <div className="card-title">弱者出局</div>
             <p>
-              新元素入队前,把队尾所有<b>比它小</b>的挤走 ——
-              它们更早过期又更弱,永无出头之日。挤完后队列保持<b>递减</b>。
+              新元素入队前,把队尾所有<b>比它小</b>的弹出 ——
+              它们更早过期又更弱,不可能再成为最大值。挤完后队列保持<b>递减</b>。
             </p>
           </div>
           <div className="card">
@@ -978,13 +978,13 @@ const empty = head === q.length;
             <div className="card-title">队头即答案</div>
             <p>
               两条规则维护完,<b>队头永远是当前窗口最大值</b>,O(1) 直读。
-              一端挤人、一端退休 —— 所以它必须是 <b>deque</b>。
+              一端弹出、一端退休 —— 所以它必须是 <b>deque</b>。
             </p>
           </div>
         </div>
         <Callout tone="idea" title="单调栈 vs 单调队列,一句话分清">
           <p>
-            都靠「弱者永无出头之日 → 提前丢弃」拿到 O(n)。区别在<b>谁离场</b>:
+            都靠「弱者不可能再成为最大值 → 提前丢弃」拿到 O(n)。区别在<b>谁离场</b>:
             单调栈解决「下一个更大」,元素被弹出时<b>结算答案</b>;单调队列解决
             「窗口最值」,多了<b>队头过期</b>这一条 —— 窗口在滑,老元素会自然
             失效。栈一端够用,队列必须两端。
@@ -1010,7 +1010,7 @@ const empty = head === q.length;
             <b> 朴素做法:</b>每次 push 都借助第二个栈把新元素垫到底部,push
             O(n)。<b>更聪明的做法:</b>别急着倒,<strong>攒到必须倒的时候
             一次性倒</strong> —— in 栈只进,out 栈只出,out 空了才把 in
-            整锅倒过去:
+            整体转移过去:
           </p>
         </div>
         <TwoStackPour />
@@ -1030,7 +1030,7 @@ const empty = head === q.length;
 
     private void transfer() {
         if (!out.isEmpty()) return;   // out 还有存货:绝不倒栈!
-        while (!in.isEmpty())         // out 空了:in 整锅倒过来
+        while (!in.isEmpty())         // out 空了:in 整体转移过来
             out.push(in.pop());       // 两次反转 = 恢复先来后到
     }
 }`,
@@ -1059,7 +1059,7 @@ const empty = head === q.length;
     def _transfer(self):
         if self.stk_out:                   # out 还有存货:绝不倒栈!
             return
-        while self.stk_in:                 # out 空了:in 整锅倒过来
+        while self.stk_in:                 # out 空了:in 整体转移过来
             self.stk_out.append(self.stk_in.pop())  # 两次反转 = 恢复原序`,
             hl: [21, 22, 23, 24],
           }}
@@ -1089,7 +1089,7 @@ MyQueue.prototype.empty = function () {
 
 MyQueue.prototype._transfer = function () {
   if (this.stkOut.length > 0) return;    // out 还有存货:绝不倒栈!
-  while (this.stkIn.length > 0)          // out 空了:in 整锅倒过来
+  while (this.stkIn.length > 0)          // out 空了:in 整体转移过来
     this.stkOut.push(this.stkIn.pop());  // 两次反转 = 恢复原序
 };`,
             hl: [25, 26, 27],
@@ -1153,7 +1153,7 @@ MyQueue.prototype._transfer = function () {
         int[] ans = new int[n - k + 1];
         Deque<Integer> dq = new ArrayDeque<>(); // 存下标,对应值递减
         for (int i = 0; i < n; i++) {
-            // ① 队尾比我弱的,永无出头之日 → 挤走
+            // ① 队尾比我弱的,不可能再成为最大值 → 弹出
             while (!dq.isEmpty() && nums[dq.peekLast()] <= nums[i])
                 dq.pollLast();
             dq.offerLast(i);                    // ② 我从队尾入队
@@ -1175,7 +1175,7 @@ class Solution:
         dq = deque()      # 存下标,对应值从队头到队尾递减
         ans = []
         for i, v in enumerate(nums):
-            # ① 队尾比我弱的,永无出头之日 → 挤走
+            # ① 队尾比我弱的,不可能再成为最大值 → 弹出
             while dq and nums[dq[-1]] <= v:
                 dq.pop()
             dq.append(i)                  # ② 我从队尾入队
@@ -1194,7 +1194,7 @@ class Solution:
   let head = 0;
   const ans = [];
   for (let i = 0; i < nums.length; i++) {
-    // ① 队尾比我弱的,永无出头之日 → 挤走
+    // ① 队尾比我弱的,不可能再成为最大值 → 弹出
     while (dq.length > head && nums[dq[dq.length - 1]] <= nums[i])
       dq.pop();
     dq.push(i);                     // ② 我从队尾入队
@@ -1257,7 +1257,7 @@ class Solution:
           <>
             朴素数组队列二选一的坑(出队 O(n) 搬家 vs 空间报废)被
             <b>循环队列</b>一次解决:下标全部 <code>% cap</code> 绕圈复用。
-            满/空撞车 → <b>留一格空</b>或<b>计数器</b>两种消歧方案。
+            满/空冲突 → <b>留一格空</b>或<b>计数器</b>两种消歧方案。
           </>,
           <>
             选型:Java 用 <code>ArrayDeque</code>,Python 用{" "}
@@ -1269,7 +1269,7 @@ class Solution:
             <b>均摊 O(1)</b> —— 与数组扩容、单调栈同一本「总账」。
           </>,
           <>
-            单调队列双规则:队尾<b>挤走比自己弱的</b>(永无出头之日)、队头
+            单调队列双规则:队尾<b>弹出比自己弱的</b>(不可能再成为最大值)、队头
             <b>清退过期的</b> —— 队头永远是窗口最大值,滑窗最值 O(n)。
           </>,
         ]}

@@ -3,7 +3,7 @@
 // 第 7 章 · 二叉树 —— 全书篇幅最大的一章,同时承担「递归入门」的职责。
 // 结构:为什么(层级天然存在)→ 内存(TreeNode = 引用×2)→
 // 递归入门(factorial 调用栈 + count(node) 逐帧)→ 四种遍历(TraverseLab)→
-// 手写实现 → 三语言对照 → 两种递归姿势 + 四道精讲(104/226/101/102)→
+// 手写实现 → 三语言对照 → 两种递归做法 + 四道精讲(104/226/101/102)→
 // 题单 11 题 → 测验 8 题。
 
 import {
@@ -91,7 +91,7 @@ export default function BinaryTreeChapter() {
         <div className="grid-3" style={{ marginTop: 18 }}>
           <div className="card hoverable">
             <div className="card-kicker">RULE 01</div>
-            <div className="card-title">🌿 最多两叉</div>
+            <div className="card-title">最多两叉</div>
             <p>
               每个节点至多一个左孩子、一个右孩子,且<b>左右有别</b>
               (只有左孩子 ≠ 只有右孩子)。可以缺,不能多。
@@ -99,7 +99,7 @@ export default function BinaryTreeChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">RULE 02</div>
-            <div className="card-title">🚫 单亲,无环</div>
+            <div className="card-title">单亲,无环</div>
             <p>
               除根外每个节点<b>恰好一个父亲</b>;顺着孩子走永远不会绕回祖先。
               没有这条,「树」会退化成图(第 12 章才对付它)。
@@ -107,10 +107,10 @@ export default function BinaryTreeChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">RULE 03</div>
-            <div className="card-title">🪆 子树也是树</div>
+            <div className="card-title">子树也是树</div>
             <p>
               从<b>任何</b>节点出发往下看,又是一棵合法的二叉树(它的子树)。
-              这个套娃性质是递归的入场券 —— 本章反复吃它的红利。
+              这一自相似性质是递归的前提 —— 本章将反复利用它。
             </p>
           </div>
         </div>
@@ -122,7 +122,7 @@ export default function BinaryTreeChapter() {
         <TermTree />
         <div className="prose">
           <p>
-            还有两个以「形状」命名的特殊形态,先混个脸熟 ——
+            还有两个以「形状」命名的特殊形态,先做初步了解 ——
             右边那个是第 9 章「堆」的地基:
           </p>
         </div>
@@ -260,7 +260,7 @@ console.log(factorial(3)); // 6`,
         <div className="grid-3">
           <div className="card hoverable">
             <div className="card-kicker">要素一</div>
-            <div className="card-title">🛑 终止条件</div>
+            <div className="card-title">终止条件</div>
             <p>
               最小的、不用递归就能直接回答的情况。阶乘是 n=1,树几乎永远是
               <b>空树</b>(node == null)。它必须写在第一行。
@@ -268,7 +268,7 @@ console.log(factorial(3)); // 6`,
           </div>
           <div className="card hoverable">
             <div className="card-kicker">要素二</div>
-            <div className="card-title">📞 递归调用</div>
+            <div className="card-title">递归调用</div>
             <p>
               把<b>更小的同类问题</b>交给自己:factorial(n−1)、count(左子树)。
               「更小」是关键 —— 每次调用必须向终止条件逼近,否则停不下来。
@@ -276,7 +276,7 @@ console.log(factorial(3)); // 6`,
           </div>
           <div className="card hoverable">
             <div className="card-kicker">要素三</div>
-            <div className="card-title">🤝 信任递归</div>
+            <div className="card-title">信任递归</div>
             <p>
               <b>假设递归调用已经返回了正确答案</b>,只管怎么用它拼出当前答案
               (数学归纳法的归纳假设)。别在脑子里追着展开 —— 会晕,而且没必要。
@@ -288,12 +288,12 @@ console.log(factorial(3)); // 6`,
             现在回到树。§02 的钥匙说「树 = 根 + 左子树 + 右子树」,
             那么<strong>数节点</strong>这个问题天然长成递归形状:
             count(树) = 1 + count(左) + count(右),空树 = 0。
-            三要素齐了 —— 看它在一棵 7 节点树上怎么跑(注意右侧调用栈的涨落,
+            三要素齐备了 —— 看它在一棵 7 节点树上怎么跑(注意右侧调用栈的涨落,
             和每个节点算完时亮出的返回值):
           </p>
         </div>
         <RecurLab />
-        <Callout tone="warn" title="最常见的翻车:忘写终止条件">
+        <Callout tone="warn" title="最常见的错误:遗漏终止条件">
           <p>
             没有 <code>if (node == null) return 0;</code>,递归就会试图访问{" "}
             <code>null.left</code>(空指针异常),或者在别的写法里无限自我调用、
@@ -822,7 +822,7 @@ console.log(root.right.left.val); // 15`,
         id="patterns"
         index="07"
         title="树题总纲:根怎么办 + 左答案 + 右答案"
-        desc="两种递归姿势打天下 —— 四道代表题,逐帧拆解"
+        desc="两种递归做法打天下 —— 四道代表题,逐帧拆解"
         badge={<span className="chip" data-tone="warn">★ 面试核心</span>}
       >
         <div className="prose">
@@ -831,12 +831,12 @@ console.log(root.right.left.val); // 15`,
             <strong>一棵树的问题 = 根节点怎么处理 + 左子树的答案 + 右子树的答案</strong>。
             拿到题先问:「如果左右子树的答案已经在我手上,我怎么拼出整棵树的答案?」
             拼法想清楚,加上终止条件,代码就写完了。而「信息往哪个方向流」,
-            决定了两种姿势:
+            决定了两种做法:
           </p>
         </div>
         <div className="grid-2">
           <div className="card hoverable">
-            <div className="card-kicker">姿势一</div>
+            <div className="card-kicker">做法一</div>
             <div className="card-title">⬇️ 自顶向下(参数下传)</div>
             <p>
               信息从根流向叶:把「一路走来的状态」(当前深度、剩余路径和、
@@ -845,7 +845,7 @@ console.log(root.right.left.val); // 15`,
             </p>
           </div>
           <div className="card hoverable">
-            <div className="card-kicker">姿势二</div>
+            <div className="card-kicker">做法二</div>
             <div className="card-title">⬆️ 自底向上(返回值上传)</div>
             <p>
               信息从叶流向根:先递归拿到<b>左右子树的返回值</b>,在<b>后序位置</b>
@@ -878,7 +878,7 @@ console.log(root.right.left.val); // 15`,
             对每个叶子算一遍到根的距离再取最大 —— 重复走了大量的边。
             <b> 递归拼装:</b>「整棵树的最大深度」=
             1(根自己)+ max(左子树最大深度, 右子树最大深度),空树 = 0。
-            终止条件 ✓、子问题更小 ✓、拼装公式 ✓ —— 三要素齐活,
+            终止条件 ✓、子问题更小 ✓、拼装公式 ✓ —— 三要素齐备活,
             这是自底向上的第一课:
           </p>
         </div>
@@ -981,7 +981,7 @@ console.log(root.right.left.val); // 15`,
             hl: [2, 3, 4, 5],
           }}
         />
-        <Callout tone="story" title="Homebrew 作者的名场面">
+        <Callout tone="story" title="一则广为流传的面试轶事">
           <p>
             Mac 用户人手一个的包管理器 Homebrew,其作者 Max Howell 当年面谷歌被拒,
             发推自嘲:「谷歌:虽然你写的软件我们 90% 的工程师都在用,
@@ -1022,7 +1022,7 @@ console.log(root.right.left.val); // 15`,
 
     boolean check(TreeNode l, TreeNode r) {
         if (l == null && r == null) return true;   // 两边都空:镜像成立
-        if (l == null || r == null) return false;  // 只空一边:破功
+        if (l == null || r == null) return false;  // 只有一侧为空:不构成镜像
         return l.val == r.val                      // 值要相等
             && check(l.left, r.right)              // 外侧 vs 外侧
             && check(l.right, r.left);             // 内侧 vs 内侧
@@ -1036,7 +1036,7 @@ console.log(root.right.left.val); // 15`,
         def check(l, r):
             if l is None and r is None:   # 两边都空:镜像成立
                 return True
-            if l is None or r is None:    # 只空一边:破功
+            if l is None or r is None:    # 只有一侧为空:不构成镜像
                 return False
             return (l.val == r.val                # 值要相等
                     and check(l.left, r.right)    # 外侧 vs 外侧
@@ -1048,7 +1048,7 @@ console.log(root.right.left.val); // 15`,
             code: `var isSymmetric = function (root) {
   const check = (l, r) => {
     if (l === null && r === null) return true;  // 两边都空:镜像成立
-    if (l === null || r === null) return false; // 只空一边:破功
+    if (l === null || r === null) return false; // 只有一侧为空:不构成镜像
     return (
       l.val === r.val &&          // 值要相等
       check(l.left, r.right) &&   // 外侧 vs 外侧
@@ -1165,7 +1165,7 @@ class Solution:
             O(n) 时间、O(w) 队列空间。「先记 size」是一把万能钥匙:
             锯齿形层序(LC 103,偶数层反转)、右视图(LC 199,取每层最后一个)、
             每层最大值(LC 515)、最小深度(LC 111,见到叶子立刻返回)——
-            全是这个模板改两行。树的 BFS 学到这一题,就算毕业了。
+            全是这个模板改两行。树的 BFS 学到这一题,即告完整。
           </p>
         </Callout>
       </Section>
@@ -1175,7 +1175,7 @@ class Solution:
         id="problems"
         index="08"
         title="高频题单:二叉树 11 题"
-        desc="由易到难:双树递归 → 两种姿势 → BFS → 构造 → 祖先,压轴 124"
+        desc="由易到难:双树递归 → 两种做法 → BFS → 构造 → 祖先,压轴 124"
         badge={<span className="chip">Hot 100 精选</span>}
       >
         <ProblemSet ch="binary-tree" items={PROBLEMS} />
@@ -1208,7 +1208,7 @@ class Solution:
             层序是 BFS。全部 O(n);DFS 空间 O(h) 吃栈,BFS 空间 O(w) 吃队列。
           </>,
           <>
-            两种递归姿势:<b>自顶向下</b>参数带祖先信息下去(路径和、深度),
+            两种递归做法:<b>自顶向下</b>参数带祖先信息下去(路径和、深度),
             <b>自底向上</b>返回值带子树信息上来(高度、直径)——
             看答案依赖祖先还是子孙来选。
           </>,

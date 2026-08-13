@@ -385,7 +385,7 @@ export default function AdvancedChapter() {
         <div className="grid-3" style={{ marginTop: 18 }}>
           <div className="card hoverable">
             <div className="card-kicker">拼装原则 01</div>
-            <div className="card-title">🧩 取长补短</div>
+            <div className="card-title">取长补短</div>
             <p>
               每个成员只贡献它 O(1)/O(log n) 的绝活,绝不让它干自己 O(n) 的短板活。
               LRU 里哈希表只管“查”,链表只管“序”。
@@ -393,7 +393,7 @@ export default function AdvancedChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">拼装原则 02</div>
-            <div className="card-title">🔗 互相指认</div>
+            <div className="card-title">互相指认</div>
             <p>
               成员之间存<b>引用</b>互通:哈希表的 value 是链表节点,链表节点里存回
               key。两边都能一步跳到对方,不用搜索。
@@ -635,7 +635,7 @@ export default function AdvancedChapter() {
             hl: [44, 45, 46, 47],
             note: (
               <>
-                <b>坑:</b>Node 里不存 key 的话,淘汰尾节点时就无法反查哈希表删除条目
+                <b>易错点:</b>Node 里不存 key 的话,淘汰尾节点时就无法反查哈希表删除条目
                 —— 这是手写 LRU 最容易漏的细节。生产代码见下方 LinkedHashMap 彩蛋。
               </>
             ),
@@ -690,9 +690,9 @@ class LRUCache:
             hl: [15, 16, 17],
             note: (
               <>
-                <b>坑:</b>生产里可以直接用 <code>collections.OrderedDict</code>(它内部就是
+                <b>易错点:</b>生产里可以直接用 <code>collections.OrderedDict</code>(它内部就是
                 哈希 + 双向链表)或 <code>functools.lru_cache</code> 装饰器 ——
-                但面试考的就是你能不能手搓这台机器。快写版见精讲 A。
+                但面试考的就是你能不能自己实现这台机器。快写版见精讲 A。
               </>
             ),
           }}
@@ -755,7 +755,7 @@ class LRUCache {
             hl: [18, 19, 20, 21],
             note: (
               <>
-                <b>坑:</b>JS 的 <code>Map</code> 本身记住插入顺序,可以“删了再插”模拟 LRU
+                <b>易错点:</b>JS 的 <code>Map</code> 本身记住插入顺序,可以“删了再插”模拟 LRU
                 (精讲 A 的快写版)—— 但那是引擎替你维护的哈希 + 链表,原理一模一样。
               </>
             ),
@@ -1416,7 +1416,7 @@ class LFUCache:
             hl: [10, 13, 14, 20, 21],
             note: (
               <>
-                <b>坑:</b>BIT 是 <b>1-based</b> 的 —— lowbit(0) = 0 会让循环原地死转。
+                <b>易错点:</b>BIT 是 <b>1-based</b> 的 —— lowbit(0) = 0 会让循环原地死转。
                 题目给 0-based 下标时,进 BIT 前先 +1。
               </>
             ),
@@ -1891,7 +1891,7 @@ class Skiplist {
             拦下的宁可错杀再复查(假阳性可控)</b>。
           </p>
         </Callout>
-        <Callout tone="warn" title="两个经典坑">
+        <Callout tone="warn" title="两个经典易错点">
           <p>
             ① <b>标准布隆过滤器不支持删除</b>:一个位可能被多个元素共享,你把它清零,
             等于把别人也“注销”了(制造假阴性,破坏铁律)。要删除得用计数布隆过滤器
@@ -2097,7 +2097,7 @@ class LRUCache:
             hl: [14, 15, 16, 17],
             note: (
               <>
-                <b>坑:</b>update 给的是“新值”而不是“增量”,直接把 val 加进去必错
+                <b>易错点:</b>update 给的是“新值”而不是“增量”,直接把 val 加进去必错
                 —— 先 <code>delta = val − a[i]</code> 再落盘。
               </>
             ),
@@ -2222,7 +2222,7 @@ class LRUCache:
         Integer i = idx.get(val);
         if (i == null) return false;
         int last = arr.get(arr.size() - 1);
-        arr.set(i, last);            // 末尾元素补到被删的坑
+        arr.set(i, last);            // 末尾元素补到被删的位置
         idx.put(last, i);            // 同步更新它的下标!
         arr.remove(arr.size() - 1);  // 尾删 O(1)
         idx.remove(val);
@@ -2236,7 +2236,7 @@ class LRUCache:
             hl: [16, 17, 18, 19],
             note: (
               <>
-                <b>坑:</b>先 <code>idx.put(last, i)</code> 再删 val 的条目 ——
+                <b>易错点:</b>先 <code>idx.put(last, i)</code> 再删 val 的条目 ——
                 如果删的恰好是末尾元素,顺序反了会把刚更新的条目又删掉
                 (这个写法两步互不干扰,天然安全)。
               </>
@@ -2261,7 +2261,7 @@ class RandomizedSet:
         if val not in self.idx:
             return False
         i, last = self.idx[val], self.arr[-1]
-        self.arr[i] = last              # 末尾元素补到被删的坑
+        self.arr[i] = last              # 末尾元素补到被删的位置
         self.idx[last] = i              # 同步更新它的下标!
         self.arr.pop()                  # 尾删 O(1)
         del self.idx[val]
@@ -2295,7 +2295,7 @@ class RandomizedSet:
     if (!this.idx.has(val)) return false;
     const i = this.idx.get(val);
     const last = this.arr[this.arr.length - 1];
-    this.arr[i] = last;                 // 末尾元素补到被删的坑
+    this.arr[i] = last;                 // 末尾元素补到被删的位置
     this.idx.set(last, i);              // 同步更新它的下标!
     this.arr.pop();                     // 尾删 O(1)
     this.idx.delete(val);
@@ -2310,7 +2310,7 @@ class RandomizedSet:
             hl: [17, 18, 19, 20],
             note: (
               <>
-                三行核心:补坑、改哈希、尾删 —— 顺序背下来,这个 trick
+                三行核心:补位、改哈希、尾删 —— 顺序背下来,这个 trick
                 在很多“O(1) 删除”场景里通用。
               </>
             ),
@@ -2378,7 +2378,7 @@ class RandomizedSet:
           </>,
           <>
             这五台机器没有一块新积木 —— 数组、链表、哈希、树、位运算全部来自前 12 章。
-            <b>面试设计题的正确姿势:先复述操作需求和复杂度目标,再报出结构组合,
+            <b>面试设计题的正确做法:先复述操作需求和复杂度目标,再报出结构组合,
             最后主动指出接缝处的同步细节</b>。到这一步,你已经不需要再看任何其他资料了。
           </>,
         ]}

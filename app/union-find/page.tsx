@@ -302,7 +302,7 @@ export default function UnionFindChapter() {
         <div className="grid-2" style={{ marginTop: 18 }}>
           <div className="card hoverable">
             <div className="card-kicker">操作一</div>
-            <div className="card-title">🔍 find(x) —— 你老大是谁?</div>
+            <div className="card-title">find(x) —— 你老大是谁?</div>
             <p>
               每个圈子推举一个<b>代表(根)</b>。想知道 A 和 D 是不是一伙,
               不用把中间的关系链摸一遍 —— 问一句「A 的老大是谁?D 的老大是谁?」
@@ -311,7 +311,7 @@ export default function UnionFindChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">操作二</div>
-            <div className="card-title">🤝 union(a, b) —— 两伙合并</div>
+            <div className="card-title">union(a, b) —— 两伙合并</div>
             <p>
               a 和 b 交了朋友?找到两人各自的老大,让<b>一个老大认另一个当老大</b>
               —— 两个圈子瞬间合成一个,a 圈的所有人自动跟着换阵营,
@@ -434,7 +434,7 @@ find(x) {
             换个角度看这个数组:每个 i 向 parent[i] 连一条「认老大」的箭头,
             整个数组就画成了<strong>一片森林</strong> —— 若干棵树,一棵树 = 一个集合,
             树根 = 集合代表。这是全书<strong>第二次「数组扮演树」</strong>:
-            堆用「下标 ×2」隐式编码父子,而并查集更直接 —— 干脆把爸爸是谁存进数组。
+            堆用「下标 ×2」隐式编码父子,而并查集更直接 —— 干脆把父节点是谁存进数组。
             树只是逻辑形状,物理上自始至终只有一排连续的 int。
           </p>
           <p>
@@ -450,7 +450,7 @@ find(x) {
             union(0,1) 让 0 挂到 1 下面,union(1,2) 又让这棵树的根挂到 2 下面……
             每次都是「老树根」挂给「新光杆」,树一路长高不长胖,最后成了一条
             <b> 10 层的链</b>。此时 find(0) 要爬 9 步 —— O(n),
-            并查集引以为傲的速度荡然无存。<b>问题不在结构,在合并的姿势</b>:
+            并查集引以为傲的速度荡然无存。<b>问题不在结构,在合并的做法</b>:
             这正是下一节两大优化要治的病。
           </p>
         </Callout>
@@ -580,7 +580,7 @@ find(x) {
           </p>
         </div>
         <UFLab defaultPC defaultRank />
-        <Callout tone="deep" title="α(n):增长最慢的函数,没有之一(的量级)">
+        <Callout tone="deep" title="α(n):增长最慢的函数(就量级而言)">
           <p>
             两个优化叠加后,单次操作的均摊复杂度是 <b>O(α(n))</b> —— α 是
             <b>反阿克曼函数(inverse Ackermann)</b>。阿克曼函数是数学里出了名的
@@ -633,7 +633,7 @@ find(x) {
 
     public int find(int x) {
         while (parent[x] != x) {
-            parent[x] = parent[parent[x]];  // 路径减半:指向爷爷
+            parent[x] = parent[parent[x]];  // 路径减半:指向祖先节点
             x = parent[x];                  // 再往上爬
         }
         return x;
@@ -660,7 +660,7 @@ find(x) {
             hl: [14, 15, 16, 17, 23, 24, 29, 30, 31],
             note: (
               <>
-                <b>路径减半(halving)</b>:迭代版把「指向爷爷」代替完整压缩,
+                <b>路径减半(halving)</b>:迭代版把「指向祖先节点」代替完整压缩,
                 一趟循环搞定、无递归无第二次遍历,复杂度同为 α(n)——
                 这是竞赛圈最流行的写法。
               </>
@@ -698,7 +698,7 @@ find(x) {
             hl: [8, 9, 10, 11, 12, 13, 16, 17, 18, 22],
             note: (
               <>
-                <b>坑:</b>Python 递归默认限深 1000,递归版 find 在长链数据上会
+                <b>易错点:</b>Python 递归默认限深 1000,递归版 find 在长链数据上会
                 RecursionError —— 所以这里用「两趟迭代」实现完整路径压缩,
                 刷题请坚持迭代写法。
               </>
@@ -714,7 +714,7 @@ find(x) {
 
   find(x) {
     while (this.parent[x] !== x) {
-      this.parent[x] = this.parent[this.parent[x]]; // 指向爷爷
+      this.parent[x] = this.parent[this.parent[x]]; // 指向祖先节点
       x = this.parent[x];                           // 再往上爬
     }
     return x;
@@ -737,7 +737,7 @@ find(x) {
             hl: [9, 10, 11, 17, 18, 19, 20, 21, 22],
             note: (
               <>
-                <b>坑:</b>大数组建议用 <code>Int32Array(n)</code> 存
+                <b>易错点:</b>大数组建议用 <code>Int32Array(n)</code> 存
                 parent/rank,内存减半且更快;注意 <code>Int32Array</code>{" "}
                 没有 <code>Array.from</code> 的下标初始化便利,要手动 for 一遍。
               </>
@@ -892,7 +892,7 @@ uf.union(ids.get("a@x.com"), ids.get("b@x.com"));`,
         <div className="grid-3">
           <div className="card hoverable">
             <div className="card-kicker">套路一</div>
-            <div className="card-title">🧮 连通块计数</div>
+            <div className="card-title">连通块计数</div>
             <p>
               「有几个省份/岛屿/组?」count 初始 = n,union 成功一次减 1,
               扫完直接交卷 → LC 547、200、2316。
@@ -900,7 +900,7 @@ uf.union(ids.get("a@x.com"), ids.get("b@x.com"));`,
           </div>
           <div className="card hoverable">
             <div className="card-kicker">套路二</div>
-            <div className="card-title">🔄 找环 / 判冗余</div>
+            <div className="card-title">找环 / 判冗余</div>
             <p>
               逐边 union,某条边两端<b>已经连通还要连</b> —— 它就是成环边。
               Kruskal 判环同款 → LC 684、685。
@@ -908,7 +908,7 @@ uf.union(ids.get("a@x.com"), ids.get("b@x.com"));`,
           </div>
           <div className="card hoverable">
             <div className="card-kicker">套路三</div>
-            <div className="card-title">🫂 等价类合并</div>
+            <div className="card-title">等价类合并</div>
             <p>
               「相等/相似/同账户」这类可传递的关系,全部 union 成等价类,
               再做检查或分组 → LC 990、721、839。
@@ -1080,7 +1080,7 @@ uf.union(ids.get("a@x.com"), ids.get("b@x.com"));`,
             时间 <b>O(n·α(n))</b> —— n 条边,每条边一次 union(内含 find),
             均摊近乎常数;空间 <b>O(n)</b> 存 parent。追问:<b>LC 685 冗余连接 II</b>
             把图改成<b>有向</b>,难度陡增 —— 多出来的边会制造两类毛病:某个点
-            <b>入度变成 2</b>(冒出两个爸爸),或者形成<b>有向环</b>,甚至两者兼有。
+            <b>入度变成 2</b>(冒出两个父节点),或者形成<b>有向环</b>,甚至两者兼有。
             得先分类讨论、锁定候选边,再用 UF 验证,不能像本题一路 union 到底。
             记住这个「有向要分情况」的坑即可。
           </p>
