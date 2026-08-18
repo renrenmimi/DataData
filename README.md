@@ -18,7 +18,7 @@ Sister sites: [AlgoAlgo](https://algo-algo.vercel.app) (algorithms) and
 
 *Inside a chapter: memory diagram, live visualization, and code*
 
-## The 14 chapters
+## Chapters
 
 | # | Chapter | What it covers |
 |---|---|---|
