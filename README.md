@@ -38,7 +38,7 @@ Sister sites: [AlgoAlgo](https://algo-algo.vercel.app) (algorithms) and
 | ✦ | Atlas | Signal-to-structure map: read a problem, pick the structure |
 
 Each chapter follows the same rhythm: an intuition first, then an interactive
-visualization, then real code in Java / Python / JavaScript, then the common mistakes, then
+visualization, then code in Java / Python / JavaScript, then the common mistakes, then
 a quiz. Progress is stored locally in the browser.
 
 ## Running locally
@@ -55,7 +55,7 @@ Build with type checking: `npm run build`.
 
 ## Structure
 
-Next.js 15 (App Router) + TypeScript + React 19, plain CSS, no Tailwind. There are no API routes, so the whole site prerenders to static
+Next.js 15 (App Router) + TypeScript + React 19, plain CSS. There are no API routes, so the whole site prerenders to static
 pages.
 
 Each chapter is one folder under `app/` holding its page, its visualizations (`viz.tsx`) and
