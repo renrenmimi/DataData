@@ -10,6 +10,14 @@ to see what the machine is doing.
 Sister sites: [AlgoAlgo](https://algo-algo.vercel.app) (algorithms) and
 [APIer](https://apier-eta.vercel.app) (HTTP, REST and GraphQL).
 
+![The course home — 14 chapters, three languages side by side](docs/home.jpg)
+
+*The course home — 14 chapters, three languages side by side*
+
+![Inside a chapter: memory diagram, live visualization, and code](docs/array.jpg)
+
+*Inside a chapter: memory diagram, live visualization, and code*
+
 ## The 14 chapters
 
 | # | Chapter | What it covers |
