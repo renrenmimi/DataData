@@ -1,15 +1,18 @@
 "use client";
 
 // ⌘K 命令面板:模糊搜索章节(标题 / 英文名 / 标签),回车跳转。
+// 搜索语料含中英两版,任一语言的关键词都能命中。
 // 全局键盘监听挂在这里;Esc 关闭,↑↓ 选择。
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { CHAPTERS } from "@/lib/curriculum";
+import { CHAPTERS, searchCorpus, subLabel } from "@/lib/curriculum";
+import { useL } from "@/lib/i18n";
 import { useShell } from "./theme-provider";
 
 export default function CommandPalette() {
   const { cmdkOpen, setCmdkOpen } = useShell();
+  const L = useL();
   const [query, setQuery] = useState("");
   const [sel, setSel] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -40,11 +43,7 @@ export default function CommandPalette() {
   const hits = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return CHAPTERS;
-    return CHAPTERS.filter((c) =>
-      [c.title, c.en, c.num, ...c.tags].some((s) =>
-        s.toLowerCase().includes(q),
-      ),
-    );
+    return CHAPTERS.filter((c) => searchCorpus(c).includes(q));
   }, [query]);
 
   if (!cmdkOpen) return null;
@@ -61,11 +60,18 @@ export default function CommandPalette() {
         if (e.target === e.currentTarget) setCmdkOpen(false);
       }}
     >
-      <div className="cmdk" role="dialog" aria-label="快速跳转">
+      <div
+        className="cmdk"
+        role="dialog"
+        aria-label={L({ en: "Quick jump", zh: "快速跳转" })}
+      >
         <input
           ref={inputRef}
           className="cmdk-input"
-          placeholder="搜索章节、数据结构、标签…"
+          placeholder={L({
+            en: "Search chapters, data structures, tags…",
+            zh: "搜索章节、数据结构、标签…",
+          })}
           value={query}
           onChange={(e) => {
             setQuery(e.target.value);
@@ -85,27 +91,39 @@ export default function CommandPalette() {
         />
         <div className="cmdk-list">
           {hits.length === 0 && (
-            <div className="cmdk-empty">没有匹配的章节 —— 换个关键词?</div>
+            <div className="cmdk-empty">
+              {L({
+                en: "No chapter matches that. Try another word.",
+                zh: "没有匹配的章节 —— 换个关键词?",
+              })}
+            </div>
           )}
-          {hits.map((c, i) => (
-            <button
-              key={c.id}
-              type="button"
-              className={`cmdk-item${i === sel ? " sel" : ""}`}
-              style={{ "--ch-hue": c.hue } as React.CSSProperties}
-              onMouseEnter={() => setSel(i)}
-              onClick={() => go(c.href)}
-            >
-              <span className="side-num">{c.num}</span>
-              <span style={{ flex: 1 }}>
-                {c.title}
-                <span className="side-en">{c.en}</span>
-              </span>
-              <span className="dim" style={{ fontSize: 11 }}>
-                {c.tags.slice(0, 2).join(" · ")}
-              </span>
-            </button>
-          ))}
+          {hits.map((c, i) => {
+            const title = L(c.title);
+            const sub = subLabel(title, L(c.en));
+            return (
+              <button
+                key={c.id}
+                type="button"
+                className={`cmdk-item${i === sel ? " sel" : ""}`}
+                style={{ "--ch-hue": c.hue } as React.CSSProperties}
+                onMouseEnter={() => setSel(i)}
+                onClick={() => go(c.href)}
+              >
+                <span className="side-num">{c.num}</span>
+                <span style={{ flex: 1 }}>
+                  {title}
+                  {sub && <span className="side-en">{sub}</span>}
+                </span>
+                <span className="dim" style={{ fontSize: 11 }}>
+                  {c.tags
+                    .slice(0, 2)
+                    .map((t) => L(t))
+                    .join(" · ")}
+                </span>
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>

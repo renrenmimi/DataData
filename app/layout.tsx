@@ -12,6 +12,7 @@ import {
   themeScript,
 } from "@/app/theme-provider";
 import { ProgressProvider } from "@/lib/progress";
+import { LangProvider, langScript } from "@/lib/i18n";
 import Sidebar from "@/app/sidebar";
 import Toolbar from "@/app/toolbar";
 import CommandPalette from "@/app/command-palette";
@@ -47,11 +48,11 @@ const notoSC = Noto_Sans_SC({
 
 export const metadata: Metadata = {
   title: {
-    default: "DataData · 看得见的数据结构",
+    default: "DataData · Data structures you can see",
     template: "%s · DataData",
   },
   description:
-    "把每一个数据结构拆成慢动作:内存图解、交互可视化、Java / Python / JavaScript 三语言对照、LeetCode 高频题精讲。",
+    "Learn data structures in slow motion: memory diagrams, interactive visualizations, Java / Python / JavaScript side by side, and worked LeetCode problems. Available in English and Chinese.",
 };
 
 export const viewport: Viewport = {
@@ -67,33 +68,36 @@ export default function RootLayout({
 }) {
   return (
     <html
-      lang="zh-CN"
+      lang="en"
       suppressHydrationWarning
       className={`${syne.variable} ${grotesk.variable} ${jetbrains.variable} ${notoSC.variable}`}
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <script dangerouslySetInnerHTML={{ __html: langScript }} />
       </head>
       <body>
-        <ThemeProvider>
-          <ShellProvider>
-            <ProgressProvider>
-              <div className="aurora" aria-hidden>
-                <div className="aurora-a" />
-                <div className="aurora-b" />
-                <div className="aurora-grid" />
-              </div>
-              <div className="shell">
-                <Sidebar />
-                <div className="shell-main">
-                  <Toolbar />
-                  <div className="shell-content">{children}</div>
+        <LangProvider>
+          <ThemeProvider>
+            <ShellProvider>
+              <ProgressProvider>
+                <div className="aurora" aria-hidden>
+                  <div className="aurora-a" />
+                  <div className="aurora-b" />
+                  <div className="aurora-grid" />
                 </div>
-              </div>
-              <CommandPalette />
-            </ProgressProvider>
-          </ShellProvider>
-        </ThemeProvider>
+                <div className="shell">
+                  <Sidebar />
+                  <div className="shell-main">
+                    <Toolbar />
+                    <div className="shell-content">{children}</div>
+                  </div>
+                </div>
+                <CommandPalette />
+              </ProgressProvider>
+            </ShellProvider>
+          </ThemeProvider>
+        </LangProvider>
       </body>
     </html>
   );

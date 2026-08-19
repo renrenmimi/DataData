@@ -2046,8 +2046,13 @@ li code {
     display: none;
   }
 
-  .toolbar .seg {
+  /* 窄屏优先保留「界面语言」,收起「偏好代码语言」(代码窗口自带 tab 可切) */
+  .toolbar .seg.tb-codelang {
     display: none;
+  }
+
+  .toolbar .seg.tb-uilang .seg-btn {
+    padding: 6px 10px;
   }
 
   .tb-btn .tb-kbd {

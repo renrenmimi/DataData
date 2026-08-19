@@ -5,8 +5,11 @@
 // 双指针/滑动窗口类演示。每一帧是一张完整快照,组件负责播放控制
 // (上一步/下一步/自动播放/进度),帧数据由各章自己写。
 // 树/图等自由形态的动画请在章节内自建组件,但控制条样式(.viz-ctl)通用。
+//
+// 双语:title / 指针 label / 每帧 msg 都接受 Loc<…>。
 
 import { useEffect, useState, type ReactNode } from "react";
+import { useL, T, type Loc } from "@/lib/i18n";
 
 export interface ArrayCell {
   v: ReactNode;
@@ -16,9 +19,9 @@ export interface ArrayCell {
 export interface ArrayFrame {
   cells: ArrayCell[];
   /** 指针标签,渲染在单元格上方,如 { i: 2, label: "slow" } */
-  ptrs?: { i: number; label: string }[];
+  ptrs?: { i: number; label: Loc<string> }[];
   /** 本帧旁白 */
-  msg: ReactNode;
+  msg: Loc<ReactNode>;
 }
 
 export function useStepper(total: number, intervalMs = 1100) {
@@ -84,10 +87,20 @@ export function StepControls({
         onClick={stepper.prev}
         disabled={step === 0}
       >
-        ← 上一步
+        <T en="← Back" zh="← 上一步" />
       </button>
-      <button type="button" className="btn btn-sm btn-primary" onClick={stepper.toggle}>
-        {stepper.playing ? "⏸ 暂停" : step >= total - 1 ? "↻ 重播" : "▶ 自动播放"}
+      <button
+        type="button"
+        className="btn btn-sm btn-primary"
+        onClick={stepper.toggle}
+      >
+        {stepper.playing ? (
+          <T en="⏸ Pause" zh="⏸ 暂停" />
+        ) : step >= total - 1 ? (
+          <T en="↻ Replay" zh="↻ 重播" />
+        ) : (
+          <T en="▶ Play" zh="▶ 自动播放" />
+        )}
       </button>
       <button
         type="button"
@@ -95,7 +108,7 @@ export function StepControls({
         onClick={stepper.next}
         disabled={step >= total - 1}
       >
-        下一步 →
+        <T en="Next →" zh="下一步 →" />
       </button>
       <span
         className="mono dim"
@@ -113,11 +126,12 @@ export function ArrayStepper({
   frames,
   cellW = 56,
 }: {
-  title: string;
+  title: Loc<string>;
   frames: ArrayFrame[];
   /** 单元格宽度(含间隙),用于指针定位 */
   cellW?: number;
 }) {
+  const L = useL();
   const stepper = useStepper(frames.length);
   // step 可能短暂落在新帧数组之外(见 useStepper 里的收敛 effect),这里再夹一次
   const f = frames[Math.min(stepper.step, frames.length - 1)];
@@ -126,7 +140,7 @@ export function ArrayStepper({
 
   return (
     <div className="viz">
-      <div className="viz-title">{title}</div>
+      <div className="viz-title">{L(title)}</div>
       <div className="viz-stage" style={{ flexDirection: "column", gap: 6 }}>
         <div className="viz-scroll" style={{ display: "flex", flexDirection: "column", gap: 6 }}>
         {/* 指针行 */}
@@ -150,9 +164,9 @@ export function ArrayStepper({
                   justifyContent: "flex-end",
                 }}
               >
-                {here.map((p) => (
-                  <span key={p.label} className="ptr">
-                    {p.label}
+                {here.map((p, k) => (
+                  <span key={k} className="ptr">
+                    {L(p.label)}
                   </span>
                 ))}
               </div>
@@ -187,7 +201,7 @@ export function ArrayStepper({
         </div>
       </div>
       <div className="viz-msg" aria-live="polite">
-        {f.msg}
+        {L(f.msg)}
       </div>
       <StepControls stepper={stepper} step={stepper.step} total={frames.length} />
     </div>
