@@ -100,11 +100,15 @@
   padding: 14px 0;
 }
 
+/* 英文比中文长,这里允许换行并居中,避免在窄屏被裁掉 */
 .stk-base {
   font-size: 11px;
   color: var(--text-3);
   font-family: var(--font-mono);
   letter-spacing: 0.08em;
+  max-width: 260px;
+  text-align: center;
+  line-height: 1.5;
 }
 
 /* ---------- CallStackDemo:调用栈 ---------- */
@@ -116,13 +120,15 @@
   gap: 10px;
 }
 
+/* 帧内说明文字英文更长,列加宽并允许说明换到第二行 */
 .stk-cs-col {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   align-items: stretch;
   gap: 6px;
-  width: 270px;
+  width: 330px;
+  max-width: 100%;
   min-height: 236px;
 }
 
@@ -133,7 +139,8 @@
   padding: 8px 14px;
   display: flex;
   align-items: baseline;
-  gap: 10px;
+  flex-wrap: wrap;
+  gap: 4px 10px;
   animation: stk-drop 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -147,6 +154,8 @@
 .stk-cframe span {
   font-size: 11px;
   color: var(--text-3);
+  flex: 1 1 auto;
+  line-height: 1.5;
 }
 
 .stk-cframe.on {
@@ -178,6 +187,9 @@
   color: var(--text-3);
   font-family: var(--font-mono);
   letter-spacing: 0.08em;
+  max-width: 330px;
+  text-align: center;
+  line-height: 1.5;
 }
 
 /* ---------- §02 内存图解:数组栈 vs 链表栈 ---------- */
