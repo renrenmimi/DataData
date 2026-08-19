@@ -88,6 +88,20 @@
   padding-bottom: 26px;
 }
 
+/* 实验室状态行:英文比中文长,窄屏时让它整行换行,不挤压按钮 */
+[data-ch="heap"] .hp-stat {
+  margin-left: auto;
+  font-size: 12px;
+  white-space: nowrap;
+}
+@media (max-width: 620px) {
+  [data-ch="heap"] .hp-stat {
+    margin-left: 0;
+    flex-basis: 100%;
+    white-space: normal;
+  }
+}
+
 /* 实验室数字输入框 */
 [data-ch="heap"] .hp-input {
   width: 92px;
