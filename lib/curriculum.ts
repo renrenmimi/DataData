@@ -1,6 +1,11 @@
 // 课程注册表 —— 全站唯一的章节清单。
 // 侧栏、命令面板、章节页脚(上一章/下一章)、进度系统都从这里取数据。
 // 新增章节:在 CHAPTERS 里插入一条,并保证 app/<id>/page.tsx 存在。
+//
+// 双语:title / en / essence / tags 都是 Loc<string>,由消费方用 useL() 解析。
+// 本文件保持纯数据模块(不加 "use client"),服务端与客户端都能 import。
+
+import type { Loc } from "@/lib/i18n";
 
 export type ChapterId =
   | "home"
@@ -24,11 +29,11 @@ export interface Chapter {
   href: string;
   /** 章节编号展示:00–13,终章用 ✦ */
   num: string;
-  title: string;
-  /** 英文副标 —— hero 大字与侧栏小字 */
-  en: string;
+  title: Loc<string>;
+  /** 英文副标 —— hero 眉题与侧栏小字 */
+  en: Loc<string>;
   /** 一句话本质 */
-  essence: string;
+  essence: Loc<string>;
   /** oklch 色相角,决定整章主题色 */
   hue: number;
   /** 难度 1–5,世界地图与侧栏展示 */
@@ -36,7 +41,7 @@ export interface Chapter {
   /** LeetCode 出现频率 1–5(5 = 顶级高频) */
   freq: 1 | 2 | 3 | 4 | 5;
   /** 本章可勾选的练习题数(进度分母的一部分)——由各章 lib 数据决定,这里只是索引用途 */
-  tags: string[];
+  tags: Loc<string>[];
 }
 
 export const CHAPTERS: Chapter[] = [
@@ -44,181 +49,284 @@ export const CHAPTERS: Chapter[] = [
     id: "home",
     href: "/",
     num: "00",
-    title: "序章 · 世界地图",
+    title: { en: "Start here", zh: "序章 · 世界地图" },
     en: "The Atlas & Big-O",
-    essence: "所有数据结构,都是「时间换空间」棋局里的一步棋。",
+    essence: {
+      en: "Every data structure is one move in a trade between time and space.",
+      zh: "所有数据结构,都是「时间换空间」棋局里的一步棋。",
+    },
     hue: 292,
     level: 1,
     freq: 5,
-    tags: ["复杂度", "Big-O", "内存模型"],
+    tags: [
+      { en: "Complexity", zh: "复杂度" },
+      "Big-O",
+      { en: "Memory model", zh: "内存模型" },
+    ],
   },
   {
     id: "array",
     href: "/array",
     num: "01",
-    title: "数组",
+    title: { en: "Array", zh: "数组" },
     en: "Array",
-    essence: "一排连续的房间,门牌号就是下标。",
+    essence: {
+      en: "A row of numbered slots stored side by side in memory.",
+      zh: "一排连续的房间,门牌号就是下标。",
+    },
     hue: 196,
     level: 1,
     freq: 5,
-    tags: ["双指针", "滑动窗口", "二分查找", "矩阵"],
+    tags: [
+      { en: "Two pointers", zh: "双指针" },
+      { en: "Sliding window", zh: "滑动窗口" },
+      { en: "Binary search", zh: "二分查找" },
+      { en: "Matrix", zh: "矩阵" },
+    ],
   },
   {
     id: "string",
     href: "/string",
     num: "02",
-    title: "字符串",
+    title: { en: "String", zh: "字符串" },
     en: "String",
-    essence: "一个不许改字的数组,改一个字就要重抄全文。",
+    essence: {
+      en: "An array of characters you cannot edit. Changing one character builds a new string.",
+      zh: "一个不许改字的数组,改一个字就要重抄全文。",
+    },
     hue: 82,
     level: 1,
     freq: 5,
-    tags: ["不可变性", "回文", "子串"],
+    tags: [
+      { en: "Immutability", zh: "不可变性" },
+      { en: "Palindrome", zh: "回文" },
+      { en: "Substring", zh: "子串" },
+    ],
   },
   {
     id: "linked-list",
     href: "/linked-list",
     num: "03",
-    title: "链表",
+    title: { en: "Linked List", zh: "链表" },
     en: "Linked List",
-    essence: "一场寻宝游戏:每个节点只告诉你下一站在哪。",
+    essence: {
+      en: "Each node holds one value and the address of the next node.",
+      zh: "一场寻宝游戏:每个节点只告诉你下一站在哪。",
+    },
     hue: 350,
     level: 2,
     freq: 5,
-    tags: ["快慢指针", "哑结点", "反转"],
+    tags: [
+      { en: "Fast and slow pointers", zh: "快慢指针" },
+      { en: "Dummy node", zh: "哑结点" },
+      { en: "Reversal", zh: "反转" },
+    ],
   },
   {
     id: "stack",
     href: "/stack",
     num: "04",
-    title: "栈",
+    title: { en: "Stack", zh: "栈" },
     en: "Stack",
-    essence: "一摞盘子:后放上去的,先被拿走。",
+    essence: {
+      en: "A pile of plates: the last one you put on is the first one you take off.",
+      zh: "一摞盘子:后放上去的,先被拿走。",
+    },
     hue: 128,
     level: 2,
     freq: 5,
-    tags: ["LIFO", "括号匹配", "单调栈"],
+    tags: [
+      "LIFO",
+      { en: "Bracket matching", zh: "括号匹配" },
+      { en: "Monotonic stack", zh: "单调栈" },
+    ],
   },
   {
     id: "queue",
     href: "/queue",
     num: "05",
-    title: "队列与双端队列",
+    title: { en: "Queue & Deque", zh: "队列与双端队列" },
     en: "Queue & Deque",
-    essence: "排队买奶茶:先来的先喝到。",
+    essence: {
+      en: "A line at a shop: whoever arrives first is served first.",
+      zh: "排队买奶茶:先来的先喝到。",
+    },
     hue: 230,
     level: 2,
     freq: 4,
-    tags: ["FIFO", "循环队列", "单调队列"],
+    tags: [
+      "FIFO",
+      { en: "Circular queue", zh: "循环队列" },
+      { en: "Monotonic queue", zh: "单调队列" },
+    ],
   },
   {
     id: "hash",
     href: "/hash",
     num: "06",
-    title: "哈希表",
+    title: { en: "Hash Table", zh: "哈希表" },
     en: "Hash Table",
-    essence: "拿钥匙直接开门,不用一间间敲。",
+    essence: {
+      en: "A key is turned into a position, so a lookup does not have to check every item.",
+      zh: "拿钥匙直接开门,不用一间间敲。",
+    },
     hue: 292,
     level: 3,
     freq: 5,
-    tags: ["哈希函数", "冲突", "O(1) 查找"],
+    tags: [
+      { en: "Hash function", zh: "哈希函数" },
+      { en: "Collision", zh: "冲突" },
+      { en: "O(1) lookup", zh: "O(1) 查找" },
+    ],
   },
   {
     id: "binary-tree",
     href: "/binary-tree",
     num: "07",
-    title: "二叉树",
+    title: { en: "Binary Tree", zh: "二叉树" },
     en: "Binary Tree",
-    essence: "一个会分叉的链表;递归在这里第一次真正发光。",
+    essence: {
+      en: "A linked list that branches. This is where recursion starts to pay off.",
+      zh: "一个会分叉的链表;递归在这里第一次真正发光。",
+    },
     hue: 152,
     level: 3,
     freq: 5,
-    tags: ["DFS", "BFS", "递归"],
+    tags: ["DFS", "BFS", { en: "Recursion", zh: "递归" }],
   },
   {
     id: "bst",
     href: "/bst",
     num: "08",
-    title: "二叉搜索树",
+    title: { en: "Binary Search Tree", zh: "二叉搜索树" },
     en: "BST",
-    essence: "左小右大立下的规矩,让整棵树变成一部字典。",
+    essence: {
+      en: "One rule (smaller on the left, larger on the right) turns a tree into a sorted dictionary.",
+      zh: "左小右大立下的规矩,让整棵树变成一部字典。",
+    },
     hue: 178,
     level: 3,
     freq: 4,
-    tags: ["有序性", "中序遍历", "平衡"],
+    tags: [
+      { en: "Ordering", zh: "有序性" },
+      { en: "In-order traversal", zh: "中序遍历" },
+      { en: "Balance", zh: "平衡" },
+    ],
   },
   {
     id: "heap",
     href: "/heap",
     num: "09",
-    title: "堆与优先队列",
+    title: { en: "Heap & Priority Queue", zh: "堆与优先队列" },
     en: "Heap",
-    essence: "只承诺一件事:堆顶永远是最值。",
+    essence: {
+      en: "It promises one thing only: the top is always the smallest or the largest value.",
+      zh: "只承诺一件事:堆顶永远是最值。",
+    },
     hue: 55,
     level: 3,
     freq: 5,
-    tags: ["Top-K", "完全二叉树", "sift"],
+    tags: [
+      "Top-K",
+      { en: "Complete binary tree", zh: "完全二叉树" },
+      { en: "Sift", zh: "sift" },
+    ],
   },
   {
     id: "trie",
     href: "/trie",
     num: "10",
-    title: "前缀树",
+    title: { en: "Trie", zh: "前缀树" },
     en: "Trie",
-    essence: "把一万个单词叠成一棵树,共享每一段相同的开头。",
+    essence: {
+      en: "Words share their common beginnings, so each prefix is stored only once.",
+      zh: "把一万个单词叠成一棵树,共享每一段相同的开头。",
+    },
     hue: 330,
     level: 4,
     freq: 3,
-    tags: ["前缀匹配", "自动补全", "字典树"],
+    tags: [
+      { en: "Prefix matching", zh: "前缀匹配" },
+      { en: "Autocomplete", zh: "自动补全" },
+      { en: "Prefix tree", zh: "字典树" },
+    ],
   },
   {
     id: "union-find",
     href: "/union-find",
     num: "11",
-    title: "并查集",
+    title: { en: "Union-Find", zh: "并查集" },
     en: "Union-Find",
-    essence: "两个问题、三行代码:你们是一伙的吗?合并!",
+    essence: {
+      en: "Two questions, a few lines of code: are these two in the same group, and merge two groups.",
+      zh: "两个问题、三行代码:你们是一伙的吗?合并!",
+    },
     hue: 100,
     level: 4,
     freq: 3,
-    tags: ["连通性", "路径压缩", "按秩合并"],
+    tags: [
+      { en: "Connectivity", zh: "连通性" },
+      { en: "Path compression", zh: "路径压缩" },
+      { en: "Union by rank", zh: "按秩合并" },
+    ],
   },
   {
     id: "graph",
     href: "/graph",
     num: "12",
-    title: "图",
+    title: { en: "Graph", zh: "图" },
     en: "Graph",
-    essence: "万物皆点,关系皆边 —— 数据结构的终极形态。",
+    essence: {
+      en: "Things become nodes and relationships become edges. Every other structure is a special case of this one.",
+      zh: "万物皆点,关系皆边 —— 数据结构的终极形态。",
+    },
     hue: 255,
     level: 4,
     freq: 4,
-    tags: ["BFS/DFS", "拓扑排序", "邻接表"],
+    tags: [
+      "BFS/DFS",
+      { en: "Topological sort", zh: "拓扑排序" },
+      { en: "Adjacency list", zh: "邻接表" },
+    ],
   },
   {
     id: "advanced",
     href: "/advanced",
     num: "13",
-    title: "组合与进阶",
+    title: { en: "Composite & Beyond", zh: "组合与进阶" },
     en: "Composite & Beyond",
-    essence: "真正的高手,把基础结构拼成新的机器。",
+    essence: {
+      en: "Combine the basic structures to build one that does something none of them can do alone.",
+      zh: "真正的高手,把基础结构拼成新的机器。",
+    },
     hue: 22,
     level: 5,
     freq: 4,
-    tags: ["LRU", "线段树", "树状数组", "跳表"],
+    tags: [
+      "LRU",
+      { en: "Segment tree", zh: "线段树" },
+      { en: "Fenwick tree", zh: "树状数组" },
+      { en: "Skip list", zh: "跳表" },
+    ],
   },
   {
     id: "atlas",
     href: "/atlas",
     num: "✦",
-    title: "终章 · 选型地图",
+    title: { en: "Decision Atlas", zh: "终章 · 选型地图" },
     en: "Decision Atlas",
-    essence: "看到题目的那一刻,你脑子里应该亮起哪盏灯?",
+    essence: {
+      en: "The moment you finish reading a problem, which structure should come to mind first?",
+      zh: "看到题目的那一刻,你脑子里应该亮起哪盏灯?",
+    },
     hue: 292,
     level: 5,
     freq: 5,
-    tags: ["选型决策", "高频题总表", "复习"],
+    tags: [
+      { en: "Choosing a structure", zh: "选型决策" },
+      { en: "Problem index", zh: "高频题总表" },
+      { en: "Review", zh: "复习" },
+    ],
   },
 ];
 
@@ -236,4 +344,18 @@ export function prevNext(id: ChapterId): { prev?: Chapter; next?: Chapter } {
     prev: i > 0 ? CHAPTERS[i - 1] : undefined,
     next: i >= 0 && i < CHAPTERS.length - 1 ? CHAPTERS[i + 1] : undefined,
   };
+}
+
+/** 侧栏 / 命令面板 / 地图卡的英文副标:标题里已经含有它时就不必重复显示。 */
+export function subLabel(title: string, en: string): string | null {
+  return title.includes(en) ? null : en;
+}
+
+/** 命令面板的搜索语料:两种语言都收进去,中英关键词都能命中。 */
+export function searchCorpus(c: Chapter): string {
+  const flat = (v: Loc<string>): string[] =>
+    typeof v === "string" ? [v] : [v.en, v.zh];
+  return [...flat(c.title), ...flat(c.en), c.num, ...c.tags.flatMap(flat)]
+    .join(" ")
+    .toLowerCase();
 }

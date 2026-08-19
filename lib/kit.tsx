@@ -6,6 +6,8 @@
 //  - Section:编号章节段(§01 · 标题 + 描述 + 右侧徽章),自带 Reveal。
 //  - Callout:提示框(idea/warn/deep/story/win 五种语气)。
 //  - BigO:复杂度徽章。 KeyPoints:章末要点卡。 ChapterFooter:上一章/下一章。
+//
+// 所有文案类 prop 都接受 Loc<…>:直接给值 = 两种语言共用,给 { en, zh } = 按语言切换。
 
 import {
   useEffect,
@@ -16,6 +18,7 @@ import {
 } from "react";
 import Link from "next/link";
 import { CHAPTERS, prevNext, type ChapterId } from "@/lib/curriculum";
+import { useL, T, type Loc } from "@/lib/i18n";
 
 /* ---------- Reveal ---------- */
 
@@ -62,7 +65,7 @@ export function Reveal({
 
 export interface HeroChip {
   id: string;
-  label: string;
+  label: Loc<string>;
   n: string;
 }
 
@@ -75,12 +78,13 @@ export function Hero({
 }: {
   ch: ChapterId;
   /** 渐变标题,例如 <>数组 <span className="grad">Array</span></> */
-  title: ReactNode;
-  essence: ReactNode;
+  title: Loc<ReactNode>;
+  essence: Loc<ReactNode>;
   chips?: HeroChip[];
   /** hero 右侧/下方的自定义视觉(每章专属动画) */
   children?: ReactNode;
 }) {
+  const L = useL();
   const meta = CHAPTERS.find((c) => c.id === ch)!;
   return (
     <header className="hero">
@@ -88,17 +92,20 @@ export function Hero({
         {meta.num}
       </div>
       <div className="hero-eyebrow">
-        CHAPTER {meta.num} · {meta.en}
+        CHAPTER {meta.num} · {L(meta.en)}
       </div>
-      <h1 className="hero-title">{title}</h1>
-      <p className="hero-essence">{essence}</p>
+      <h1 className="hero-title">{L(title)}</h1>
+      <p className="hero-essence">{L(essence)}</p>
       {children}
       {chips && chips.length > 0 && (
-        <nav className="hero-nav" aria-label="本章段落">
+        <nav
+          className="hero-nav"
+          aria-label={L({ en: "Sections in this chapter", zh: "本章段落" })}
+        >
           {chips.map((c) => (
             <a key={c.id} href={`#${c.id}`} className="hero-chip">
               <span className="n">§{c.n}</span>
-              {c.label}
+              {L(c.label)}
             </a>
           ))}
         </nav>
@@ -119,20 +126,21 @@ export function Section({
 }: {
   id?: string;
   index: string;
-  title: ReactNode;
-  desc?: ReactNode;
-  badge?: ReactNode;
+  title: Loc<ReactNode>;
+  desc?: Loc<ReactNode>;
+  badge?: Loc<ReactNode>;
   children: ReactNode;
 }) {
+  const L = useL();
   return (
     <Reveal>
       <section className="sec" id={id}>
         <div className="sec-head">
           <span className="sec-index">§{index}</span>
-          <h2 className="sec-title">{title}</h2>
-          {badge && <span className="sec-badge">{badge}</span>}
+          <h2 className="sec-title">{L(title)}</h2>
+          {badge && <span className="sec-badge">{L(badge)}</span>}
         </div>
-        {desc && <p className="sec-desc">{desc}</p>}
+        {desc && <p className="sec-desc">{L(desc)}</p>}
         {children}
       </section>
     </Reveal>
@@ -157,9 +165,10 @@ export function Callout({
 }: {
   tone?: "idea" | "warn" | "deep" | "story" | "win";
   ico?: string;
-  title?: ReactNode;
+  title?: Loc<ReactNode>;
   children: ReactNode;
 }) {
+  const L = useL();
   return (
     <div className="callout" data-tone={tone}>
       <span className="ico" aria-hidden>
@@ -168,7 +177,7 @@ export function Callout({
       <div>
         {title && (
           <p>
-            <b>{title}</b>
+            <b>{L(title)}</b>
           </p>
         )}
         {typeof children === "string" ? <p>{children}</p> : children}
@@ -180,9 +189,10 @@ export function Callout({
 /* ---------- BigO ---------- */
 
 /** o 取值:1 | logn | n | nlogn | n2 | 2n,label 缺省按 o 生成 */
-export function BigO({ o, label }: { o: string; label?: string }) {
+export function BigO({ o, label }: { o: string; label?: Loc<string> }) {
+  const L = useL();
   const text =
-    label ??
+    (label === undefined ? undefined : L(label)) ??
     {
       "1": "O(1)",
       logn: "O(log n)",
@@ -201,24 +211,30 @@ export function BigO({ o, label }: { o: string; label?: string }) {
 
 /* ---------- KeyPoints ---------- */
 
+const KP_TITLE: Loc<ReactNode> = {
+  en: "What to take away from this chapter",
+  zh: "这一章,真正要带走的",
+};
+
 export function KeyPoints({
-  title = "这一章,真正要带走的",
+  title = KP_TITLE,
   points,
 }: {
-  title?: string;
-  points: ReactNode[];
+  title?: Loc<ReactNode>;
+  points: Loc<ReactNode>[];
 }) {
+  const L = useL();
   return (
     <Reveal>
       <div className="kp">
         <div className="kp-title">
           <span aria-hidden>✦</span>
-          {title}
+          {L(title)}
         </div>
         <ul>
           {points.map((p, i) => (
             <li key={i}>
-              <span>{p}</span>
+              <span>{L(p)}</span>
             </li>
           ))}
         </ul>
@@ -230,19 +246,25 @@ export function KeyPoints({
 /* ---------- ChapterFooter ---------- */
 
 export function ChapterFooter({ ch }: { ch: ChapterId }) {
+  const L = useL();
   const { prev, next } = prevNext(ch);
   return (
-    <nav className="ch-footer" aria-label="章节导航">
+    <nav
+      className="ch-footer"
+      aria-label={L({ en: "Chapter navigation", zh: "章节导航" })}
+    >
       {prev ? (
         <Link
           href={prev.href}
           className="ch-footer-link"
           style={{ "--ch-hue": prev.hue } as CSSProperties}
         >
-          <span className="lab">← 上一章</span>
+          <span className="lab">
+            <T en="← Previous chapter" zh="← 上一章" />
+          </span>
           <span className="name">
             <span className="n">{prev.num}</span>
-            {prev.title}
+            {L(prev.title)}
           </span>
         </Link>
       ) : (
@@ -254,10 +276,12 @@ export function ChapterFooter({ ch }: { ch: ChapterId }) {
           className="ch-footer-link next"
           style={{ "--ch-hue": next.hue } as CSSProperties}
         >
-          <span className="lab">下一章 →</span>
+          <span className="lab">
+            <T en="Next chapter →" zh="下一章 →" />
+          </span>
           <span className="name">
             <span className="n">{next.num}</span>
-            {next.title}
+            {L(next.title)}
           </span>
         </Link>
       ) : (

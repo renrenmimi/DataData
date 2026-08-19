@@ -6,38 +6,42 @@
 //  - multi:多选,勾选后「检查」;漏选/错选分别提示。
 //  - fill:填空,回车或按钮判定;可反复尝试,答对为止(计分按最终是否答对)。
 // 全部答完 → 结算面板,成绩写入进度系统(取历史最好成绩,决定章节「通关」状态)。
+//
+// 双语:q / opts / why / wrong / hint 等文案都接受 Loc<…>;
+// fill 的 answers 是一个「可接受答案」数组,中英两种写法都往里放即可。
 
 import { useEffect, useState, type ReactNode } from "react";
 import { useProgress } from "@/lib/progress";
+import { useL, T, type Loc } from "@/lib/i18n";
 import type { ChapterId } from "@/lib/curriculum";
 
 export type QuizItem =
   | {
       type: "choice";
-      q: ReactNode;
-      opts: ReactNode[];
+      q: Loc<ReactNode>;
+      opts: Loc<ReactNode>[];
       correct: number;
       /** 每个选项的针对性纠错(正确项可留 undefined) */
-      wrong?: (ReactNode | undefined)[];
-      why: ReactNode;
+      wrong?: (Loc<ReactNode> | undefined)[];
+      why: Loc<ReactNode>;
     }
   | {
       type: "multi";
-      q: ReactNode;
-      opts: ReactNode[];
+      q: Loc<ReactNode>;
+      opts: Loc<ReactNode>[];
       correct: number[];
-      missHint: ReactNode;
-      extraHint: ReactNode;
-      why: ReactNode;
+      missHint: Loc<ReactNode>;
+      extraHint: Loc<ReactNode>;
+      why: Loc<ReactNode>;
     }
   | {
       type: "fill";
-      q: ReactNode;
-      placeholder?: string;
-      /** 允许的答案(不区分大小写、去空格后比较) */
+      q: Loc<ReactNode>;
+      placeholder?: Loc<string>;
+      /** 允许的答案(不区分大小写、去空格后比较);中英写法都放进来 */
       answers: string[];
-      hint: ReactNode;
-      why: ReactNode;
+      hint: Loc<ReactNode>;
+      why: Loc<ReactNode>;
     };
 
 type ItemState =
@@ -52,6 +56,7 @@ function norm(s: string) {
 }
 
 export function Quiz({ ch, items }: { ch: ChapterId; items: QuizItem[] }) {
+  const L = useL();
   const { reportQuiz } = useProgress();
   const [states, setStates] = useState<ItemState[]>(() =>
     items.map(() => ({ phase: "idle" })),
@@ -103,7 +108,7 @@ export function Quiz({ ch, items }: { ch: ChapterId; items: QuizItem[] }) {
             <div className="q-num">
               QUESTION {String(i + 1).padStart(2, "0")} / {items.length}
             </div>
-            <p className="q-text">{item.q}</p>
+            <p className="q-text">{L(item.q)}</p>
 
             {item.type === "choice" && (
               <ChoiceBody
@@ -184,14 +189,35 @@ export function Quiz({ ch, items }: { ch: ChapterId; items: QuizItem[] }) {
           </span>
           <span>
             {firstRight === items.length ? (
-              <>
-                <b>全对!本章正式通关</b> —— 侧栏的小绿灯已经为你点亮。
-              </>
+              <T
+                en={
+                  <>
+                    <b>All correct. Chapter complete.</b> The green dot next to
+                    this chapter in the sidebar is now on.
+                  </>
+                }
+                zh={
+                  <>
+                    <b>全对!本章正式通关</b> —— 侧栏的小绿灯已经为你点亮。
+                  </>
+                }
+              />
             ) : (
-              <>
-                第一次尝试答对 {firstRight} 题。回头看看错题的解释,然后
-                <b>重做一遍拿全对</b>,才算真正拿下这一章。
-              </>
+              <T
+                en={
+                  <>
+                    You answered {firstRight} of {items.length} correctly on the
+                    first try. Read the explanations for the ones you missed,
+                    then <b>redo the quiz and get them all right</b>.
+                  </>
+                }
+                zh={
+                  <>
+                    第一次尝试答对 {firstRight} 题。回头看看错题的解释,然后
+                    <b>重做一遍拿全对</b>,才算真正拿下这一章。
+                  </>
+                }
+              />
             )}
           </span>
           <button
@@ -200,7 +226,7 @@ export function Quiz({ ch, items }: { ch: ChapterId; items: QuizItem[] }) {
             style={{ marginLeft: "auto" }}
             onClick={reset}
           >
-            重做测验
+            {L({ en: "Retry quiz", zh: "重做测验" })}
           </button>
         </div>
       )}
@@ -217,6 +243,7 @@ function ChoiceBody({
   st: ItemState;
   onPick: (k: number) => void;
 }) {
+  const L = useL();
   const locked = st.phase !== "idle";
   return (
     <>
@@ -236,20 +263,25 @@ function ChoiceBody({
               onClick={() => onPick(k)}
             >
               <span className="key">{KEYS[k]}</span>
-              <span>{opt}</span>
+              <span>{L(opt)}</span>
             </button>
           );
         })}
       </div>
       {st.phase === "right" && (
-        <div className="q-feedback ok">✓ {item.why}</div>
+        <div className="q-feedback ok">✓ {L(item.why)}</div>
       )}
       {st.phase === "wrong" && st.picked !== null && (
         <div className="q-feedback no">
-          ✕ {item.wrong?.[st.picked] ?? item.why}
+          ✕ {L(item.wrong?.[st.picked] ?? item.why)}
           <p style={{ marginTop: 6, marginBottom: 0 }}>
-            <b>正确答案是 {KEYS[item.correct]}:</b>
-            {item.why}
+            <b>
+              <T
+                en={<>The correct answer is {KEYS[item.correct]}: </>}
+                zh={<>正确答案是 {KEYS[item.correct]}:</>}
+              />
+            </b>
+            {L(item.why)}
           </p>
         </div>
       )}
@@ -270,12 +302,17 @@ function MultiBody({
   onToggle: (k: number) => void;
   onCheck: () => void;
 }) {
+  const L = useL();
   const locked = st.phase !== "idle";
   const missed = item.correct.some((c) => !picks.includes(c));
   const extra = picks.some((p) => !item.correct.includes(p));
   return (
     <>
-      <div className="q-opts" role="group" aria-label="多选">
+      <div
+        className="q-opts"
+        role="group"
+        aria-label={L({ en: "Select all that apply", zh: "多选" })}
+      >
         {item.opts.map((opt, k) => {
           let cls = "q-opt";
           if (!locked && picks.includes(k)) cls += " picked";
@@ -292,7 +329,7 @@ function MultiBody({
               onClick={() => onToggle(k)}
             >
               <span className="key">{picks.includes(k) ? "✓" : KEYS[k]}</span>
-              <span>{opt}</span>
+              <span>{L(opt)}</span>
             </button>
           );
         })}
@@ -305,19 +342,21 @@ function MultiBody({
             disabled={picks.length === 0}
             onClick={onCheck}
           >
-            检查(多选)
+            {L({ en: "Check answer", zh: "检查(多选)" })}
           </button>
         </div>
       )}
       {st.phase === "right" && (
-        <div className="q-feedback ok">✓ {item.why}</div>
+        <div className="q-feedback ok">✓ {L(item.why)}</div>
       )}
       {st.phase === "wrong" && (
         <div className="q-feedback no">
-          ✕ {extra ? item.extraHint : missed ? item.missHint : item.why}
+          ✕ {L(extra ? item.extraHint : missed ? item.missHint : item.why)}
           <p style={{ marginTop: 6, marginBottom: 0 }}>
-            <b>正确组合:</b>
-            {item.correct.map((c) => KEYS[c]).join(" + ")} —— {item.why}
+            <b>
+              <T en="Correct combination: " zh="正确组合:" />
+            </b>
+            {item.correct.map((c) => KEYS[c]).join(" + ")} — {L(item.why)}
           </p>
         </div>
       )}
@@ -338,13 +377,18 @@ function FillBody({
   setText: (v: string) => void;
   onSubmit: () => void;
 }) {
+  const L = useL();
   const solved = st.phase === "right";
   return (
     <>
       <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
         <input
           className="q-input"
-          placeholder={item.placeholder ?? "输入答案…"}
+          placeholder={
+            item.placeholder === undefined
+              ? L({ en: "Type your answer…", zh: "输入答案…" })
+              : L(item.placeholder)
+          }
           value={text}
           disabled={solved}
           onChange={(e) => setText(e.target.value)}
@@ -358,16 +402,18 @@ function FillBody({
           disabled={solved || !text.trim()}
           onClick={onSubmit}
         >
-          确认
+          {L({ en: "Check", zh: "确认" })}
         </button>
       </div>
-      {solved && <div className="q-feedback ok">✓ {item.why}</div>}
+      {solved && <div className="q-feedback ok">✓ {L(item.why)}</div>}
       {st.phase === "wrong" && (
         <div className="q-feedback no">
-          ✕ 还不对{st.tries >= 2 ? "" : ""} —— {item.hint}
+          ✕ <T en="Not quite yet" zh="还不对" /> — {L(item.hint)}
           {st.tries >= 3 && (
             <p style={{ marginTop: 6, marginBottom: 0 }}>
-              <b>参考答案:</b>
+              <b>
+                <T en="Accepted answer: " zh="参考答案:" />
+              </b>
               <code>{item.answers[0]}</code>
             </p>
           )}
