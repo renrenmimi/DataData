@@ -5,9 +5,12 @@
 //    区分「命中单词 / 是前缀非单词 / 未命中」三种结果。
 //  - StaticTrie:根据词表自动布局的静态结构图(§02 结构 / isEnd 图解复用)。
 //  - TrieStepper:通用「Trie 帧」播放器,精讲 LC 208 / LC 211 的逐帧动画用。
+//
+// 双语:所有标题、旁白、图例、按钮、无障碍文案都通过 <T> / useL() 切换。
 
 import { useMemo, useRef, useState, type ReactNode } from "react";
 import { useStepper, StepControls } from "@/lib/stepper";
+import { useL, T, type Loc } from "@/lib/i18n";
 
 /* ================= 数据结构与工具 ================= */
 
@@ -170,6 +173,7 @@ const LAB_W = 640;
 const SEED = ["car", "card", "cat", "do", "dog"];
 
 export function TrieLab() {
+  const L = useL();
   const seed = useMemo(() => buildTrie(SEED), []);
   const nextId = useRef(seed.nextId);
   const [root, setRoot] = useState<TNode>(() => seed.root);
@@ -181,10 +185,22 @@ export function TrieLab() {
   const [busy, setBusy] = useState(false);
   const [input, setInput] = useState("");
   const [msg, setMsg] = useState<ReactNode>(
-    <>
-      这棵 Trie 里已经住着 <b>car、card、cat、do、dog</b> 五个词。试着插入{" "}
-      <b>care</b> 或 <b>cab</b>,看它怎么复用已有的开头;再查询 <b>ca</b> 感受「前缀」。
-    </>,
+    <T
+      en={
+        <>
+          This trie already holds five words: <b>car, card, cat, do, dog</b>.
+          Insert <b>care</b> or <b>cab</b> and watch which part of the path is
+          reused. Then search for <b>ca</b> to see what a prefix looks like.
+        </>
+      }
+      zh={
+        <>
+          这棵 Trie 里已经存了 <b>car、card、cat、do、dog</b> 五个词。试着插入{" "}
+          <b>care</b> 或 <b>cab</b>,看路径哪一段被复用;再查询 <b>ca</b>,
+          看看「前缀」长什么样。
+        </>
+      }
+    />,
   );
 
   const { nodes, edges, height } = useMemo(() => layout(root, LAB_W), [root]);
@@ -209,7 +225,12 @@ export function TrieLab() {
   const readWord = (): string | null => {
     const w = input.trim().toLowerCase();
     if (!/^[a-z]{1,8}$/.test(w)) {
-      setMsg("请输入 1–8 个英文字母(实验室只演示小写字母 a–z)。");
+      setMsg(
+        <T
+          en="Type 1 to 8 letters. This lab only demonstrates lowercase a to z."
+          zh="请输入 1–8 个英文字母(实验室只演示小写字母 a–z)。"
+        />,
+      );
       return null;
     }
     return w;
@@ -243,7 +264,12 @@ export function TrieLab() {
     }
 
     if (countNodes(newRoot) > CAP) {
-      setMsg(`实验室最多容纳 ${CAP} 个节点 —— 点「重置」清空后再玩。`);
+      setMsg(
+        <T
+          en={`This lab holds at most ${CAP} nodes. Press Reset to start over.`}
+          zh={`实验室最多容纳 ${CAP} 个节点 —— 点「重置」清空后再试。`}
+        />,
+      );
       setBusy(false);
       return;
     }
@@ -266,15 +292,42 @@ export function TrieLab() {
     setOk([cur.id]);
     setMsg(
       already ? (
-        <>
-          <b>{w}</b> 之前就插入过 —— 这次只是又把末节点的 isEnd 标了一遍,树的形状没变。
-        </>
+        <T
+          en={
+            <>
+              <b>{w}</b> was already stored. This insert only set isEnd = true
+              again on the same last node, so the shape of the tree did not
+              change.
+            </>
+          }
+          zh={
+            <>
+              <b>{w}</b> 之前就插入过。这次只是把同一个末节点的 isEnd 又标了一遍,
+              树的形状没有变化。
+            </>
+          }
+        />
       ) : (
-        <>
-          插入 <b>{w}</b> 完成:前 <b>{reused}</b> 个字母沿着已有路径「免费」复用,
-          只新建了 <b>{bornIds.length}</b> 个节点,末节点 isEnd 置为 true。
-          共走了 <b>{w.length}</b> 步 = 单词长度,和树里已有多少词 <b>毫无关系</b>。
-        </>
+        <T
+          en={
+            <>
+              Inserted <b>{w}</b>. <b>{reused}</b> of its <b>{w.length}</b>{" "}
+              letters followed edges that already existed, so only{" "}
+              <b>{bornIds.length}</b> new nodes were created, and the last node
+              now has isEnd = true. The walk took <b>{w.length}</b> steps, the
+              length of the word. How many words the tree already holds does not
+              change that.
+            </>
+          }
+          zh={
+            <>
+              插入 <b>{w}</b> 完成:它的 <b>{w.length}</b> 个字母里,有{" "}
+              <b>{reused}</b> 个走的是已经存在的边,所以只新建了{" "}
+              <b>{bornIds.length}</b> 个节点,末节点 isEnd 置为 true。整趟走了{" "}
+              <b>{w.length}</b> 步 = 单词长度;树里已经有多少词,不影响这个步数。
+            </>
+          }
+        />
       ),
     );
     setBusy(false);
@@ -308,37 +361,85 @@ export function TrieLab() {
       setLit(acc.slice(0, -1));
       setBad([acc[acc.length - 1]]);
       setMsg(
-        <>
-          查询 <b>{w}</b>:走到 <b>{acc.length}</b> 个节点时,下一个字母对应的 child 是空的 ——
-          断路。<b>未命中</b>:整棵树里都不可能有以 {w} 开头的内容(有的话它必然长在这条路径上)。
-        </>,
+        <T
+          en={
+            <>
+              Looking up <b>{w}</b>: the walk reached <b>{acc.length}</b> nodes
+              counting the root, and then the next letter had no matching child.
+              The path stops here. <b>No match</b>, and nothing in the tree can
+              start with {w}, because any such word would have to lie on this
+              same path.
+            </>
+          }
+          zh={
+            <>
+              查询 <b>{w}</b>:算上根节点走到第 <b>{acc.length}</b> 个节点时,
+              下一个字母没有对应的 child,路径到此为止。<b>未命中</b>,
+              而且整棵树里不可能有以 {w} 开头的词 —— 有的话,它必然长在这条路径上。
+            </>
+          }
+        />,
       );
     } else if (prefixMode) {
       setLit(acc.slice(0, -1));
       setOk([cur!.id]);
       setMsg(
-        <>
-          startsWith(<b>{w}</b>):从 root 一路都能走通 → <b>存在以 {w} 为前缀的单词</b>。
-          注意:是否 isEnd <b>无所谓</b>,能走到底就算前缀命中。
-        </>,
+        <T
+          en={
+            <>
+              startsWith(<b>{w}</b>): the whole path exists, so{" "}
+              <b>at least one stored word starts with {w}</b>. isEnd is not
+              checked here. Arriving is the answer.
+            </>
+          }
+          zh={
+            <>
+              startsWith(<b>{w}</b>):整条路径都走得通,所以
+              <b>至少有一个已存的词以 {w} 开头</b>。这里不检查 isEnd,走到了就算命中。
+            </>
+          }
+        />,
       );
     } else if (cur!.isEnd) {
       setLit(acc.slice(0, -1));
       setOk([cur!.id]);
       setMsg(
-        <>
-          search(<b>{w}</b>):路径走通,且末节点 <b>isEnd = true</b> → <b>命中一个完整单词</b> ✓
-        </>,
+        <T
+          en={
+            <>
+              search(<b>{w}</b>): the path exists and the last node has{" "}
+              <b>isEnd = true</b>, so {w} is a stored word ✓
+            </>
+          }
+          zh={
+            <>
+              search(<b>{w}</b>):路径走得通,末节点 <b>isEnd = true</b> —— {w}{" "}
+              是一个已存的单词 ✓
+            </>
+          }
+        />,
       );
     } else {
       setLit(acc.slice(0, -1));
       setPre([cur!.id]);
       setMsg(
-        <>
-          search(<b>{w}</b>):路径走得通,但末节点 <b>isEnd = false</b> —— {w}{" "}
-          只是别人的<b>前缀,不是被插入过的单词</b>。所以 search 返回 false,而
-          startsWith 会返回 true。这正是 isEnd 存在的意义。
-        </>,
+        <T
+          en={
+            <>
+              search(<b>{w}</b>): the path exists, but the last node has{" "}
+              <b>isEnd = false</b>. {w} is only the <b>beginning of other words</b>
+              , not a word that was inserted. search returns false here, while
+              startsWith returns true. This is the case isEnd exists for.
+            </>
+          }
+          zh={
+            <>
+              search(<b>{w}</b>):路径走得通,但末节点 <b>isEnd = false</b> —— {w}{" "}
+              只是<b>别的词的开头</b>,不是被插入过的单词。所以 search 返回 false,
+              而 startsWith 会返回 true。isEnd 就是为这种情况存在的。
+            </>
+          }
+        />,
       );
     }
     setBusy(false);
@@ -351,20 +452,31 @@ export function TrieLab() {
     const s = buildTrie(SEED);
     nextId.current = s.nextId;
     setRoot(s.root);
-    setMsg("已重置为初始 5 个词:car、card、cat、do、dog。");
+    setMsg(
+      <T
+        en="Reset to the five starting words: car, card, cat, do, dog."
+        zh="已重置为初始 5 个词:car、card、cat、do、dog。"
+      />,
+    );
   };
 
   return (
     <div className="viz">
       <div className="tr-lab-title viz-title">
-        Trie 实验室 —— 插入单词看它「长」出来,查询看路径逐节点点亮
+        <T
+          en="Trie lab: insert a word and watch the tree grow, or look one up and watch the path light up node by node"
+          zh="Trie 实验室 —— 插入单词看树长出来,查询看路径逐节点点亮"
+        />
       </div>
       <div className="viz-stage">
         <svg
           viewBox={`0 0 ${LAB_W} ${height}`}
           className="tr-svg"
           role="img"
-          aria-label="前缀树可视化"
+          aria-label={L({
+            en: "Trie structure diagram",
+            zh: "前缀树结构图",
+          })}
         >
           {edges.map((e) => (
             <g key={e.id}>
@@ -388,47 +500,54 @@ export function TrieLab() {
       </div>
       <div className="tr-legend">
         <span>
-          <i className="tr-dot lit" /> 路径经过
+          <i className="tr-dot lit" /> <T en="On the path" zh="路径经过" />
         </span>
         <span>
-          <i className="tr-dot ok" /> 命中(单词/前缀)
+          <i className="tr-dot ok" />{" "}
+          <T en="Match (word or prefix)" zh="命中(单词 / 前缀)" />
         </span>
         <span>
-          <i className="tr-dot pre" /> 是前缀,非单词
+          <i className="tr-dot pre" />{" "}
+          <T en="Prefix, not a word" zh="是前缀,不是单词" />
         </span>
         <span>
-          <i className="tr-dot bad" /> 断路未命中
+          <i className="tr-dot bad" />{" "}
+          <T en="Path stops, no match" zh="断路,未命中" />
         </span>
         <span>
-          <i className="tr-dot end" /> isEnd(词尾)
+          <i className="tr-dot end" />{" "}
+          <T en="isEnd (a word ends here)" zh="isEnd(有词在此结束)" />
         </span>
       </div>
       <div className="viz-ctl">
         <input
           className="tr-input"
           value={input}
-          placeholder="输入单词,如 care"
+          placeholder={L({ en: "word, e.g. care", zh: "输入单词,如 care" })}
           disabled={busy}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter") doInsert();
           }}
-          aria-label="输入要插入或查询的单词"
+          aria-label={L({
+            en: "Word to insert or look up",
+            zh: "输入要插入或查询的单词",
+          })}
         />
         <button type="button" className="btn btn-sm btn-primary" onClick={doInsert} disabled={busy}>
-          插入
+          <T en="Insert" zh="插入" />
         </button>
         <button type="button" className="btn btn-sm" onClick={() => doQuery(false)} disabled={busy}>
-          查询单词
+          <T en="search" zh="查询单词" />
         </button>
         <button type="button" className="btn btn-sm" onClick={() => doQuery(true)} disabled={busy}>
-          查询前缀
+          <T en="startsWith" zh="查询前缀" />
         </button>
         <button type="button" className="btn btn-sm btn-ghost" onClick={doReset} disabled={busy}>
-          重置
+          <T en="Reset" zh="重置" />
         </button>
         <span className="mono dim" style={{ marginLeft: "auto", fontSize: 12 }}>
-          节点 {count} · 上限 {CAP}
+          <T en="nodes" zh="节点" /> {count} / {CAP}
         </span>
       </div>
     </div>
@@ -445,17 +564,26 @@ export function StaticTrie({
 }: {
   words: string[];
   w?: number;
-  caption?: ReactNode;
+  caption?: Loc<ReactNode>;
   /** 需要额外高亮的完整单词的词尾节点(用 word 匹配) */
   emphasize?: string[];
 }) {
+  const L = useL();
   const { root } = useMemo(() => buildTrie(words), [words]);
   const { nodes, edges, height } = useMemo(() => layout(root, w), [root, w]);
   const emph = new Set(emphasize ?? []);
 
   return (
     <div className="tr-fig">
-      <svg viewBox={`0 0 ${w} ${height}`} className="tr-svg" role="img">
+      <svg
+        viewBox={`0 0 ${w} ${height}`}
+        className="tr-svg"
+        role="img"
+        aria-label={L({
+          en: `Trie built from the words ${words.join(", ")}`,
+          zh: `由 ${words.join("、")} 建成的前缀树`,
+        })}
+      >
         {edges.map((e) => (
           <g key={e.id}>
             <line className="tr-edge" x1={e.x1} y1={e.y1} x2={e.x2} y2={e.y2} />
@@ -476,7 +604,7 @@ export function StaticTrie({
           />
         ))}
       </svg>
-      {caption && <div className="tr-fig-cap">{caption}</div>}
+      {caption && <div className="tr-fig-cap">{L(caption)}</div>}
     </div>
   );
 }
@@ -497,7 +625,7 @@ export interface TStepFrame {
   bad?: number[];
   pre?: number[];
   dim?: number[];
-  msg: ReactNode;
+  msg: Loc<ReactNode>;
 }
 
 export function TrieStepper({
@@ -508,13 +636,14 @@ export function TrieStepper({
   w = 640,
   h = 400,
 }: {
-  title: string;
+  title: Loc<string>;
   nodes: TStepNode[];
   edges: [number, number][];
   frames: TStepFrame[];
   w?: number;
   h?: number;
 }) {
+  const L = useL();
   const s = useStepper(frames.length);
   const f = frames[s.step];
   const byId = useMemo(() => new Map(nodes.map((n) => [n.id, n])), [nodes]);
@@ -530,9 +659,14 @@ export function TrieStepper({
 
   return (
     <div className="viz">
-      <div className="viz-title">{title}</div>
+      <div className="viz-title">{L(title)}</div>
       <div className="viz-stage">
-        <svg viewBox={`0 0 ${w} ${h}`} className="tr-svg" role="img">
+        <svg
+          viewBox={`0 0 ${w} ${h}`}
+          className="tr-svg"
+          role="img"
+          aria-label={L(title)}
+        >
           {edges.map(([a, b], i) => {
             const na = byId.get(a)!;
             const nb = byId.get(b)!;
@@ -578,7 +712,7 @@ export function TrieStepper({
         </svg>
       </div>
       <div className="viz-msg" aria-live="polite">
-        {f.msg}
+        {L(f.msg)}
       </div>
       <StepControls stepper={s} step={s.step} total={frames.length} />
     </div>
