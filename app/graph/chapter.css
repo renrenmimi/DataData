@@ -160,6 +160,9 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--text-3);
+  /* 英文标题比中文长,允许换行并留出行距 */
+  line-height: 1.5;
+  text-wrap: pretty;
 }
 
 [data-ch="graph"] .gr-chips {
