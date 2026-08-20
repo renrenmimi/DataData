@@ -151,12 +151,14 @@
   width: 100%;
 }
 
+/* 英文栈帧文案(waiting for f(2) / resumes: 3 × 2 = 6)比中文长,
+   列宽放宽到 300px,帧内允许换行,避免溢出。 */
 [data-ch="binary-tree"] .bt-stackcol {
   display: flex;
   flex-direction: column;
   gap: 6px;
   min-width: 210px;
-  max-width: 260px;
+  max-width: 300px;
 }
 
 [data-ch="binary-tree"] .bt-stackcap {
@@ -177,9 +179,10 @@
   font-size: 12px;
   color: var(--text-2);
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  gap: 10px;
+  gap: 4px 10px;
   animation: fade-up 0.25s ease;
 }
 

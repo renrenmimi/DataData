@@ -83,8 +83,10 @@
   border-top: 1px dashed var(--border);
 }
 
+/* 宽度按英文标题("Design 2 · Move front" + "dequeue O(1), wastes space")留足,
+   中文更短,同样容得下。 */
 .qu-memrow-label {
-  width: 118px;
+  width: 152px;
   flex: none;
 }
 

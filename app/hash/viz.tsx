@@ -5,9 +5,12 @@
 //    预置 "Aa" / "BB" 这对同哈希单词,亲眼制造一次冲突。
 //  - CollisionLab:同一批会撞桶的单词,分别用「链地址法」和「线性探测」
 //    逐帧插入,对照两种冲突解决策略(含探测的聚集现象)。
+//
+// 双语:所有标题、旁白、按钮、图内文字都通过 <T> / useL() 切换。
 
 import { useState, type ReactNode } from "react";
 import { useStepper, StepControls } from "@/lib/stepper";
+import { useL, T } from "@/lib/i18n";
 
 const B = 8; // 桶数
 
@@ -35,23 +38,40 @@ function hashSteps(word: string): { steps: CharStep[]; h: number } {
 
 const PRESETS = ["cat", "dog", "Aa", "BB"];
 
+const START_ACC = (
+  <T
+    en={<>h starts at 0. For each character: h = h × 31 + character code</>}
+    zh={<>h 从 0 开始,每读一个字符:h = h × 31 + 字符编码</>}
+  />
+);
+
 export function HashLab() {
+  const L = useL();
   const [word, setWord] = useState("cat");
   const [buckets, setBuckets] = useState<string[][]>(() =>
     Array.from({ length: B }, () => []),
   );
   const [chars, setChars] = useState<CharStep[]>([]);
   const [charIdx, setCharIdx] = useState(-1);
-  const [accText, setAccText] = useState<ReactNode>(
-    <>h 从 0 开始,每读一个字符:h = h × 31 + 字符编码</>,
-  );
+  const [accText, setAccText] = useState<ReactNode>(START_ACC);
   const [hot, setHot] = useState(-1);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<ReactNode>(
-    <>
-      输入一个单词(≤ 6 字符)点「投入哈希机」。试完 cat、dog,再试{" "}
-      <b>Aa</b> 和 <b>BB</b> —— 有惊喜(坏的那种)。
-    </>,
+    <T
+      en={
+        <>
+          Type a word of at most 6 characters and press Hash it. Try cat and
+          dog, then try <b>Aa</b> and <b>BB</b> — those two are chosen to land
+          in the same bucket.
+        </>
+      }
+      zh={
+        <>
+          输入一个单词(≤ 6 字符)点「投入哈希机」。先试 cat、dog,再试{" "}
+          <b>Aa</b> 和 <b>BB</b> —— 这两个词是特意挑的,会落进同一个桶。
+        </>
+      }
+    />,
   );
 
   const run = async (raw?: string) => {
@@ -75,10 +95,22 @@ export function HashLab() {
         </>,
       );
       setMsg(
-        <>
-          读入字符 &apos;{s.ch}&apos;(编码 {s.code}):旧 h 乘 31 再加上它 ——
-          每个字符都被「织」进结果里,换一个字符、换一个位置,h 都会不同。
-        </>,
+        <T
+          en={
+            <>
+              Read the character &apos;{s.ch}&apos; (code {s.code}). The old h is
+              multiplied by 31, then this code is added. Every character changes
+              the result, and so does its position, because an earlier character
+              gets multiplied by 31 more times.
+            </>
+          }
+          zh={
+            <>
+              读入字符 &apos;{s.ch}&apos;(编码 {s.code}):旧 h 乘 31,再加上它。
+              每个字符都会改变结果,位置也会 —— 越靠前的字符被乘 31 的次数越多。
+            </>
+          }
+        />,
       );
       await sleep(950);
     }
@@ -92,15 +124,27 @@ export function HashLab() {
       </>,
     );
     setMsg(
-      <>
-        哈希值 {h} 太大,当不了下标 —— 对桶数取模:{h} mod {B} ={" "}
-        <b>{t}</b>。无论 h 多大,都被压回 0 ~ {B - 1}。
-      </>,
+      <T
+        en={
+          <>
+            The hash {h} is far too large to be an array index, so it is taken
+            modulo the bucket count: {h} mod {B} = <b>{t}</b>. However large h
+            gets, the result is pushed back into 0 to {B - 1}.
+          </>
+        }
+        zh={
+          <>
+            哈希值 {h} 太大,当不了数组下标 —— 对桶数取模:{h} mod {B} ={" "}
+            <b>{t}</b>。无论 h 多大,结果都被压回 0 ~ {B - 1}。
+          </>
+        }
+      />,
     );
     await sleep(1200);
 
     // 3) 落桶
-    const collided = buckets[t].length > 0;
+    const occupants = buckets[t];
+    const collided = occupants.length > 0;
     setHot(t);
     setBuckets((prev) => {
       const nb = prev.map((b) => [...b]);
@@ -109,16 +153,40 @@ export function HashLab() {
     });
     setMsg(
       collided ? (
-        <>
-          💥 <b>冲突(collision)!</b>「{w}」和「{buckets[t].join("、")}
-          」被分进了同一个 {t} 号桶 —— 不同的 key、相同的桶位。
-          怎么办?这正是 §03 的主题。
-        </>
+        <T
+          en={
+            <>
+              💥 <b>Collision.</b> &quot;{w}&quot; and &quot;
+              {occupants.join(", ")}&quot; were sent to the same bucket {t}:
+              different keys, same index. What the table does next is the subject
+              of §03.
+            </>
+          }
+          zh={
+            <>
+              💥 <b>冲突(collision)!</b>「{w}」和「{occupants.join("、")}
+              」被分进了同一个 {t} 号桶 —— 不同的 key、相同的下标。
+              接下来怎么办,就是 §03 的主题。
+            </>
+          }
+        />
       ) : (
-        <>
-          「{w}」落进 <b>{t} 号桶</b>。下次查它:同样的哈希、同样的取模,
-          一步直达 {t} 号桶 —— 这就是 O(1) 的全部秘密。
-        </>
+        <T
+          en={
+            <>
+              &quot;{w}&quot; goes into <b>bucket {t}</b>. To look it up later,
+              the table computes the same hash and the same modulo and jumps
+              straight to bucket {t}. No scanning, and that is the whole reason
+              lookup is fast.
+            </>
+          }
+          zh={
+            <>
+              「{w}」落进 <b>{t} 号桶</b>。以后查它:算出同样的哈希、同样的取模,
+              一步跳到 {t} 号桶,不需要逐个扫描 —— 这就是查得快的全部原因。
+            </>
+          }
+        />
       ),
     );
     await sleep(600);
@@ -131,19 +199,29 @@ export function HashLab() {
     setChars([]);
     setCharIdx(-1);
     setHot(-1);
-    setAccText(<>h 从 0 开始,每读一个字符:h = h × 31 + 字符编码</>);
-    setMsg(<>桶已清空。再来一轮 —— 记得试试 Aa 和 BB。</>);
+    setAccText(START_ACC);
+    setMsg(
+      <T
+        en={<>The buckets are empty again. Try Aa and BB next.</>}
+        zh={<>桶已清空。下一轮试试 Aa 和 BB。</>}
+      />,
+    );
   };
 
   return (
     <div className="viz">
-      <div className="viz-title">哈希机实验室 —— 任何单词,三步变下标</div>
+      <div className="viz-title">
+        <T
+          en="Hash lab — any word becomes an index in three steps"
+          zh="哈希机实验室 —— 任何单词,三步变下标"
+        />
+      </div>
       <div className="viz-stage" style={{ flexDirection: "column", gap: 8 }}>
         <div className="hs-pipeline">
           <div className="hs-run">
             {chars.length === 0 ? (
               <span className="dim" style={{ fontSize: 13 }}>
-                待投入…
+                <T en="waiting for a word…" zh="待投入…" />
               </span>
             ) : (
               chars.map((s, i) => (
@@ -190,7 +268,7 @@ export function HashLab() {
           onKeyDown={(e) => {
             if (e.key === "Enter") run();
           }}
-          aria-label="要哈希的单词"
+          aria-label={L({ en: "Word to hash", zh: "要哈希的单词" })}
         />
         <button
           type="button"
@@ -198,7 +276,7 @@ export function HashLab() {
           onClick={() => run()}
           disabled={busy || !word.trim()}
         >
-          投入哈希机
+          <T en="Hash it" zh="投入哈希机" />
         </button>
         {PRESETS.map((p) => (
           <button
@@ -218,7 +296,7 @@ export function HashLab() {
           disabled={busy}
           style={{ marginLeft: "auto" }}
         >
-          清空桶
+          <T en="Clear buckets" zh="清空桶" />
         </button>
       </div>
     </div>
@@ -251,10 +329,21 @@ function buildChainFrames(): ChainFrame[] {
     chains: chains.map((c) => [...c]),
     hot: -1,
     msg: (
-      <>
-        6 个单词依次插入 8 个桶。<b>链地址法</b>:每个桶不再只放一个元素,
-        而是挂一条链表 —— 撞了就往链上接。
-      </>
+      <T
+        en={
+          <>
+            Six words are inserted into eight buckets, one at a time. With{" "}
+            <b>separate chaining</b>, a bucket does not hold a single entry. It
+            holds a list, and a colliding entry is appended to that list.
+          </>
+        }
+        zh={
+          <>
+            6 个单词依次插入 8 个桶。<b>链地址法</b>:每个桶不是只放一个元素,
+            而是挂一条链表 —— 撞了就接到链上。
+          </>
+        }
+      />
     ),
   });
   for (const { w, b } of KEYS) {
@@ -264,14 +353,37 @@ function buildChainFrames(): ChainFrame[] {
       chains: chains.map((c) => [...c]),
       hot: b,
       msg: clash ? (
-        <>
-          「{w}」也被哈希到 <b>{b} 号桶</b> —— 发生冲突。处理方式:接到该桶链表的尾部。
-          代价:以后查这个桶里的 key,要沿链逐个 equals 比对。
-        </>
+        <T
+          en={
+            <>
+              &quot;{w}&quot; also hashes to <b>bucket {b}</b>, so this is a
+              collision. It is appended to the end of that bucket&apos;s list.
+              The cost: from now on, a lookup in this bucket has to compare the
+              keys in the list one by one.
+            </>
+          }
+          zh={
+            <>
+              「{w}」也被哈希到 <b>{b} 号桶</b> —— 冲突发生。处理方式:
+              接到该桶链表的尾部。代价:以后查这个桶里的 key,
+              要沿链逐个比对。
+            </>
+          }
+        />
       ) : (
-        <>
-          「{w}」哈希到 <b>{b} 号桶</b>,桶是空的,直接入住。
-        </>
+        <T
+          en={
+            <>
+              &quot;{w}&quot; hashes to <b>bucket {b}</b>. The bucket is empty,
+              so it goes straight in.
+            </>
+          }
+          zh={
+            <>
+              「{w}」哈希到 <b>{b} 号桶</b>,桶是空的,直接入住。
+            </>
+          }
+        />
       ),
     });
   }
@@ -279,11 +391,26 @@ function buildChainFrames(): ChainFrame[] {
     chains: chains.map((c) => [...c]),
     hot: -1,
     msg: (
-      <>
-        插入完毕:最长的链也只有 2 个节点,查任何 key 最多比对 2 次 ——
-        只要哈希均匀 + 负载因子受控,链长的<b>平均值就是常数</b>,这就是
-        「平均 O(1)」的底气。
-      </>
+      <T
+        en={
+          <>
+            All six are in. The longest list holds 2 entries, so any lookup
+            compares at most 2 keys. As long as the hash spreads the keys and the
+            load factor stays bounded, the <b>average</b> list length is a
+            constant. That is what &quot;O(1) on average&quot; rests on — and
+            also why it is only an average: put all six words in one bucket and
+            the same lookup compares 6 keys.
+          </>
+        }
+        zh={
+          <>
+            插入完毕:最长的链只有 2 个节点,查任何 key 最多比对 2 次。
+            只要哈希分布均匀、负载因子受控,链长的<b>平均值就是常数</b> ——
+            这正是「平均 O(1)」的依据,也说明了它为什么只是平均值:
+            把这 6 个词全塞进同一个桶,同样一次查找就要比对 6 次。
+          </>
+        }
+      />
     ),
   });
   return frames;
@@ -304,10 +431,22 @@ function buildProbeFrames(): ProbeFrame[] {
     scan: [],
     placed: -1,
     msg: (
-      <>
-        同一批单词,这次用<b>开放寻址 · 线性探测</b>:每个桶只放一个元素,
-        撞了就往右找下一个空位(到头绕回 0)。
-      </>
+      <T
+        en={
+          <>
+            The same six words, this time with <b>open addressing and linear
+            probing</b>: every slot holds at most one entry, and a colliding
+            entry moves right until it finds a free slot, wrapping back to 0 at
+            the end.
+          </>
+        }
+        zh={
+          <>
+            同一批单词,这次用<b>开放寻址 · 线性探测</b>:每个格子只放一个元素,
+            撞了就往右找下一个空位,到头绕回 0。
+          </>
+        }
+      />
     ),
   });
   for (const { w, b } of KEYS) {
@@ -324,15 +463,38 @@ function buildProbeFrames(): ProbeFrame[] {
       placed: i,
       msg:
         scan.length === 0 ? (
-          <>
-            「{w}」的家 <b>{b} 号</b>是空的,直接入住。
-          </>
+          <T
+            en={
+              <>
+                &quot;{w}&quot; hashes to <b>slot {b}</b>, which is free, so it
+                goes straight in.
+              </>
+            }
+            zh={
+              <>
+                「{w}」的家 <b>{b} 号</b>是空的,直接入住。
+              </>
+            }
+          />
         ) : (
-          <>
-            「{w}」的家 {b} 号被占!线性探测:
-            {scan.map((s) => `${s} 号有人`).join(" → ")} → 住进{" "}
-            <b>{i} 号</b>。查找时也要走同一条探测路线。
-          </>
+          <T
+            en={
+              <>
+                &quot;{w}&quot; hashes to slot {b}, which is taken. Linear
+                probing moves right:{" "}
+                {scan.map((s) => `${s} is taken`).join(" → ")} → it settles in{" "}
+                <b>slot {i}</b>. A later lookup for &quot;{w}&quot; has to walk
+                the same probe path.
+              </>
+            }
+            zh={
+              <>
+                「{w}」的家 {b} 号被占了。线性探测往右走:
+                {scan.map((s) => `${s} 号有人`).join(" → ")} → 住进{" "}
+                <b>{i} 号</b>。以后查「{w}」也要走同一条探测路线。
+              </>
+            }
+          />
         ),
     });
   }
@@ -341,11 +503,26 @@ function buildProbeFrames(): ProbeFrame[] {
     scan: [],
     placed: -1,
     msg: (
-      <>
-        注意 4~7 号连成了一片「拥挤区」—— 一次冲突会让后来者跟着挪窝,
-        越挤越长,这叫<b>聚集(clustering)</b>。所以开放寻址对负载因子更敏感,
-        通常压在 0.5~0.7 就要扩容。
-      </>
+      <T
+        en={
+          <>
+            Slots 4 to 7 are now a solid run, and it continues through the wrap
+            into 0 and 1. One collision pushes an entry sideways, which makes the
+            next collision more likely, which makes the run longer. This is
+            called <b>clustering</b>. It is why open addressing is more sensitive
+            to the load factor than chaining, and why such tables usually grow at
+            around 0.5 to 0.7 rather than 0.75.
+          </>
+        }
+        zh={
+          <>
+            4~7 号已经连成一片,而且绕过末尾一直接到 0、1 号。
+            一次冲突把元素挤到旁边,让下一次冲突更容易发生,连片就越来越长 ——
+            这叫<b>聚集(clustering)</b>。所以开放寻址比链地址法更怕负载因子,
+            通常压到 0.5~0.7 就要扩容,而不是 0.75。
+          </>
+        }
+      />
     ),
   });
   return frames;
@@ -423,7 +600,20 @@ function ProbePlayer() {
         </div>
         {f.scan.length > 0 && (
           <span className="hs-probe-scan">
-            探测路径:{[...f.scan, f.placed].join(" → ")}(红 = 被占,亮 = 入住)
+            <T
+              en={
+                <>
+                  Probe path: {[...f.scan, f.placed].join(" → ")} (red = taken,
+                  highlighted = where it settled)
+                </>
+              }
+              zh={
+                <>
+                  探测路径:{[...f.scan, f.placed].join(" → ")}(红 = 被占,亮 =
+                  入住)
+                </>
+              }
+            />
           </span>
         )}
       </div>
@@ -440,21 +630,24 @@ export function CollisionLab() {
   return (
     <div className="viz">
       <div className="viz-title">
-        冲突解决实验室 —— 同一批单词,两种活法
+        <T
+          en="Collision lab — the same six words, two strategies"
+          zh="冲突解决实验室 —— 同一批单词,两种活法"
+        />
         <span className="seg" style={{ marginLeft: "auto" }}>
           <button
             type="button"
             className={`seg-btn${mode === "chain" ? " on" : ""}`}
             onClick={() => setMode("chain")}
           >
-            链地址法
+            <T en="Chaining" zh="链地址法" />
           </button>
           <button
             type="button"
             className={`seg-btn${mode === "probe" ? " on" : ""}`}
             onClick={() => setMode("probe")}
           >
-            线性探测
+            <T en="Linear probing" zh="线性探测" />
           </button>
         </span>
       </div>

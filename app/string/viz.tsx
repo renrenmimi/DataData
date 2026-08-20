@@ -1,12 +1,13 @@
 "use client";
 
-// 第 2 章 · 字符串的两个专属可视化:
+// 第 2 章 · 字符串的两个专属可视化(双语):
 //  - EncodeLab:输入任意字符串,逐字符展示 Unicode 码点与 UTF-8 字节
 //    (用 codePointAt 逐码点遍历,正确处理 emoji 的 UTF-16 代理对)。
 //  - ConcatLab:同一任务两种拼法赛跑 ——「每次 += 全量重建」vs
-//    「StringBuilder 追加」,实时累计拷贝的字符数,亲眼看 O(n²) 和 O(n) 拉开差距。
+//    「用可变容器追加」,实时累计拷贝的字符数,亲眼看 O(n²) 和 O(n) 拉开差距。
 
 import { useEffect, useMemo, useState } from "react";
+import { useL, T } from "@/lib/i18n";
 
 /* ================= EncodeLab ================= */
 
@@ -59,6 +60,7 @@ function analyze(input: string): EncRow[] {
 }
 
 export function EncodeLab() {
+  const L = useL();
   const [text, setText] = useState("A字🙂");
   const rows = useMemo(() => analyze(text), [text]);
   const totalBytes = rows.reduce((s, r) => s + r.bytes.length, 0);
@@ -66,19 +68,35 @@ export function EncodeLab() {
 
   return (
     <div className="viz">
-      <div className="viz-title">编码实验室 —— 输入任何字符,看它的数字身份</div>
+      <div className="viz-title">
+        <T
+          en="Encoding lab: type a character and see the numbers behind it"
+          zh="编码实验室 —— 输入任何字符,看它的数字身份"
+        />
+      </div>
       <div style={{ marginBottom: 14 }}>
         <input
           className="str-enc-input"
           value={text}
           maxLength={24}
           onChange={(e) => setText(e.target.value)}
-          placeholder="输入字母 / 汉字 / emoji…"
-          aria-label="待编码的字符串"
+          placeholder={L({
+            en: "Type letters, Chinese characters, or emoji…",
+            zh: "输入字母 / 汉字 / emoji…",
+          })}
+          aria-label={L({
+            en: "Text to encode",
+            zh: "待编码的字符串",
+          })}
         />
       </div>
       {rows.length === 0 ? (
-        <div className="viz-msg">输入点什么 —— 试试「A字🙂」这种混搭。</div>
+        <div className="viz-msg">
+          <T
+            en="Type something. A mixed input such as “A字🙂” shows the most."
+            zh="输入点什么 —— 试试「A字🙂」这种混搭。"
+          />
+        </div>
       ) : (
         <>
           <div className="str-enc-list">
@@ -89,7 +107,7 @@ export function EncodeLab() {
                   U+{hex(r.cp, 4)}
                   <br />
                   <span style={{ color: "var(--text-3)", fontWeight: 400 }}>
-                    十进制 {r.cp}
+                    <T en={<>decimal {r.cp}</>} zh={<>十进制 {r.cp}</>} />
                   </span>
                 </span>
                 <span className="str-enc-bytes">
@@ -104,38 +122,113 @@ export function EncodeLab() {
                   ))}
                 </span>
                 <span className="str-enc-meta">
-                  UTF-8:{r.bytes.length} 字节
-                  <br />
-                  UTF-16:{r.units} 单元{r.units === 2 ? "(代理对)" : ""}
+                  <T
+                    en={
+                      <>
+                        UTF-8: {r.bytes.length} byte
+                        {r.bytes.length === 1 ? "" : "s"}
+                        <br />
+                        UTF-16: {r.units} unit{r.units === 1 ? "" : "s"}
+                        {r.units === 2 ? " (surrogate pair)" : ""}
+                      </>
+                    }
+                    zh={
+                      <>
+                        UTF-8:{r.bytes.length} 字节
+                        <br />
+                        UTF-16:{r.units} 单元
+                        {r.units === 2 ? "(代理对)" : ""}
+                      </>
+                    }
+                  />
                 </span>
               </div>
             ))}
           </div>
           <div className="str-enc-total">
             <span>
-              人眼字符(码点)<b>{rows.length}</b> 个
+              <T
+                en={
+                  <>
+                    <b>{rows.length}</b> code points
+                  </>
+                }
+                zh={
+                  <>
+                    码点 <b>{rows.length}</b> 个
+                  </>
+                }
+              />
             </span>
             <span>
-              JS 的 <b>.length = {totalUnits}</b>(数的是 UTF-16 单元)
+              <T
+                en={
+                  <>
+                    JavaScript <b>.length = {totalUnits}</b> (UTF-16 code units)
+                  </>
+                }
+                zh={
+                  <>
+                    JavaScript 的 <b>.length = {totalUnits}</b>(数的是 UTF-16
+                    编码单元)
+                  </>
+                }
+              />
             </span>
             <span>
-              UTF-8 存储 <b>{totalBytes}</b> 字节
+              <T
+                en={
+                  <>
+                    <b>{totalBytes}</b> bytes stored as UTF-8
+                  </>
+                }
+                zh={
+                  <>
+                    UTF-8 存储 <b>{totalBytes}</b> 字节
+                  </>
+                }
+              />
             </span>
           </div>
         </>
       )}
       <div className="viz-msg" style={{ marginTop: 12 }}>
         {rows.some((r) => r.units === 2) ? (
-          <>
-            注意最后一行:这个字符的码点超过了 U+FFFF,UTF-16 里要用
-            <b>一对代理对</b>表示 —— 所以 JS 的 length 会把它数成 <b>2</b>,
-            <b>charAt 还会把它劈成两半乱码</b>。这就是 §05 的 emoji 大坑。
-          </>
+          <T
+            en={
+              <>
+                Look at the row marked as a surrogate pair. Its code point is
+                above U+FFFF, so UTF-16 needs <b>two code units</b> for it. That
+                is why JavaScript counts it as <b>2</b> in <code>.length</code>,
+                and why <code>charAt</code> returns only half of it. Java behaves
+                the same way. This is the trap in §05.
+              </>
+            }
+            zh={
+              <>
+                看标着「代理对」的那一行:它的码点超过了 U+FFFF,UTF-16 需要
+                <b>两个编码单元</b>才能表示它。所以 JavaScript 的{" "}
+                <code>.length</code> 把它数成 <b>2</b>,<code>charAt</code>{" "}
+                也只能取到它的一半。Java 的行为完全相同 —— 这就是 §05 的那个坑。
+              </>
+            }
+          />
         ) : (
-          <>
-            同一个字符,三个身份:人眼看到的「字」、Unicode 发的「号」(码点)、
-            硬盘里存的「字节」。试试输入一个 emoji,看看会发生什么。
-          </>
+          <T
+            en={
+              <>
+                One character, three identities: the shape you see, the number
+                Unicode assigned to it (the code point), and the bytes stored on
+                disk. Try typing an emoji and watch what changes.
+              </>
+            }
+            zh={
+              <>
+                同一个字符,三个身份:你看到的字形、Unicode 给它的编号(码点)、
+                以及硬盘里存下的字节。试试输入一个 emoji,看看会发生什么。
+              </>
+            }
+          />
         )}
       </div>
     </div>
@@ -150,7 +243,7 @@ const N = 60; // 总共追加 60 个字符
 function precompute() {
   const naive: number[] = [0];
   const builder: number[] = [0];
-  let cap = 8; // StringBuilder 初始容量 8
+  let cap = 8; // 可变缓冲区初始容量 8
   let len = 0;
   let nSum = 0;
   let bSum = 0;
@@ -158,7 +251,7 @@ function precompute() {
     // 朴素 +=:新串长 k,要把旧的 k-1 个字符全部重抄 + 写 1 个新字符
     nSum += k;
     naive.push(nSum);
-    // StringBuilder:写 1 个字符;仅当容量满时翻倍并搬家(拷贝 len 个)
+    // 可变缓冲区:写 1 个字符;仅当容量满时翻倍并搬家(拷贝 len 个)
     if (len === cap) {
       bSum += len;
       cap *= 2;
@@ -196,12 +289,17 @@ export function ConcatLab() {
   return (
     <div className="viz">
       <div className="viz-title">
-        拼接赛跑 —— 追加 {N} 个字符,谁拷贝得少?
+        <T
+          en={<>Concatenation race: append {N} characters, who copies less?</>}
+          zh={<>拼接赛跑 —— 追加 {N} 个字符,谁拷贝得少?</>}
+        />
       </div>
       <div className="viz-stage" style={{ flexDirection: "column", gap: 8 }}>
         <div className="str-race">
           <div className="str-race-row">
-            <span className="str-race-label">每次 s += c(重建)</span>
+            <span className="str-race-label">
+              <T en="s += c (rebuild each time)" zh="每次 s += c(重建)" />
+            </span>
             <div className="str-race-track">
               <div
                 className="str-race-bar"
@@ -209,10 +307,20 @@ export function ConcatLab() {
                 style={{ width: `${(nv / max) * 100}%` }}
               />
             </div>
-            <span className="str-race-num">已拷贝 {nv} 字符</span>
+            <span className="str-race-num">
+              <T
+                en={<>{nv} chars copied</>}
+                zh={<>已拷贝 {nv} 字符</>}
+              />
+            </span>
           </div>
           <div className="str-race-row">
-            <span className="str-race-label">StringBuilder 追加</span>
+            <span className="str-race-label">
+              <T
+                en="Append to a mutable buffer"
+                zh="往可变缓冲区追加"
+              />
+            </span>
             <div className="str-race-track">
               <div
                 className="str-race-bar"
@@ -220,31 +328,79 @@ export function ConcatLab() {
                 style={{ width: `${(bv / max) * 100}%` }}
               />
             </div>
-            <span className="str-race-num">已拷贝 {bv} 字符</span>
+            <span className="str-race-num">
+              <T
+                en={<>{bv} chars copied</>}
+                zh={<>已拷贝 {bv} 字符</>}
+              />
+            </span>
           </div>
         </div>
       </div>
       <div className="viz-msg" aria-live="polite">
         {step === 0 ? (
-          <>
-            两位选手做同一件事:往字符串尾部追加 {N} 个字符。
-            比的不是次数(都一样),是<b>背后总共拷贝了多少字符</b>。
-          </>
+          <T
+            en={
+              <>
+                Both runners do the same job: append {N} characters to a string.
+                The number of appends is identical. What differs is{" "}
+                <b>how many characters get copied in total</b>.
+              </>
+            }
+            zh={
+              <>
+                两位选手做同一件事:往字符串尾部追加 {N} 个字符。
+                追加次数完全一样,比的是<b>背后总共拷贝了多少字符</b>。
+              </>
+            }
+          />
         ) : done ? (
-          <>
-            终点:朴素 += 拷贝了 <b>{nv}</b> 字符(≈ n²/2),StringBuilder 只拷贝了{" "}
-            <b>{bv}</b>(≈ 2n,含扩容搬家)—— 差 <b>{Math.round(nv / bv)} 倍</b>。
-            n 再大十倍,差距就是百倍:这就是 O(n²) 与 O(n) 的区别。
-          </>
+          <T
+            en={
+              <>
+                Finish line: <code>+=</code> copied <b>{nv}</b> characters
+                (about n²/2), while the mutable buffer copied <b>{bv}</b> (about
+                2n, including the resizing). That is a factor of{" "}
+                <b>{Math.round(nv / bv)}</b>. Make n ten times larger and the gap
+                becomes a hundred times: this is the difference between O(n²) and
+                O(n).
+              </>
+            }
+            zh={
+              <>
+                终点:<code>+=</code> 拷贝了 <b>{nv}</b> 个字符(≈ n²/2),
+                可变缓冲区只拷贝了 <b>{bv}</b> 个(≈ 2n,含扩容搬家)——
+                相差 <b>{Math.round(nv / bv)}</b> 倍。n 再大十倍,差距就是百倍:
+                这就是 O(n²) 与 O(n) 的区别。
+              </>
+            }
+          />
         ) : (
-          <>
-            第 {step} 次追加:+= 要新建长度 {step} 的串、重抄全部旧字符(本次拷贝{" "}
-            <b>{step}</b> 个);StringBuilder 只往数组空位写 1 个
-            {builder[step] - builder[step - 1] > 1 ? (
-              <>(这一步刚好触发扩容,额外搬家一次)</>
-            ) : null}
-            。
-          </>
+          <T
+            en={
+              <>
+                Append {step}: <code>+=</code> allocates a new string of length{" "}
+                {step} and copies every old character into it (<b>{step}</b>{" "}
+                copies this step). The mutable buffer writes 1 character into a
+                free slot
+                {builder[step] - builder[step - 1] > 1
+                  ? ", and this step happens to fill the buffer, so it also grows once"
+                  : ""}
+                .
+              </>
+            }
+            zh={
+              <>
+                第 {step} 次追加:<code>+=</code> 要新建长度 {step}{" "}
+                的串并重抄全部旧字符(本次拷贝 <b>{step}</b> 个);
+                可变缓冲区只往数组空位写 1 个
+                {builder[step] - builder[step - 1] > 1
+                  ? ",这一步刚好装满,顺带扩容搬家一次"
+                  : ""}
+                。
+              </>
+            }
+          />
         )}
       </div>
       <div className="viz-ctl">
@@ -256,7 +412,13 @@ export function ConcatLab() {
             setPlaying((p) => !p);
           }}
         >
-          {playing ? "⏸ 暂停" : done ? "↻ 重赛" : "▶ 开跑"}
+          {playing ? (
+            <T en="⏸ Pause" zh="⏸ 暂停" />
+          ) : done ? (
+            <T en="↻ Race again" zh="↻ 重赛" />
+          ) : (
+            <T en="▶ Start" zh="▶ 开跑" />
+          )}
         </button>
         <button
           type="button"
@@ -266,11 +428,11 @@ export function ConcatLab() {
             setStep(0);
           }}
         >
-          重置
+          <T en="Reset" zh="重置" />
         </button>
         <span className="mono dim" style={{ marginLeft: "auto", fontSize: 12 }}>
-          进度 {step} / {N}
-          {step > 0 && <> · 当前差距 {(nv / Math.max(bv, 1)).toFixed(1)}×</>}
+          <T en={<>Step {step} / {N}</>} zh={<>进度 {step} / {N}</>} />
+          {step > 0 && <> · {(nv / Math.max(bv, 1)).toFixed(1)}×</>}
         </span>
       </div>
     </div>

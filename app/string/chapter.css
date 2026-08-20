@@ -1,4 +1,5 @@
-/* 第 2 章 · 字符串 —— 章节专属样式(全部 .str- 前缀,颜色只用 token) */
+/* 第 2 章 · 字符串 —— 章节专属样式(全部 .str- 前缀,颜色只用 token)。
+   列宽按英文文案留了余量:英文比中文长,固定网格列不能卡着中文的宽度写。 */
 
 /* ---------- EncodeLab:逐字符编码表 ---------- */
 
@@ -30,7 +31,7 @@
 
 .str-enc-row {
   display: grid;
-  grid-template-columns: 52px 100px 1fr 120px;
+  grid-template-columns: 52px 100px 1fr 158px;
   align-items: center;
   gap: 12px;
   padding: 9px 14px;
@@ -119,7 +120,7 @@
 
 .str-race-row {
   display: grid;
-  grid-template-columns: 150px 1fr 130px;
+  grid-template-columns: 200px 1fr 168px;
   align-items: center;
   gap: 14px;
 }
@@ -127,8 +128,20 @@
 .str-race-label {
   font-family: var(--font-mono);
   font-size: 12.5px;
+  line-height: 1.45;
   color: var(--text-2);
   text-align: right;
+}
+
+/* 窄屏:三列固定网格放不下英文标签 → 堆成单列 */
+@media (max-width: 640px) {
+  .str-race-row {
+    grid-template-columns: 1fr;
+    gap: 5px;
+  }
+  .str-race-label {
+    text-align: left;
+  }
 }
 
 .str-race-track {
