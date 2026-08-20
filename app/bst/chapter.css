@@ -138,6 +138,13 @@
   box-shadow: 0 0 0 3px var(--acc-soft);
 }
 
+/* 实验室控制条右侧的统计文字(英文比中文长,允许整体换行) */
+[data-ch="bst"] .bst-stats {
+  margin-left: auto;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
 /* 静态小图(删除三情况 / 旋转)容器 */
 [data-ch="bst"] .bst-fig {
   display: flex;
