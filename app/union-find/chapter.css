@@ -1,4 +1,5 @@
-/* 第 11 章 · 并查集 —— 本章专属样式(全部带 .uf- 前缀,颜色只用 token) */
+/* 第 11 章 · 并查集 —— 本章专属样式(全部带 .uf- 前缀,颜色只用 token)。
+   英文文案比中文长,.uf-stat / figcaption 都允许换行,不靠缩小字号硬塞。 */
 
 [data-ch="union-find"] .uf-svg {
   width: 100%;
@@ -97,11 +98,21 @@
   border-radius: 10px;
 }
 
+/* 图例:英文更长,允许自然换行并在窄屏独占一行 */
 .uf-stat {
   font-family: var(--font-mono);
   font-size: 12px;
+  line-height: 1.5;
   color: var(--text-2);
   margin-left: auto;
+  max-width: 100%;
+}
+
+@media (max-width: 720px) {
+  .uf-stat {
+    margin-left: 0;
+    flex-basis: 100%;
+  }
 }
 
 .uf-stat b {

@@ -1,12 +1,16 @@
 "use client";
 
 // 第 11 章 · 并查集的招牌可视化 UFLab:
-//  - 一排节点(SVG 森林),点选两个节点执行 union,动画演示 find 顺藤摸瓜 + 两树合并;
+//  - 一排节点(SVG 森林),点选两个节点执行 union,动画演示 find 一路爬到根 + 两树合并;
 //  - 「最坏顺序 union」按钮:0-1, 1-2, … 连续合并,不带按秩合并时会退化成一条长链;
 //  - 「路径压缩」「按秩合并」两个开关,开着再跑一遍,亲眼对比树形差异;
 //  - 下方同步显示 parent 数组 —— 强调「一个数组就是整片森林」。
+//
+// 双语:标题、旁白、按钮、图例、aria-label 全部通过 <T> / useL() 切换。
+// 口径统一:深度按「边数」计,所以 10 个节点连成的链深度是 9,find 走 9 步。
 
 import { useState, type ReactNode } from "react";
+import { useL, T } from "@/lib/i18n";
 
 const N = 10;
 const SLOT = 62;
@@ -57,6 +61,7 @@ export function UFLab({
   defaultPC?: boolean;
   defaultRank?: boolean;
 }) {
+  const L = useL();
   const [parent, setParent] = useState<number[]>(() =>
     Array.from({ length: N }, (_, i) => i),
   );
@@ -68,7 +73,10 @@ export function UFLab({
   const [bad, setBad] = useState<Set<number>>(new Set());
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<ReactNode>(
-    "初始:10 个节点各自为营,parent[i] = i,每个人都是自己的老大。点两个节点试试 union。",
+    <T
+      en="Ten elements, ten separate sets. parent[i] = i, so every element is its own root. Click two nodes to union them."
+      zh="10 个元素,10 个独立集合。parent[i] = i,每个元素都是自己所在树的根。点两个节点即可 union。"
+    />,
   );
 
   const { pos, roots, width, height } = layout(parent);
@@ -92,11 +100,22 @@ export function UFLab({
       cur = p[cur];
       litNow.add(cur);
       setLit(new Set(litNow));
+      const from = path[path.length - 1];
+      const to = cur;
       setMsg(
-        <>
-          find({x}):{path[path.length - 1]} 不是根(parent 指向 {cur}
-          ),继续往上爬…
-        </>,
+        <T
+          en={
+            <>
+              find({x}): {from} is not a root, because parent[{from}] = {to}.
+              Keep climbing.
+            </>
+          }
+          zh={
+            <>
+              find({x}):{from} 不是根,因为 parent[{from}] = {to},继续往上爬。
+            </>
+          }
+        />,
       );
       await sleep(speed);
     }
@@ -106,10 +125,21 @@ export function UFLab({
       for (const node of path) np[node] = root;
       setParent(np);
       setMsg(
-        <>
-          <b>路径压缩</b>:既然都爬到根 {root} 了,顺手把沿途的{" "}
-          {path.join("、")} 全部改挂到根上 —— 下次 find 一步到位。
-        </>,
+        <T
+          en={
+            <>
+              <b>Path compression</b>: the walk already reached root {root}, so
+              repoint every node on the way ({path.join(", ")}) straight at the
+              root. The next find on any of them takes one step.
+            </>
+          }
+          zh={
+            <>
+              <b>路径压缩</b>:反正已经爬到根 {root} 了,顺手把沿途的{" "}
+              {path.join("、")} 全部改指向根 —— 它们下一次 find 一步到位。
+            </>
+          }
+        />,
       );
       await sleep(speed + 250);
       return { root, p: np };
@@ -122,10 +152,20 @@ export function UFLab({
     const rk = [...rank];
 
     setMsg(
-      <>
-        union({a}, {b}):第一步永远是先找两边的<b>根</b> —— 合并的是两个帮派,
-        不是两个成员。
-      </>,
+      <T
+        en={
+          <>
+            union({a}, {b}): the first step is always to find both{" "}
+            <b>roots</b>. What gets merged is two sets, not two elements.
+          </>
+        }
+        zh={
+          <>
+            union({a}, {b}):第一步永远是先找出两边的<b>根</b> ——
+            合并的是两个集合,不是两个元素。
+          </>
+        }
+      />,
     );
     await sleep(speed + 150);
 
@@ -137,11 +177,23 @@ export function UFLab({
     if (ra.root === rb.root) {
       setBad(new Set([ra.root]));
       setMsg(
-        <>
-          find({a}) 和 find({b}) 都是 <b>{ra.root}</b> ——
-          本来就是一伙的,什么都不用做(这个「已连通还想连」的信号,正是 LC 684
-          找环的钥匙)。
-        </>,
+        <T
+          en={
+            <>
+              find({a}) and find({b}) both return <b>{ra.root}</b>. The two
+              elements are already in the same set, so union does nothing and
+              the number of components stays at <b>{compCount}</b>. This signal
+              is exactly what LC 684 uses to detect a cycle.
+            </>
+          }
+          zh={
+            <>
+              find({a}) 和 find({b}) 都返回 <b>{ra.root}</b> ——
+              两个元素本来就在同一个集合里,union 什么都不做,连通块数仍是{" "}
+              <b>{compCount}</b>。这个信号正是 LC 684 用来找环的依据。
+            </>
+          }
+        />,
       );
       await sleep(900);
       setBad(new Set());
@@ -160,17 +212,40 @@ export function UFLab({
     setParent(p);
     setLit(new Set([child, boss]));
     setMsg(
-      <>
-        两个根不同 → 合并:parent[{child}] = {boss}
-        {useRank ? (
+      <T
+        en={
           <>
-            (<b>按秩合并</b>:让矮的那棵挂到高的下面,树高才不会白白 +1)
+            The two roots differ, so merge: parent[{child}] = {boss}
+            {useRank ? (
+              <>
+                {" "}
+                (<b>union by rank</b>: the shorter tree goes under the taller
+                one, so the height does not grow)
+              </>
+            ) : (
+              <>
+                {" "}
+                (no union by rank: height is ignored, {child} is simply
+                attached to {boss})
+              </>
+            )}
+            . Components {compCount} → <b>{compCount - 1}</b>.
           </>
-        ) : (
-          <>(不按秩合并:不看高矮,直接把 {child} 挂给 {boss})</>
-        )}
-        。连通块 {compCount} → <b>{compCount - 1}</b>。
-      </>,
+        }
+        zh={
+          <>
+            两个根不同 → 合并:parent[{child}] = {boss}
+            {useRank ? (
+              <>
+                (<b>按秩合并</b>:矮的那棵挂到高的下面,树高不会增加)
+              </>
+            ) : (
+              <>(不按秩合并:不看高矮,直接把 {child} 挂给 {boss})</>
+            )}
+            。连通块 {compCount} → <b>{compCount - 1}</b>。
+          </>
+        }
+      />,
     );
     await sleep(speed + 300);
     setLit(new Set());
@@ -181,15 +256,24 @@ export function UFLab({
     if (sel === null) {
       setSel(i);
       setMsg(
-        <>
-          已选中 <b>{i}</b>,再点一个节点,就执行 union({i}, ?)。
-        </>,
+        <T
+          en={
+            <>
+              <b>{i}</b> is selected. Click a second node to run union({i}, ?).
+            </>
+          }
+          zh={
+            <>
+              已选中 <b>{i}</b>,再点一个节点就执行 union({i}, ?)。
+            </>
+          }
+        />,
       );
       return;
     }
     if (sel === i) {
       setSel(null);
-      setMsg("取消选择。");
+      setMsg(<T en="Selection cleared." zh="已取消选择。" />);
       return;
     }
     const a = sel;
@@ -208,9 +292,10 @@ export function UFLab({
     setRank(Array(N).fill(0));
     setLit(new Set());
     setMsg(
-      <>
-        重置完毕,按最坏顺序连续执行 union(0,1), union(1,2), …, union(8,9)…
-      </>,
+      <T
+        en="Reset. Now running union(0,1), union(1,2), …, union(8,9) in that order."
+        zh="已重置,现在按 union(0,1), union(1,2), …, union(8,9) 的顺序连续合并。"
+      />,
     );
     await sleep(700);
     let p = Array.from({ length: N }, (_, i) => i);
@@ -229,7 +314,7 @@ export function UFLab({
       setLit(new Set([child, boss]));
       setMsg(
         <>
-          union({i}, {i + 1}):parent[{child}] = {boss}
+          union({i}, {i + 1}): parent[{child}] = {boss}
         </>,
       );
       await sleep(360);
@@ -249,15 +334,44 @@ export function UFLab({
     );
     setMsg(
       useRank ? (
-        <>
-          按秩合并生效:每次都是矮树挂高树,最深也只有 <b>{depth}</b> 层 ——
-          树高被压在 O(log n)。再关掉开关跑一次,对比一下。
-        </>
+        <T
+          en={
+            <>
+              Union by rank is on. The shorter tree always went under the taller
+              one, so the deepest node is only <b>{depth}</b> step
+              {depth === 1 ? "" : "s"} from its root. Union by rank alone keeps
+              the height within O(log n). Turn the switch off and run it again
+              to compare.
+            </>
+          }
+          zh={
+            <>
+              按秩合并已生效:每次都是矮树挂高树,最深的节点距离根也只有{" "}
+              <b>{depth}</b> 步。单靠按秩合并,树高就被压在 O(log n) 以内。
+              关掉开关再跑一次,对比一下。
+            </>
+          }
+        />
       ) : (
-        <>
-          退化情形:不按秩合并的 union 把树连成了一条 <b>{depth} 层</b>的长链 —— find(0)
-          要爬 {depth} 步,退化成 O(n),跟链表没区别。打开下面的优化开关再跑一次。
-        </>
+        <T
+          en={
+            <>
+              Degenerate case: without union by rank, every merge hung the old
+              root under a fresh single node, so the 10 elements became one
+              chain. The deepest node is <b>{depth}</b> steps from the root, so
+              find costs O(n) here, no better than scanning a linked list. Turn
+              on the switches below and run it again.
+            </>
+          }
+          zh={
+            <>
+              退化情形:不按秩合并时,每次都把旧的根挂到一个光杆节点下面,
+              10 个元素连成了一条链。最深的节点距离根 <b>{depth}</b> 步,
+              此时 find 的代价是 O(n),和扫一遍链表没有区别。
+              打开下面的开关再跑一次。
+            </>
+          }
+        />
       ),
     );
     setBusy(false);
@@ -270,13 +384,21 @@ export function UFLab({
     setSel(null);
     setLit(new Set());
     setBad(new Set());
-    setMsg("已重置:10 个连通块,各自为营。");
+    setMsg(
+      <T
+        en="Reset: 10 components, each holding one element."
+        zh="已重置:10 个连通块,每块一个元素。"
+      />,
+    );
   };
 
   return (
     <div className="viz">
       <div className="viz-title">
-        并查集实验室 —— 点两个节点合并;开关优化,对比树形
+        <T
+          en="Union-Find lab — click two nodes to union them, toggle the optimizations, compare the shapes"
+          zh="并查集实验室 —— 点两个节点合并,开关优化,对比树形"
+        />
       </div>
       <div className="viz-stage" style={{ flexDirection: "column", gap: 18 }}>
         <svg
@@ -284,7 +406,10 @@ export function UFLab({
           viewBox={`0 0 ${width} ${height}`}
           style={{ maxWidth: width }}
           role="img"
-          aria-label="并查集森林"
+          aria-label={L({
+            en: "Union-Find forest",
+            zh: "并查集森林",
+          })}
         >
           <defs>
             <marker
@@ -299,7 +424,7 @@ export function UFLab({
               <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--text-3)" />
             </marker>
           </defs>
-          {/* 边:子 → 父(箭头指向老大) */}
+          {/* 边:子 → 父(箭头指向父节点) */}
           {parent.map((par, i) => {
             if (par === i) return null;
             const a = pos[i];
@@ -337,7 +462,7 @@ export function UFLab({
                 className={cls}
                 onClick={() => onNodeClick(i)}
                 role="button"
-                aria-label={`节点 ${i}`}
+                aria-label={L({ en: `Node ${i}`, zh: `节点 ${i}` })}
               >
                 {par === i && (
                   <text className="uf-crown" x={x} y={y - 26}>
@@ -353,7 +478,10 @@ export function UFLab({
           })}
         </svg>
         {/* parent 数组同步视图 */}
-        <div className="uf-arr" aria-label="parent 数组">
+        <div
+          className="uf-arr"
+          aria-label={L({ en: "parent array", zh: "parent 数组" })}
+        >
           {parent.map((par, i) => (
             <div
               key={i}
@@ -377,10 +505,10 @@ export function UFLab({
           onClick={worstCase}
           disabled={busy}
         >
-          最坏顺序 union ×9
+          <T en="Worst-case union ×9" zh="最坏顺序 union ×9" />
         </button>
         <button type="button" className="btn btn-sm" onClick={reset} disabled={busy}>
-          重置
+          <T en="Reset" zh="重置" />
         </button>
         <button
           type="button"
@@ -389,7 +517,8 @@ export function UFLab({
           onClick={() => setUsePC((v) => !v)}
           disabled={busy}
         >
-          {usePC ? "✓" : "✗"} 路径压缩
+          {usePC ? "✓" : "✗"}{" "}
+          <T en="Path compression" zh="路径压缩" />
         </button>
         <button
           type="button"
@@ -398,10 +527,14 @@ export function UFLab({
           onClick={() => setUseRank((v) => !v)}
           disabled={busy}
         >
-          {useRank ? "✓" : "✗"} 按秩合并
+          {useRank ? "✓" : "✗"} <T en="Union by rank" zh="按秩合并" />
         </button>
         <span className="uf-stat">
-          连通块 <b>{compCount}</b> · 👑 = 根(parent 数组里绿格 = 自己指自己)
+          <T en="components" zh="连通块" /> <b>{compCount}</b> ·{" "}
+          <T
+            en="👑 = root; a green cell in the parent array points at itself"
+            zh="👑 = 根;parent 数组里的绿格 = 自己指自己"
+          />
         </span>
       </div>
     </div>
