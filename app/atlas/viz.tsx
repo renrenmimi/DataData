@@ -228,7 +228,7 @@ const TREE: Record<string, Node> = {
     structure: { en: "Array", zh: "数组 Array" },
     href: "/array",
     why: {
-      en: "O(1) random access and good cache behaviour, so it is the first choice when you read much more than you write. If it is sorted, you also get binary search in O(log n).",
+      en: "O(1) random access and good cache behavior, so it is the first choice when you read much more than you write. If it is sorted, you also get binary search in O(log n).",
       zh: "O(1) 随机访问 + 缓存友好,读多写少的首选。有序还送二分查找 O(log n)。",
     },
     runnerUp: {

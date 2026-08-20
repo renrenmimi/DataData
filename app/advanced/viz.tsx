@@ -697,15 +697,17 @@ export function SegAnatomy() {
               <b> splits the range in half</b>, and a leaf holds a single
               element. A range of odd length gives the extra element to the left
               child: for [0,2], mid = (0+2)/2 = 1, so the children are [0,1] and
-              [2,2]. The height is ⌈log₂6⌉ + 1 = 4 levels, and every operation
-              only walks along that height.
+              [2,2]. The tree has ⌈log₂6⌉ + 1 = 4 levels, so its height is 3
+              edges, and every operation only walks one path from top to
+              bottom.
             </>
           }
           zh={
             <>
               根节点 = 整个数组的和(24);每往下一层,区间<b>对半分</b>;叶子 = 单个元素。
               [0,2] 这种奇数长度的区间就让左边多分一个:mid = (0+2)/2 = 1 → 左孩子 [0,1]、
-              右孩子 [2,2]。树高 = ⌈log₂6⌉ + 1 = 4 层,所有操作都只沿着树高走。
+              右孩子 [2,2]。这棵树共 ⌈log₂6⌉ + 1 = 4 层,按边数算树高是 3,
+              所有操作都只沿着一条自顶向下的路径走。
             </>
           }
         />

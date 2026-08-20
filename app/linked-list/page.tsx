@@ -109,12 +109,12 @@ export default function LinkedListChapter() {
                   hundred thousand elements and operations landing in the
                   middle, that O(n) copying is a real cost. There is one cause:
                   an array ties <strong>logical order</strong> to{" "}
-                  <strong>physical order</strong>. Two neighbours are neighbours
+                  <strong>physical order</strong>. Two neighbors are neighbors
                   in memory, so there is no room between them.
                 </p>
                 <p>
                   A <strong>linked list</strong> removes that tie. An element no
-                  longer has to live next to its neighbour. Instead each element
+                  longer has to live next to its neighbor. Instead each element
                   carries a note that says where the next one is. You are given
                   the first address (<code>head</code>), you follow the note to
                   the second element, then the next, and so on. When a note
@@ -1365,11 +1365,11 @@ class DNode {
 class Doubly {
     // Insert x after node: four references, none of them optional
     static void insertAfter(DNode node, DNode x) {
-        x.prev = node;            // (1) x takes hold of its left neighbour
-        x.next = node.next;       // (2) x takes hold of its right neighbour
+        x.prev = node;            // (1) x takes hold of its left neighbor
+        x.next = node.next;       // (2) x takes hold of its right neighbor
         if (node.next != null)
-            node.next.prev = x;   // (3) right neighbour points back (may be absent)
-        node.next = x;            // (4) the left neighbour switches last
+            node.next.prev = x;   // (3) right neighbor points back (may be absent)
+        node.next = x;            // (4) the left neighbor switches last
     }
 
     // Delete node: no search for a predecessor. This is the point of prev
@@ -1417,11 +1417,11 @@ class Doubly {
 
 def insert_after(node, x):
     """Insert x after node: four references, none of them optional"""
-    x.prev = node             # (1) x takes hold of its left neighbour
-    x.next = node.next        # (2) x takes hold of its right neighbour
+    x.prev = node             # (1) x takes hold of its left neighbor
+    x.next = node.next        # (2) x takes hold of its right neighbor
     if node.next:
-        node.next.prev = x    # (3) right neighbour points back (may be absent)
-    node.next = x             # (4) the left neighbour switches last
+        node.next.prev = x    # (3) right neighbor points back (may be absent)
+    node.next = x             # (4) the left neighbor switches last
 
 def remove(node):
     """Delete node: no search for a predecessor. This is the point of prev"""
@@ -1468,10 +1468,10 @@ class DNode {
 
 // Insert x after node: four references, none of them optional
 function insertAfter(node, x) {
-  x.prev = node;              // (1) x takes hold of its left neighbour
-  x.next = node.next;         // (2) x takes hold of its right neighbour
-  if (node.next) node.next.prev = x; // (3) right neighbour points back
-  node.next = x;              // (4) the left neighbour switches last
+  x.prev = node;              // (1) x takes hold of its left neighbor
+  x.next = node.next;         // (2) x takes hold of its right neighbor
+  if (node.next) node.next.prev = x; // (3) right neighbor points back
+  node.next = x;              // (4) the left neighbor switches last
 }
 
 // Delete node: no search for a predecessor. This is the point of prev

@@ -24,8 +24,9 @@ function treePos(i: number, w: number) {
   return { x: ((k + 0.5) / 2 ** d) * w, y: 36 + d * 62, d };
 }
 
-/** n 个结点的完全二叉树高度(按边数),空堆记 0 */
-const heightOf = (n: number) => (n <= 1 ? 0 : Math.floor(Math.log2(n)));
+/** n 个结点的完全二叉树高度(按边数):单结点为 0,空堆按惯例记 −1 */
+const heightOf = (n: number) =>
+  n <= 0 ? -1 : n === 1 ? 0 : Math.floor(Math.log2(n));
 
 /* ================= HeapLab ================= */
 

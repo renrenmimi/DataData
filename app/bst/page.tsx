@@ -7,7 +7,8 @@
 //
 // 双语:所有文案走 <T> / Loc<…>;代码窗的注释按语言给 en / zh 两版,
 // 可执行行逐行相同,所以 hl 行号两版通用。
-// 全章「高度 h」按层数计:只有根时 h = 1,一条 n 节点的链 h = n。
+// 全章「高度 h」按边数计(与第 7、9 章统一):只有根时 h = 0,空树记 −1,
+// 一条 n 节点的链 h = n − 1,n 个节点的平衡下限 h = ⌊log₂n⌋。
 
 import "./chapter.css";
 import {
@@ -376,14 +377,14 @@ const F108: ArrayFrame[] = [
     msg: {
       en: (
         <>
-          Finally [9] becomes the right child of 5. Done: 5 nodes and height 3,
-          which is ⌈log₂(5+1)⌉. Each element is used exactly once, so building
-          the tree is <b>O(n)</b>.
+          Finally [9] becomes the right child of 5. Done: 5 nodes and height 2,
+          which is ⌊log₂5⌋. Each element is used exactly once, so building the
+          tree is <b>O(n)</b>.
         </>
       ),
       zh: (
         <>
-          最后 [9] → 5 的右孩子。完成:5 个节点、高度 3 = ⌈log₂(5+1)⌉;
+          最后 [9] → 5 的右孩子。完成:5 个节点、树高 2 = ⌊log₂5⌋(按边数);
           每个元素恰好被用一次 → <b>O(n)</b> 建树。
         </>
       ),
@@ -642,15 +643,17 @@ export default function BSTChapter() {
                 <p>
                   At each node you ask one question, smaller or larger, and{" "}
                   <b>the whole subtree on the other side is dropped</b>. The
-                  number of comparisons equals the length of the path you walk,
-                  which is at most the height h. When the tree is balanced, each
-                  step removes about half the remaining nodes.
+                  number of comparisons equals the number of nodes on the path
+                  you walk, which is at most h + 1 (a path of h edges touches h +
+                  1 nodes). When the tree is balanced, each step removes about
+                  half the remaining nodes.
                 </p>
               }
               zh={
                 <p>
                   每到一个节点只问一次「大还是小」,<b>另一边的子树整棵被扔掉</b>。
-                  比较次数 = 走过的路径长度 ≤ 树高 h。
+                  比较次数 = 走过的路径上的节点数 ≤ h + 1
+                  (h 条边的路径串着 h + 1 个节点)。
                   树平衡时,每一步扔掉的大约就是剩余节点的一半。
                 </p>
               }
@@ -666,7 +669,7 @@ export default function BSTChapter() {
                 <p>
                   Insert: follow the search path to an empty slot, attach the new
                   node, change one pointer. Delete: at most one path is touched.
-                  Nothing is shifted along an array. This is the behaviour
+                  Nothing is shifted along an array. This is the behavior
                   inherited from the linked list.
                 </p>
               }
@@ -811,7 +814,7 @@ export default function BSTChapter() {
               <p>
                 With sorted input every new value turns the same way, and the
                 tree leans into a chain. The height h goes from about log n up to
-                n, and search stops removing subtrees and starts checking nodes
+                n − 1, and search stops removing subtrees and starts checking nodes
                 one by one, exactly like a linked list.{" "}
                 <b>The rule (left smaller, right larger) guarantees correctness,
                 not shape.</b>{" "}
@@ -821,7 +824,7 @@ export default function BSTChapter() {
             zh={
               <p>
                 顺序插入时每个新值都往同一边拐,树斜成一条链:
-                高度 h 从大约 log n 恶化到 n,查找从「整棵扔掉子树」
+                高度 h 从大约 log n 恶化到 n − 1,查找从「整棵扔掉子树」
                 退化成「逐个检查」—— 和链表一模一样。
                 <b>规矩(左小右大)只保证正确性,不保证形状。</b>
                 管形状的是 §05 的平衡树。
@@ -952,11 +955,12 @@ export default function BSTChapter() {
               <>
                 <p>
                   Why <strong>O(h)</strong> everywhere and not O(log n)? Because
-                  h, the height of the tree, is a <strong>variable</strong>.
-                  (This chapter counts height in levels: a tree with only a root
-                  has height 1.) When the tree is balanced, h ≈ log₂n, since each
+                  h, the height of the tree, is a <strong>variable</strong>. As
+                  in chapter 7, height is the number of <b>edges</b> on the
+                  longest root-to-leaf path, so a tree with only a root has
+                  height 0. When the tree is balanced, h = ⌊log₂n⌋, since each
                   level can hold twice as many nodes as the one above it. When
-                  sorted input makes the tree degenerate into a chain, h = n.
+                  sorted input makes the tree degenerate into a chain, h = n − 1.
                   Saying O(log n) without a condition is wrong. The complete
                   answer is: <b>O(h); that is log n when the tree is balanced and
                   n in the worst case, and production code uses a red-black tree
@@ -975,9 +979,9 @@ export default function BSTChapter() {
               <>
                 <p>
                   为什么全都写 <strong>O(h)</strong> 而不是 O(log n)?
-                  因为 h(树高)是个<strong>变量</strong>
-                  (本章按层数计高度:只有根时高度为 1)。完全平衡时 h ≈ log₂n
-                  —— 每层能装的节点数是上一层的两倍;顺序插入退化成链时 h = n。
+                  因为 h(树高)是个<strong>变量</strong>。和第 7 章一样,
+                  树高按<b>边数</b>计:只有根时 h = 0。完全平衡时 h = ⌊log₂n⌋
+                  —— 每层能装的节点数是上一层的两倍;顺序插入退化成链时 h = n − 1。
                   不加条件地说 O(log n) 是错的。完整答案是:
                   <b>O(h),平衡时 log n、最坏 n,工程用红黑树把 h 钉在 log n</b>。
                 </p>
@@ -1841,15 +1845,16 @@ class BST {
                 <T
                   en={
                     <>
-                      The left side of 3 is 2 levels deep and the right side is
-                      0, so BF = +2, over the limit. The shape is
-                      &quot;left-left&quot;, and the repair is a{" "}
-                      <b>right rotation</b>.
+                      The left subtree of 3 has height 1, and its right subtree
+                      is empty, which counts as −1. So BF = 1 − (−1) = +2, over
+                      the limit. The shape is &quot;left-left&quot;, and the
+                      repair is a <b>right rotation</b>.
                     </>
                   }
                   zh={
                     <>
-                      3 的左边高 2 层、右边高 0 层:BF = +2,超标。
+                      3 的左子树高 1(按边数),右子树为空、记作 −1:
+                      BF = 1 − (−1) = +2,超标。
                       失衡形状是「左左」—— 解法:<b>右旋</b>。
                     </>
                   }
@@ -2402,8 +2407,9 @@ arr.splice(lowerBound(arr, 25), 0, 25);  // 有序插入,搬移 O(n)
                 the setting is different. The data lives on <b>disk</b>, and disk
                 is read one page at a time, usually 16KB, so reading 1 byte costs
                 almost the same as reading 16KB. A red-black tree stores one key
-                per node and has height about log₂n, roughly 20 levels for a
-                million rows, which means up to 20 disk reads for one lookup. A
+                per node and has height about log₂n, so for a million rows one
+                lookup walks a path of roughly 20 nodes, which means up to 20
+                disk reads. A
                 B+ tree instead fills each node with{" "}
                 <b>a whole page of several hundred keys</b>. With a few hundred
                 children per node, a million rows fit in 3 or 4 levels:{" "}
@@ -2422,8 +2428,9 @@ arr.splice(lowerBound(arr, 25), 0, 25);  // 有序插入,搬移 O(n)
                 MySQL(InnoDB)的索引是 B+ 树 —— 同样是有序树,
                 为什么不用内存里更快的红黑树?因为场景变了:数据在<b>磁盘</b>上,
                 而磁盘按「页」(通常 16KB)整块读取,读 1 字节和读 16KB 代价几乎一样。
-                红黑树一个节点存一个 key,树高约 log₂n(百万数据 ≈ 20 层),
-                意味着一次查询最多 20 次磁盘读取。B+ 树则让一个节点装满
+                红黑树一个节点存一个 key,树高约 log₂n
+                (百万数据一次查询要走约 20 个节点),意味着最多 20 次磁盘读取。
+                B+ 树则让一个节点装满
                 <b>一整页的几百个 key</b>,分叉数几百,百万数据只需 3~4 层 ——
                 <b>矮胖的树 = 极少的读取次数</b>。此外 B+ 树把数据全放叶子层、
                 叶子之间用链表串起来:范围扫描(<code>WHERE id BETWEEN …</code>)
@@ -2980,11 +2987,13 @@ arr.splice(lowerBound(arr, 25), 0, 25);  // 有序插入,搬移 O(n)
                 <T
                   en={
                     <>
-                      5 nodes, height 3 = ⌈log₂(5+1)⌉ — exactly the minimum
-                      possible.
+                      5 nodes, 3 levels, height 2 = ⌊log₂5⌋ — exactly the
+                      minimum possible.
                     </>
                   }
-                  zh={<>5 个节点,高度 3 = ⌈log₂(5+1)⌉ —— 正好贴着下限。</>}
+                  zh={
+                    <>5 个节点、3 层,树高 2 = ⌊log₂5⌋(按边数)—— 正好贴着下限。</>
+                  }
                 />
               }
             />
@@ -3214,15 +3223,17 @@ arr.splice(lowerBound(arr, 25), 0, 25);  // 有序插入,搬移 O(n)
           {
             en: (
               <>
-                Search, insert, and delete are all <b>O(h)</b>: h ≈ log n while
-                the tree is balanced, and h = n after sorted input degenerates
-                it. State the complexity with h, or state the condition.
+                Search, insert, and delete are all <b>O(h)</b>, with the height h
+                counted in edges: h = ⌊log₂n⌋ while the tree is balanced, and
+                h = n − 1 after sorted input degenerates it. State the complexity
+                with h, or state the condition.
               </>
             ),
             zh: (
               <>
-                查找 / 插入 / 删除都是 <b>O(h)</b>:平衡时 h ≈ log n,
-                有序插入退化时 h = n —— 说复杂度带上 h,或者把条件说清楚。
+                查找 / 插入 / 删除都是 <b>O(h)</b>(树高按边数计):
+                平衡时 h = ⌊log₂n⌋,有序插入退化时 h = n − 1 ——
+                说复杂度带上 h,或者把条件说清楚。
               </>
             ),
           },

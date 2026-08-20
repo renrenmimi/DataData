@@ -328,9 +328,9 @@ const F200: ArrayFrame[] = [
     msg: {
       en: (
         <>
-          At (0,0): the right neighbour (0,1) is land, so union(0, 1) and{" "}
+          At (0,0): the right neighbor (0,1) is land, so union(0, 1) and{" "}
           <b>count goes 5 → 4</b>. Each cell only needs to look right and down,
-          because the left and upper neighbours were already joined when those
+          because the left and upper neighbors were already joined when those
           cells were visited.
         </>
       ),
@@ -351,7 +351,7 @@ const F200: ArrayFrame[] = [
     msg: {
       en: (
         <>
-          Still at (0,0): the lower neighbour (1,0), which is idx 4, is also
+          Still at (0,0): the lower neighbor (1,0), which is idx 4, is also
           land, so union(0, 4) and <b>count goes 4 → 3</b>. The three land cells
           in the top left are now one component.
         </>
@@ -374,7 +374,7 @@ const F200: ArrayFrame[] = [
       en: (
         <>
           (0,1) has water to the right and below, so it is skipped. At (0,3) the
-          right neighbour is outside the grid, and the lower neighbour (1,3),
+          right neighbor is outside the grid, and the lower neighbor (1,3),
           which is idx 7, is land, so union(3, 7) and{" "}
           <b>count goes 3 → 2</b>.
         </>
@@ -2493,7 +2493,7 @@ uf.union(ids.get("a@x.com"), ids.get("b@x.com"));`,
                   <code>id = r×cols + c</code> before it can go into the parent
                   array. This is the <b>row-major</b> layout from the array
                   chapter. Second, each cell only has to look{" "}
-                  <b>right and down</b>. Its left and upper neighbours were
+                  <b>right and down</b>. Its left and upper neighbors were
                   already joined when those cells were processed, so checking
                   them again is wasted work, the same reason 547 scans only the
                   upper triangle.
@@ -2712,7 +2712,7 @@ uf.union(ids.get("a@x.com"), ids.get("b@x.com"));`,
                   II: new land cells appear one at a time, and the current island
                   count has to be reported <b>immediately</b> after each one.
                   DFS would rescan the whole grid every time, while Union-Find
-                  only unions the new cell with its four neighbours and answers
+                  only unions the new cell with its four neighbors and answers
                   at once. <b>Counting a fixed grid once favours DFS. Merging
                   continuously over time favours Union-Find.</b>
                 </p>

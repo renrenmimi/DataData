@@ -582,7 +582,7 @@ export default function ArrayChapter() {
                   <strong>give it an index and it returns the element</strong>.
                 </p>
                 <p>
-                  The row of lockers follows three rules. Every behaviour of an
+                  The row of lockers follows three rules. Every behavior of an
                   array comes from these three rules.
                 </p>
               </>

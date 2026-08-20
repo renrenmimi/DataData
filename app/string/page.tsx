@@ -1283,7 +1283,7 @@ export default function StringChapter() {
                   per character looked like enough. Emoji broke that assumption,
                   and surrogate pairs are the patch. Java 9 and later store many
                   strings as Latin-1 bytes internally, but the API still counts
-                  UTF-16 code units, so the behaviour you see does not change.
+                  UTF-16 code units, so the behavior you see does not change.
                 </>
               }
               zh={

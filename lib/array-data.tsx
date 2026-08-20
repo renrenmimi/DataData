@@ -42,7 +42,7 @@ export const PROBLEMS: Problem[] = [
     d: "easy",
     tags: [TAG.twoPointers, TAG.inPlace],
     hint: {
-      en: "The array is sorted, so equal values are always neighbours. Let one pointer read and another pointer write.",
+      en: "The array is sorted, so equal values are always neighbors. Let one pointer read and another pointer write.",
       zh: "数组已排序,相等的元素一定挨在一起。一个指针负责读,一个指针负责写。",
     },
     key: {
@@ -333,7 +333,7 @@ export const PROBLEMS: Problem[] = [
     d: "medium",
     tags: [TAG.sorting, TAG.intervals],
     hint: {
-      en: "Sort by the left endpoint first, and overlapping intervals become neighbours.",
+      en: "Sort by the left endpoint first, and overlapping intervals become neighbors.",
       zh: "先按左端点排序,重叠的区间就会变成邻居。",
     },
     key: {
