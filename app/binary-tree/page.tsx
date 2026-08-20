@@ -270,6 +270,35 @@ export default function BinaryTreeChapter() {
           <T
             en={
               <p>
+                Two of those words carry a number, and this course counts that
+                number in <b>edges</b> — the usual convention. The{" "}
+                <b>depth</b> of a node is the number of edges from the root down
+                to it, so the root has depth 0. The <b>height</b> of a node is
+                the number of edges on the longest path from it down to a leaf,
+                so a leaf has height 0. The <b>height of the tree</b> is the
+                height of its root. A tree holding only a root therefore has
+                height 0, and an empty tree is conventionally −1. Chapters 8 and
+                9 keep this definition, so their formulas can be compared
+                directly.
+              </p>
+            }
+            zh={
+              <p>
+                这里面有两个词要带上数字,而本课程一律<b>按边数计</b>
+                (这也是主流约定):节点的<b>深度 depth</b> =
+                从根走到它经过的边数,所以根的深度是 0;节点的<b>高度 height</b>{" "}
+                = 从它往下走到叶子的最长路径的边数,所以叶子的高度是 0;
+                <b>整棵树的高度</b> = 根的高度。于是只有一个根的树,树高为 0;
+                空树按惯例记作 −1。第 8、9 章沿用同一套定义,
+                两章的公式可以直接对照。
+              </p>
+            }
+          />
+        </div>
+        <div className="prose">
+          <T
+            en={
+              <p>
                 Three shapes have names of their own. Read the naming carefully:
                 the Chinese and the English terms do not line up the way you would
                 guess, and the third one is what chapter 09 builds the heap on.
@@ -1878,7 +1907,7 @@ console.log(root.right.left.val); // 15`,
                   <b>Detail:</b> the LeetCode JS template uses the constructor
                   function style, <code>function TreeNode(val, left, right)</code>
                   . The class form above is fully compatible with it. You should
-                  recognise both.
+                  recognize both.
                 </>
               ),
               zh: (

@@ -92,18 +92,18 @@ export const PROBLEMS: Problem[] = [
       { en: "adjacent difference", zh: "相邻差" },
     ],
     hint: {
-      en: "In a sorted sequence the smallest difference is always between two neighbours. How does a BST produce a sorted sequence?",
+      en: "In a sorted sequence the smallest difference is always between two neighbors. How does a BST produce a sorted sequence?",
       zh: "升序序列里,最小差值一定出现在相邻两个数之间 —— BST 怎么变出升序序列?",
     },
     key: {
       en: (
         <>
           Traverse in order and keep prev, the previously visited value. At each
-          step update the answer with cur − prev. Why only neighbours: in a
+          step update the answer with cur − prev. Why only neighbors: in a
           sorted sequence, the difference between any two values is at least as
           large as the difference between some adjacent pair between them. One
           in-order pass, O(n) time and O(h) stack space. Rule of thumb: when a
-          BST problem mentions difference, neighbour, or k-th, think in-order
+          BST problem mentions difference, neighbor, or k-th, think in-order
           first.
         </>
       ),
@@ -439,8 +439,8 @@ export const QUIZ: QuizItem[] = [
       },
     ],
     why: {
-      en: "With sorted input every new value is larger (or smaller) than everything already in the tree, so it always turns the same way. The tree leans into a chain, h = n, and every operation degrades to O(n). This is exactly why AVL and red-black trees exist.",
-      zh: "有序插入时,每个新值都比现有全部值大(或小),永远往同一边拐 —— 树斜成一条链,h = n,全部操作退化成 O(n)。这正是 AVL / 红黑树诞生的原因。",
+      en: "With sorted input every new value is larger (or smaller) than everything already in the tree, so it always turns the same way. The tree leans into a chain, h = n − 1 (height counted in edges), and every operation degrades to O(n). This is exactly why AVL and red-black trees exist.",
+      zh: "有序插入时,每个新值都比现有全部值大(或小),永远往同一边拐 —— 树斜成一条链,h = n − 1(树高按边数计),全部操作退化成 O(n)。这正是 AVL / 红黑树诞生的原因。",
     },
   },
   {

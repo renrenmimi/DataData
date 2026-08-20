@@ -980,7 +980,7 @@ export default function AdvancedChapter() {
                   <>
                     <span className="t">Doubly linked list + hash map</span>
                     Give every node a prev pointer. Now unlinking has both
-                    neighbours at hand, so <b>removal is O(1) and inserting at
+                    neighbors at hand, so <b>removal is O(1) and inserting at
                     the head is O(1)</b>, and the hash map still locates any node
                     in O(1). The map answers &quot;where is this key&quot; and
                     the list answers &quot;how old is it&quot;. Each

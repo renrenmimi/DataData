@@ -595,7 +595,7 @@ export default function QueueChapter() {
                   removing at the head and inserting at the tail need no
                   traversal. The same rule as always: use the end that costs
                   nothing. A linked queue never resizes and never fills up. The
-                  price is one pointer per element and poor cache behaviour.
+                  price is one pointer per element and poor cache behavior.
                 </p>
               }
               zh={
@@ -1771,7 +1771,7 @@ const empty = head === q.length;
                 </td>
                 <td>
                   <code>LinkedList</code>{" "}
-                  <T en="(poor cache behaviour)" zh="(缓存不友好)" />
+                  <T en="(poor cache behavior)" zh="(缓存不友好)" />
                 </td>
                 <td>
                   <code>list.pop(0)</code>
@@ -2342,7 +2342,7 @@ MyQueue.prototype._transfer = function () {
                 right; report the maximum at every position.{" "}
                 <b> Brute force:</b> scan k elements per window, O(nk), which is
                 too slow at n = 10⁵. <b> Why it can be improved:</b> two
-                neighbouring windows share k − 1 elements, so brute force{" "}
+                neighboring windows share k − 1 elements, so brute force{" "}
                 <strong>scans almost the same stretch again and again</strong>.
                 It also throws information away: once an element has a larger
                 element to its right, it can never be the maximum of any later

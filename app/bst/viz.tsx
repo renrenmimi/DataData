@@ -8,7 +8,8 @@
 //  - TreeStepper:通用「树帧」播放器,精讲 LC 98 / LC 230 的逐帧动画用。
 //
 // 双语:标题、旁白、按钮、图内标签全部通过 <T> / useL() 切换。
-// 本章「高度」一律按层数计:只有根时高度为 1。
+// 本章「高度」一律按边数计(与第 7、9 章统一):只有根时高度为 0,空树记 −1,
+// 所以 n 个节点的树高下限是 ⌊log₂n⌋。
 
 import { useMemo, useState, type ReactNode } from "react";
 import { useStepper, StepControls } from "@/lib/stepper";
@@ -367,7 +368,7 @@ export function BSTLab() {
       <T
         en={
           <>
-            <b>5 nodes, height 5.</b> The tree leaned over into a chain, and
+            <b>5 nodes, height 4.</b> The tree leaned over into a chain, and
             finding 5 now takes 5 comparisons. O(h) has become O(n), which is
             what a linked list costs. Sorted input is the worst case for a plain
             BST, and §05 is about fixing it.
@@ -375,7 +376,7 @@ export function BSTLab() {
         }
         zh={
           <>
-            <b>5 个节点,高度 5</b> —— 树斜成了一条链,查 5 要比较 5 次。
+            <b>5 个节点,树高 4</b> —— 树斜成了一条链,查 5 要比较 5 次。
             O(h) 变成了 O(n),和链表一样慢。有序输入是裸 BST 的最坏情况,
             这正是 §05 平衡树要解决的问题。
           </>
@@ -392,8 +393,8 @@ export function BSTLab() {
     setRoot(buildSample());
     setMsg(
       <T
-        en="Back to the sample tree, which is perfectly balanced: 7 nodes, height 3."
-        zh="回到示例树(完美平衡):7 个节点,高度只有 3。"
+        en="Back to the sample tree, which is perfectly balanced: 7 nodes, height 2."
+        zh="回到示例树(完美平衡):7 个节点,树高只有 2。"
       />,
     );
   };
@@ -469,9 +470,9 @@ export function BSTLab() {
           <T en="Reset sample tree" zh="重置示例树" />
         </button>
         <span className="mono dim bst-stats">
-          <T en="nodes" zh="节点" /> {count} · <T en="height" zh="高度" />{" "}
-          {count === 0 ? 0 : depth + 1} · <T en="min height" zh="平衡下限" />{" "}
-          ⌈log₂(n+1)⌉ = {Math.ceil(Math.log2(count + 1))}
+          <T en="nodes" zh="节点" /> {count} · <T en="height" zh="树高" />{" "}
+          {count === 0 ? -1 : depth} · <T en="min height" zh="平衡下限" />{" "}
+          ⌊log₂n⌋ = {count === 0 ? -1 : Math.floor(Math.log2(count))}
         </span>
       </div>
     </div>

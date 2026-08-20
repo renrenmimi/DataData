@@ -675,7 +675,7 @@ export const QUIZ: QuizItem[] = [
       },
     ],
     why: {
-      en: "The invariant of BFS: at any moment the queue holds nodes from at most two neighbouring levels, and nodes of the same level are queued left to right. Dequeue one node, enqueue its children at the back, and first in, first out guarantees a whole level leaves before the next one starts. To split the output into levels, record the queue size before the inner loop and dequeue exactly that many nodes. This is the queue from chapter 05 doing real work.",
+      en: "The invariant of BFS: at any moment the queue holds nodes from at most two neighboring levels, and nodes of the same level are queued left to right. Dequeue one node, enqueue its children at the back, and first in, first out guarantees a whole level leaves before the next one starts. To split the output into levels, record the queue size before the inner loop and dequeue exactly that many nodes. This is the queue from chapter 05 doing real work.",
       zh: "BFS 的不变量:任一时刻队列里的节点最多横跨相邻两层,且同层节点按从左到右排队。出队一个、孩子入队尾 —— 先进先出保证整层出完才轮到下一层。想把输出切成一层一层,就在内层循环前先记下队列长度,本轮只出队这么多个。这正是第 5 章的队列在干实事。",
     },
   },
