@@ -88,6 +88,7 @@
 
 /* ---------- §02 LRU 实验室 ---------- */
 
+/* 英文行比中文长,给哈希表面板留出更宽的基础宽度 */
 .adv-lru-hash {
   border: 1px dashed var(--border-strong);
   border-radius: 14px;
@@ -95,7 +96,8 @@
   display: flex;
   flex-direction: column;
   gap: 5px;
-  min-width: 210px;
+  min-width: 250px;
+  max-width: 100%;
 }
 
 .adv-lru-hash .hd {
@@ -215,6 +217,8 @@
   font-family: var(--font-mono);
   font-size: 11px;
   color: var(--text-3);
+  text-align: center;
+  line-height: 1.6;
 }
 
 /* ---------- §03 LFU 频次分桶图解 ---------- */
@@ -227,12 +231,15 @@
   margin: 18px 0;
 }
 
+/* 三个桶等宽平铺;英文说明比中文长,基础宽度放大,窄屏再换行 */
 .adv-bucket {
   border: 1px solid var(--border);
   border-radius: 14px;
   padding: 12px 14px;
   background: var(--panel);
-  min-width: 132px;
+  flex: 1 1 210px;
+  min-width: 200px;
+  max-width: 300px;
 }
 
 .adv-bucket.min {
