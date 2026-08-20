@@ -176,9 +176,9 @@
   box-shadow: 0 0 0 2px var(--bg), 0 0 0 3.5px var(--ok);
 }
 
-/* ---- 实验室输入框 ---- */
+/* ---- 实验室输入框(宽度留给较长的英文 placeholder) ---- */
 [data-ch="trie"] .tr-input {
-  width: 150px;
+  width: 168px;
   padding: 8px 12px;
   border-radius: 10px;
   border: 1px solid var(--border-strong);
