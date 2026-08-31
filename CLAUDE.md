@@ -58,6 +58,19 @@ Bloom filter) → ✦ finale: the decision atlas (decision tree + full problem i
   comment lines. Use it whenever you edit comments in bulk, so a translation
   pass can never silently rewrite a `zh:` value.
 
+### Tests
+
+| Command | What it covers |
+|---|---|
+| `npm run typecheck` | `tsc --noEmit` over the app and the tests |
+| `npm test` | Vitest: `lib/predict.ts` logic and `ArrayStepper` behaviour (jsdom) |
+| `npm run test:e2e` | Builds, then drives predict mode in Chromium (Playwright) |
+
+Unit specs live in `test/unit`, end-to-end specs in `test/e2e`; CI
+(`.github/workflows/ci.yml`) runs typecheck, unit tests, build and E2E on every
+pull request. Layout questions such as "does the panel fit at 360px" belong in
+the E2E specs — jsdom has no layout engine and would report every width as 0.
+
 ## File layout and ownership
 
 ```
@@ -129,9 +142,40 @@ Resolve one with `const L = useL(); L(value)`, or switch inline with
   moved but cells unchanged / cells changed but pointers unchanged / a pointer
   one cell too far). Feedback names the axis that was wrong and a score sits in
   the control bar. Styles: section 14 of globals.css (`.pf-*`).
+- **Score scope: one score belongs to one frame dataset.** Chapters that let the
+  learner switch demo case swap the `frames` prop; the score and any unfinished
+  question reset at that point, so answers are never attributed to a walkthrough
+  the learner was not shown. The reset keys on the frame *contents*
+  (`framesSig`), not on `frames.length` — two demos can be the same length — and
+  not on array identity, so a chapter that builds its frames inline does not
+  lose the score on every render. Switching language is not a dataset change and
+  keeps the score.
+- **Where predict mode is available.** It comes with `ArrayStepper`, so exactly
+  the chapters that use it have it: **array, string, stack, queue, hash, bst,
+  heap, union-find, advanced** (23 steppers in total). The tree, graph and
+  linked-list style animations are hand-built components in `app/<ch>/viz.tsx`
+  and deliberately do **not** offer prediction — **binary-tree, graph,
+  linked-list and trie** therefore have none. Adding it to a hand-built
+  animation is a separate piece of work, not a side effect of touching a chapter.
 - `StepControls` accepts optional `onNext` (intercept the advance),
   `nextDisabled`, `playDisabled` and `extra` (extra controls) — a hand-built
   animation can reuse those hooks to offer prediction too.
+
+### lib/predict.ts (pure half of predict mode)
+
+Signatures, distractor construction and the screen-reader description live here
+as plain functions over plain data, so the regression tests exercise the real
+logic instead of a copy. `ArrayCell` / `ArrayFrame` are declared here and
+re-exported by `lib/stepper.tsx`, so chapters keep importing them from
+`@/lib/stepper`. Nothing in this module may import React runtime code or touch
+the DOM.
+
+- `buildChallenge(frames, step, n, shuffle?)` — the answer is always the real
+  next frame; options are deduplicated by `fullSig`. Returns `null` when there
+  is no next frame or no distinguishable distractor, and the caller then just
+  advances. The `shuffle` parameter defaults to a Fisher-Yates pass over
+  `Math.random` and exists so tests can pin the option order.
+- `cellSig` / `ptrSig` / `fullSig` / `framesSig`, `diffKind`, `describeFrame`.
 
 ### lib/quiz.tsx
 
