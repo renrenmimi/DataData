@@ -1,7 +1,9 @@
 "use client";
 
-// 终章 · 选型决策树 —— 交互式引导:回答几个问题,走到推荐的结构。
-// 数据是一棵小决策树;记录走过的路径(面包屑),随时可以重来。
+// Finale · Selection decision tree — an interactive guide: answer a few questions and
+// land on the recommended structure.
+// The data is a small decision tree; the path walked is kept as breadcrumbs and can be
+// restarted at any time.
 
 import { useState } from "react";
 import Link from "next/link";

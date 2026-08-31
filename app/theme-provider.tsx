@@ -1,10 +1,13 @@
 "use client";
 
-// 应用级 client providers。
-//  - ThemeProvider:把 data-theme("dark" | "light")镜像到 <html>,localStorage 持久化。
-//    首帧前由 <head> 里的内联脚本(themeScript)设好,不闪错主题。
-//  - ShellProvider:工作台 UI 状态(移动端抽屉侧栏 / 桌面折叠 / ⌘K 面板 / 偏好代码语言)。
-//    「偏好代码语言」是全站联动的:任何一个 CodeTabs 切到 Python,所有代码窗口都跟着切。
+// App-level client providers.
+//  - ThemeProvider: mirrors data-theme ("dark" | "light") onto <html> and
+//    persists it in localStorage. The inline script in <head> (themeScript)
+//    sets it before the first paint, so the wrong theme never flashes.
+//  - ShellProvider: workbench UI state (mobile drawer sidebar / desktop
+//    collapse / ⌘K palette / preferred code language).
+//    The preferred code language is shared site-wide: switch any CodeTabs to
+//    Python and every code window on the page follows.
 
 import {
   createContext,
@@ -24,7 +27,8 @@ const THEME_KEY = "dd-theme";
 const SIDEBAR_KEY = "dd-sidebar";
 const CODELANG_KEY = "dd-codelang";
 
-// 首帧前执行:读回主题 + 侧栏折叠状态,避免闪烁。默认深色 + 展开。
+// Runs before the first paint: restores the theme and sidebar collapse state
+// to avoid a flash. Defaults to dark + expanded.
 export const themeScript = `(function(){var d=document.documentElement;try{var t=localStorage.getItem("${THEME_KEY}");if(t!=="light"&&t!=="dark"){t="dark";}d.dataset.theme=t;}catch(e){d.dataset.theme="dark";}try{d.dataset.sidebar=localStorage.getItem("${SIDEBAR_KEY}")==="collapsed"?"collapsed":"expanded";}catch(e){d.dataset.sidebar="expanded";}})();`;
 
 type ThemeCtx = {
@@ -67,16 +71,16 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
 export const useTheme = () => useContext(ThemeContext);
 
-// ---------- Shell UI 状态 ----------
+// ---------- Shell UI state ----------
 
 type ShellCtx = {
-  sidebarOpen: boolean; // 移动端抽屉(≤960px 遮罩滑入)
+  sidebarOpen: boolean; // Mobile drawer (slides in over a scrim at ≤960px)
   setSidebarOpen: Dispatch<SetStateAction<boolean>>;
-  sidebarCollapsed: boolean; // 桌面端折叠
+  sidebarCollapsed: boolean; // Collapsed on desktop
   toggleSidebarCollapsed: () => void;
   cmdkOpen: boolean;
   setCmdkOpen: Dispatch<SetStateAction<boolean>>;
-  codeLang: CodeLang; // 全站联动的偏好代码语言
+  codeLang: CodeLang; // Preferred code language, shared site-wide
   setCodeLang: (l: CodeLang) => void;
 };
 

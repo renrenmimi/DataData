@@ -1,7 +1,8 @@
-/* 第 2 章 · 字符串 —— 章节专属样式(全部 .str- 前缀,颜色只用 token)。
-   列宽按英文文案留了余量:英文比中文长,固定网格列不能卡着中文的宽度写。 */
+/* Chapter 2 · Strings — styles for this chapter only (.str- prefix, colours from
+   tokens). Column widths leave room for the English copy: it runs longer than
+   the Chinese, so a fixed grid column must not be sized to the Chinese. */
 
-/* ---------- EncodeLab:逐字符编码表 ---------- */
+/* ---------- EncodeLab: the per-character encoding table ---------- */
 
 .str-enc-input {
   width: 100%;
@@ -83,7 +84,7 @@
   line-height: 1.5;
 }
 
-/* 窄屏:四列固定网格会溢出 → 堆成单列 */
+/* Narrow screens: the fixed four-column grid would overflow, so stack it */
 @media (max-width: 560px) {
   .str-enc-row {
     grid-template-columns: 1fr;
@@ -109,7 +110,7 @@
   color: var(--acc-ink);
 }
 
-/* ---------- ConcatLab:累计拷贝对比条 ---------- */
+/* ---------- ConcatLab: cumulative-copy comparison bars ---------- */
 
 .str-race {
   display: flex;
@@ -133,7 +134,7 @@
   text-align: right;
 }
 
-/* 窄屏:三列固定网格放不下英文标签 → 堆成单列 */
+/* Narrow screens: three fixed columns cannot hold the English labels, so stack them */
 @media (max-width: 640px) {
   .str-race-row {
     grid-template-columns: 1fr;
@@ -173,7 +174,7 @@
   color: var(--text-2);
 }
 
-/* ---------- KMP next 数组示意表 ---------- */
+/* ---------- The KMP next-array table ---------- */
 
 .str-kmp-grid {
   display: flex;

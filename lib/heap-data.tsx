@@ -1,8 +1,8 @@
-// 第 9 章 · 堆与优先队列 —— 题单与测验数据(English default / 中文可切换)。
-// 题单主线:Top-K 门槛堆(703/973/692)→ 反复取最值(1046/767)→
-// 合并 K 路(378)→ 双堆(295/502)。295 是本单的重点,key 里讲透。
+// Chapter 9 · Heaps and priority queues — problem set and quiz data (English default / Chinese toggle).
+// Problem-set arc: Top-K threshold heap (703/973/692) → repeatedly taking the extreme (1046/767) →
+// merging K sorted sources (378) → dual heaps (295/502). LC 295 is the centerpiece; its key covers it in depth.
 //
-// 题目标题用 LeetCode 官方英文名;tags / hint / key 都写成 { en, zh }。
+// Problem titles use the official LeetCode English name; tags / hint / key are all { en, zh } pairs.
 
 import type { Problem } from "@/lib/problems";
 import type { QuizItem } from "@/lib/quiz";

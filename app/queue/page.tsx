@@ -1,15 +1,17 @@
 "use client";
 
-// 第 5 章 · 队列与双端队列 —— 十段式:
-// 直觉(FIFO)→ 内存(搬移/浪费/绕圈 → 循环队列、链表、deque)→
-// 核心操作(RingLab 环形实验室)→ 手写实现(循环队列 = LC 622 + 链表版)→
-// 三语言对照(JS 没有现成的队列)→ 双栈模拟 + 单调队列专题 +
-// 两道精讲(LC 232 / 239 逐帧)→ 题单 → 测验 → 要点。
+// Chapter 5 · Queues and deques — the ten-part format:
+// intuition (FIFO) → memory (shifting / wasted space / wrapping around → circular queue, linked list, deque) →
+// core operations (RingLab, the circular-queue lab) → hand-written implementations
+// (circular queue = LC 622 + linked-list version) →
+// three-language comparison (JS has no built-in queue) → two-stack simulation + a focused section on
+// monotonic deques + two walkthroughs (LC 232 / 239, frame-by-frame) → problem set → quiz → key points.
 //
-// 双语:所有面向学习者的文案都用 <T en zh> 或 { en, zh },英文为默认语言。
-// 代码窗的 code 写成 { en, zh } —— 两版逐行等价,只有注释不同,hl 行号才对得上。
-// 术语与第 4 章(栈)保持一致:monotonic stack / monotonic deque、amortized、
-// front / back、O(1) amortized。
+// Bilingual: every learner-facing string goes through <T en zh> or { en, zh }; English is the default.
+// Code blocks pass code as { en, zh } — the two versions are line-for-line equivalent and differ only
+// in their comments, so the hl line numbers apply to both.
+// Terminology matches chapter 4 (stacks): monotonic stack / monotonic deque, amortized,
+// front / back, O(1) amortized.
 
 import "./chapter.css";
 
@@ -29,11 +31,12 @@ import { PROBLEMS, QUIZ } from "@/lib/queue-data";
 import { T } from "@/lib/i18n";
 import { QueueMemFig, RingLab, TwoStackPour } from "./viz";
 
-/* ================= 精讲动画帧 ================= */
+/* ================= Walkthrough animation frames ================= */
 
-// LC 239 滑动窗口最大值:nums = [5,3,1,4,2,6], k = 3
-// lit = 在单调队列中,bad = 正在被弹出,ghost = 已滑出窗口,ok = 收官
-// 代码弹出条件是 nums[back] <= nums[i](「不大于就弹」),所以队列里的值严格递减。
+// LC 239 Sliding Window Maximum: nums = [5,3,1,4,2,6], k = 3
+// lit = in the monotonic deque, bad = being popped, ghost = already slid out of the window, ok = done
+// The code pops while nums[back] <= nums[i] ("pop anything not greater"), so the values
+// held in the deque strictly decrease.
 const F239: ArrayFrame[] = [
   {
     cells: [{ v: 5 }, { v: 3 }, { v: 1 }, { v: 4 }, { v: 2 }, { v: 6 }],
@@ -291,7 +294,7 @@ const F239: ArrayFrame[] = [
   },
 ];
 
-/* ================= 页面 ================= */
+/* ================= Page ================= */
 
 const CHIPS = [
   { id: "intuition", n: "01", label: { en: "Intuition", zh: "直觉" } },
@@ -349,7 +352,7 @@ export default function QueueChapter() {
         chips={CHIPS}
       />
 
-      {/* ================= §01 直觉 ================= */}
+      {/* ================= §01 Intuition ================= */}
       <Section
         id="intuition"
         index="01"
@@ -509,7 +512,7 @@ export default function QueueChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §02 内存 ================= */}
+      {/* ================= §02 Memory ================= */}
       <Section
         id="memory"
         index="02"
@@ -669,7 +672,7 @@ export default function QueueChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §03 核心操作 ================= */}
+      {/* ================= §03 Core operations ================= */}
       <Section
         id="ops"
         index="03"
@@ -872,7 +875,7 @@ export default function QueueChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §04 手写实现 ================= */}
+      {/* ================= §04 Building it from scratch ================= */}
       <Section
         id="impl"
         index="04"
@@ -1425,7 +1428,7 @@ class LinkedQueue:
         </Callout>
       </Section>
 
-      {/* ================= §05 三语言对照 ================= */}
+      {/* ================= §05 Three languages side by side ================= */}
       <Section
         id="langs"
         index="05"
@@ -1788,7 +1791,7 @@ const empty = head === q.length;
         </div>
       </Section>
 
-      {/* ================= §06 套路与精讲 ================= */}
+      {/* ================= §06 Patterns and walkthroughs ================= */}
       <Section
         id="patterns"
         index="06"
@@ -2044,7 +2047,7 @@ const empty = head === q.length;
           />
         </Callout>
 
-        {/* —— 精讲 A —— */}
+        {/* —— Walkthrough A —— */}
         <div className="sec-head" style={{ marginTop: 44 }}>
           <span className="sec-index">
             <T en="Walkthrough A" zh="精讲 A" />
@@ -2314,7 +2317,7 @@ MyQueue.prototype._transfer = function () {
           />
         </Callout>
 
-        {/* —— 精讲 B —— */}
+        {/* —— Walkthrough B —— */}
         <div className="sec-head" style={{ marginTop: 44 }}>
           <span className="sec-index">
             <T en="Walkthrough B" zh="精讲 B" />
@@ -2548,7 +2551,7 @@ class Solution:
         </Callout>
       </Section>
 
-      {/* ================= §07 题单 ================= */}
+      {/* ================= §07 Problem set ================= */}
       <Section
         id="problems"
         index="07"

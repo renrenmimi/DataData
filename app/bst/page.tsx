@@ -1,14 +1,18 @@
 "use client";
 
-// 第 8 章 · 二叉搜索树(BST)
-// 十段式:直觉(有序数组 vs 链表的两难)→ 性质(中序=升序 + BSTLab)→
-// 核心操作(O(h) + 删除三情况图解)→ 手写实现 → 平衡的世界(AVL/红黑/工程对照)→
-// 三道精讲(98/230/108,逐帧动画 + 三语言题解)→ 题单 → 测验 → 要点。
+// Chapter 8 · Binary search tree (BST)
+// Ten sections: intuition (the sorted array vs. linked list dilemma) → properties
+// (in-order traversal = ascending order + BSTLab) → core operations (O(h) + the three
+// deletion cases illustrated) → from-scratch implementation → the world of balance
+// (AVL / red-black / real-world comparison) → three walkthroughs (98/230/108,
+// frame-by-frame animation + three-language solutions) → problem set → quiz → key points.
 //
-// 双语:所有文案走 <T> / Loc<…>;代码窗的注释按语言给 en / zh 两版,
-// 可执行行逐行相同,所以 hl 行号两版通用。
-// 全章「高度 h」按边数计(与第 7、9 章统一):只有根时 h = 0,空树记 −1,
-// 一条 n 节点的链 h = n − 1,n 个节点的平衡下限 h = ⌊log₂n⌋。
+// Bilingual: all copy goes through <T> / Loc<…>; the code windows carry en / zh versions
+// of the comments, while the executable lines are identical, so the hl line numbers
+// apply to both versions.
+// Throughout the chapter the height h is counted in edges (matching chapters 7 and 9):
+// h = 0 for a root-only tree, −1 for an empty tree, h = n − 1 for a chain of n nodes,
+// and the balanced lower bound for n nodes is h = ⌊log₂n⌋.
 
 import "./chapter.css";
 import {
@@ -34,9 +38,10 @@ import {
   type TreeFrame,
 } from "./viz";
 
-/* ================= 精讲动画帧 ================= */
+/* ================= Walkthrough animation frames ================= */
 
-// —— LC 98:验证 BST。反例树:只查父子全过,但 6 违反祖先约束 ——
+// — LC 98: validate a BST. The counterexample tree passes every parent-child check,
+//   but 6 violates a bound inherited from an ancestor —
 const N98: StepNode[] = [
   { id: 0, v: 10, x: 300, y: 40 },
   { id: 1, v: 5, x: 170, y: 125 },
@@ -171,7 +176,7 @@ const F98: TreeFrame[] = [
   },
 ];
 
-// —— LC 230:BST 中第 K 小(k=3)。中序数数,数到 k 就停 ——
+// — LC 230: kth smallest element in a BST (k=3). Count during in-order traversal, stop at k —
 const N230: StepNode[] = [
   { id: 0, v: 5, x: 300, y: 40 },
   { id: 1, v: 3, x: 170, y: 120 },
@@ -278,7 +283,7 @@ const F230: TreeFrame[] = [
   },
 ];
 
-// —— LC 108:有序数组 → 平衡 BST。取中点当根,两半递归 ——
+// — LC 108: sorted array → balanced BST. Take the midpoint as the root, recurse on both halves —
 const A108 = [-10, -3, 0, 5, 9];
 const F108: ArrayFrame[] = [
   {
@@ -392,7 +397,7 @@ const F108: ArrayFrame[] = [
   },
 ];
 
-/* ================= 页面 ================= */
+/* ================= Page ================= */
 
 const CHIPS: { id: string; n: string; label: Loc<string> }[] = [
   { id: "intuition", n: "01", label: { en: "Intuition", zh: "直觉" } },
@@ -449,7 +454,7 @@ export default function BSTChapter() {
         chips={CHIPS}
       />
 
-      {/* ================= §01 直觉 ================= */}
+      {/* ================= §01 Intuition ================= */}
       <Section
         id="intuition"
         index="01"
@@ -716,7 +721,7 @@ export default function BSTChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §02 性质 ================= */}
+      {/* ================= §02 The property ================= */}
       <Section
         id="order"
         index="02"
@@ -834,7 +839,7 @@ export default function BSTChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §03 核心操作 ================= */}
+      {/* ================= §03 Core operations ================= */}
       <Section
         id="ops"
         index="03"
@@ -1233,7 +1238,7 @@ export default function BSTChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §04 手写实现 ================= */}
+      {/* ================= §04 Build it ================= */}
       <Section
         id="impl"
         index="04"
@@ -1742,7 +1747,7 @@ class BST {
         />
       </Section>
 
-      {/* ================= §05 平衡的世界 ================= */}
+      {/* ================= §05 Balanced trees ================= */}
       <Section
         id="balance"
         index="05"
@@ -2443,7 +2448,7 @@ arr.splice(lowerBound(arr, 25), 0, 25);  // 有序插入,搬移 O(n)
         </Callout>
       </Section>
 
-      {/* ================= §06 套路与精讲 ================= */}
+      {/* ================= §06 Patterns and walkthroughs ================= */}
       <Section
         id="patterns"
         index="06"
@@ -2488,7 +2493,7 @@ arr.splice(lowerBound(arr, 25), 0, 25);  // 有序插入,搬移 O(n)
           />
         </div>
 
-        {/* —— 精讲 A —— */}
+        {/* — Walkthrough A — */}
         <div className="sec-head" style={{ marginTop: 40 }}>
           <span className="sec-index">
             <T en="Walkthrough A" zh="精讲 A" />
@@ -2705,7 +2710,7 @@ arr.splice(lowerBound(arr, 25), 0, 25);  // 有序插入,搬移 O(n)
           />
         </Callout>
 
-        {/* —— 精讲 B —— */}
+        {/* — Walkthrough B — */}
         <div className="sec-head" style={{ marginTop: 44 }}>
           <span className="sec-index">
             <T en="Walkthrough B" zh="精讲 B" />
@@ -2913,7 +2918,7 @@ arr.splice(lowerBound(arr, 25), 0, 25);  // 有序插入,搬移 O(n)
           />
         </Callout>
 
-        {/* —— 精讲 C —— */}
+        {/* — Walkthrough C — */}
         <div className="sec-head" style={{ marginTop: 44 }}>
           <span className="sec-index">
             <T en="Walkthrough C" zh="精讲 C" />
@@ -3151,7 +3156,7 @@ arr.splice(lowerBound(arr, 25), 0, 25);  // 有序插入,搬移 O(n)
         </Callout>
       </Section>
 
-      {/* ================= §07 题单 ================= */}
+      {/* ================= §07 Problem set ================= */}
       <Section
         id="problems"
         index="07"

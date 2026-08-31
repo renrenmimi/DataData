@@ -1,8 +1,10 @@
 "use client";
 
-// 首页签名动画:同一批 7 个节点,在「数组 → 链表 → 二叉树 → 图」四种形态之间
-// 平滑变形(rAF 逐帧插值 + 缓动),边随当前位置实时重绘。
-// 想传达的第一直觉:数据没变,变的是「组织方式」—— 这就是数据结构。
+// Home-page signature animation: the same 7 nodes morph between four shapes
+// (array → linked list → binary tree → graph) with frame-by-frame rAF
+// interpolation plus easing; edges redraw from the live positions.
+// The intuition it aims for: the data never changes, only the way it is
+// organized — and that is exactly what a data structure is.
 
 import { useEffect, useRef, useState } from "react";
 import { useL, useLang, T, type Lang, type Loc } from "@/lib/i18n";
@@ -12,7 +14,7 @@ type P = { x: number; y: number };
 const W = 460;
 const H = 300;
 
-// 7 个节点在四种形态下的坐标
+// Coordinates of the 7 nodes in each of the four shapes
 const LAYOUTS: {
   name: Loc<string>;
   en: string;
@@ -104,13 +106,13 @@ export function HeroMorph() {
   const startRef = useRef(0);
   const rafRef = useRef(0);
 
-  // 每 3 秒换一种形态
+  // Switch shape every 3 seconds
   useEffect(() => {
     const t = setInterval(() => setLayout((l) => (l + 1) % LAYOUTS.length), 3000);
     return () => clearInterval(t);
   }, []);
 
-  // rAF 插值到目标形态
+  // Interpolate toward the target shape with rAF
   useEffect(() => {
     const target = LAYOUTS[layout].pts;
     fromRef.current = pts;
@@ -135,7 +137,7 @@ export function HeroMorph() {
 
   const Lay = LAYOUTS[layout];
   const name = L(Lay.name);
-  // 英文模式下主标题已经是英文,不再重复下面那行全大写英文名
+  // In English mode the heading is already English; skip the uppercase duplicate
   const showEn = name.toUpperCase() !== Lay.en;
 
   return (
@@ -177,7 +179,7 @@ export function HeroMorph() {
 }
 
 /* ------------------------------------------------------------------ */
-/* RefLab:变量与引用 —— 标签、纸条与盒子                              */
+/* RefLab: variables and references — labels, notes and boxes         */
 /* ------------------------------------------------------------------ */
 
 type RefState = "separate" | "shared";
@@ -305,7 +307,7 @@ export function RefLab() {
             zh: "变量与引用示意",
           })}
         >
-          {/* 变量标签 */}
+          {/* Variable labels */}
           {(["a", "b"] as const).map((name) => (
             <g key={name} transform={`translate(30, ${boxY[name]})`}>
               <rect x={-24} y={-20} width={64} height={40} rx={10} className="ref-tag" />
@@ -314,7 +316,7 @@ export function RefLab() {
               </text>
             </g>
           ))}
-          {/* 箭头 */}
+          {/* Arrows */}
           <line x1={72} y1={boxY.a} x2={300} y2={boxY.a} className="ref-arrow" markerEnd="url(#ref-arr)" />
           <line
             x1={72}
@@ -329,7 +331,7 @@ export function RefLab() {
               <path d="M0,0 L8,4 L0,8 z" className="ref-arrow-head" />
             </marker>
           </defs>
-          {/* 盒子 */}
+          {/* Boxes */}
           <g transform={`translate(310, ${boxY.a})`}>
             <rect x={0} y={-26} width={110} height={52} rx={12} className="ref-box lit" />
             <text x={55} y={-4} textAnchor="middle" className="ref-box-label">
@@ -369,7 +371,7 @@ export function RefLab() {
 }
 
 /* ------------------------------------------------------------------ */
-/* Big-O 增长实验室:拖动 n,看六条复杂度曲线的差距如何撕开             */
+/* Big-O growth lab: drag n and watch the six curves pull apart       */
 /* ------------------------------------------------------------------ */
 
 const CURVES = [
@@ -381,7 +383,7 @@ const CURVES = [
   { id: "2n", label: "O(2ⁿ)", f: (n: number) => Math.pow(2, n), color: "#f26fb1" },
 ] as const;
 
-const OPS_PER_SEC = 1e8; // 粗略假设:普通电脑每秒 ~10⁸ 次基本操作
+const OPS_PER_SEC = 1e8; // A rough assumption: an ordinary machine does ~10⁸ basic operations a second
 
 function fmtOps(v: number): string {
   if (v >= 1e12) return v.toExponential(1).replace("e+", "×10^");
@@ -419,7 +421,7 @@ export function BigOLab() {
     Object.fromEntries(CURVES.map((c) => [c.id, true])),
   );
 
-  // y 轴用 log 刻度(否则 2ⁿ 一出场其他曲线全趴地上)
+  // Log scale on the y axis (otherwise 2ⁿ flattens every other curve)
   const yMax = Math.max(
     ...CURVES.filter((c) => on[c.id]).map((c) => c.f(n)),
     8,
@@ -441,7 +443,7 @@ export function BigOLab() {
     return pts.join(" ");
   };
 
-  // y 轴刻度:10⁰ 10² 10⁴ …
+  // y-axis ticks: 10⁰ 10² 10⁴ …
   const ticks: number[] = [];
   for (let e = 0; e <= Math.ceil(logMax); e += Math.max(1, Math.ceil(logMax / 5))) {
     ticks.push(e);

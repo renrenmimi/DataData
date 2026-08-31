@@ -1,9 +1,10 @@
-// 第 8 章 · 二叉搜索树 —— 题单与测验数据。
-// 题单围绕三条主线:基本操作(700/701/450)、利用有序性(653/530/235/938)、
-// 有序性被破坏或被封装(99/173)。hint 只给方向,key 一段话讲透。
+// Chapter 8 · Binary search trees — problem set and quiz data.
+// Problems follow three threads: basic operations (700/701/450), exploiting the sorted order
+// (653/530/235/938), and cases where that order is broken or hidden behind an API (99/173).
+// hint points a direction only; key explains the optimal solution in one paragraph.
 //
-// 双语:title / tags / hint / key 与所有测验文案都是 { en, zh } 对。
-// 题目标题用 LeetCode 官方英文名,zh 用官方中文名。
+// Bilingual: title / tags / hint / key and every quiz string are { en, zh } pairs.
+// Problem titles use the official LeetCode English name on en and the official Chinese name on zh.
 
 import type { Problem } from "@/lib/problems";
 import type { QuizItem } from "@/lib/quiz";

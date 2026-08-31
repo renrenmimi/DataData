@@ -1,7 +1,8 @@
-// 第 2 章 · 字符串 —— 题单与测验数据(双语)。
-// 题单覆盖:对撞指针、计数数组、滑动窗口、模拟、KMP,从 Easy 铺到 Hard;
-// hint 只给方向不剧透,key 用一段话把最优解讲透。
-// 题目标题的 en 用 LeetCode 官方英文名,zh 用官方中文名。
+// Chapter 2 · Strings — problem set and quiz data (bilingual).
+// Problems cover two pointers from both ends, counting arrays, sliding window, simulation, and KMP,
+// ramping from Easy to Hard; hint points a direction without spoilers, key explains the optimal
+// solution in one paragraph.
+// Problem titles use the official LeetCode English name on en and the official Chinese name on zh.
 
 import type { Problem } from "@/lib/problems";
 import type { QuizItem } from "@/lib/quiz";

@@ -1,13 +1,16 @@
 "use client";
 
-// 第 11 章 · 并查集的招牌可视化 UFLab:
-//  - 一排节点(SVG 森林),点选两个节点执行 union,动画演示 find 一路爬到根 + 两树合并;
-//  - 「最坏顺序 union」按钮:0-1, 1-2, … 连续合并,不带按秩合并时会退化成一条长链;
-//  - 「路径压缩」「按秩合并」两个开关,开着再跑一遍,亲眼对比树形差异;
-//  - 下方同步显示 parent 数组 —— 强调「一个数组就是整片森林」。
+// Chapter 11 · UFLab, the centerpiece visualization for union-find:
+//  - a row of nodes (an SVG forest): pick two nodes to run union, and the animation
+//    shows find climbing all the way to the root plus the two trees merging;
+//  - the "worst-case union order" button: 0-1, 1-2, … merged in sequence, which
+//    degenerates into one long chain when union by rank is off;
+//  - two toggles, "path compression" and "union by rank": turn them on, run it again,
+//    and compare the resulting tree shapes;
+//  - the parent array is mirrored underneath — one array is the entire forest.
 //
-// 双语:标题、旁白、按钮、图例、aria-label 全部通过 <T> / useL() 切换。
-// 口径统一:深度按「边数」计,所以 10 个节点连成的链深度是 9,find 走 9 步。
+// Bilingual: titles, narration, buttons, legend, and aria-labels all switch through <T> / useL().
+// Convention: depth is counted in edges, so a chain of 10 nodes has depth 9 and find takes 9 steps.
 
 import { useState, type ReactNode } from "react";
 import { useL, T } from "@/lib/i18n";
@@ -19,7 +22,8 @@ const PAD = 34;
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-/* 从 parent 数组算出森林布局:叶子占一个横向槽位,父节点居中于子树上方 */
+/* Derive the forest layout from the parent array: each leaf takes one horizontal slot,
+ * a parent is centered above its subtree */
 function layout(parent: number[]) {
   const children: number[][] = Array.from({ length: N }, () => []);
   const roots: number[] = [];
@@ -82,13 +86,14 @@ export function UFLab({
   const { pos, roots, width, height } = layout(parent);
   const compCount = roots.length;
 
-  /* 纯查询版 find(不带动画,不压缩) */
+  /* Plain query version of find (no animation, no compression) */
   const findRoot = (p: number[], x: number) => {
     while (p[x] !== x) x = p[x];
     return x;
   };
 
-  /* 动画版 find:逐级点亮沿途节点;开启路径压缩时,回来把沿途节点直接挂到根上 */
+  /* Animated find: light up each node along the way; with path compression on, reattach
+   * those nodes directly to the root on the way back */
   const animFind = async (p: number[], x: number, speed: number) => {
     const path: number[] = [];
     let cur = x;
@@ -287,7 +292,7 @@ export function UFLab({
     if (busy) return;
     setBusy(true);
     setSel(null);
-    // 先重置
+    // Reset first
     setParent(Array.from({ length: N }, (_, i) => i));
     setRank(Array(N).fill(0));
     setLit(new Set());
@@ -424,7 +429,7 @@ export function UFLab({
               <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--text-3)" />
             </marker>
           </defs>
-          {/* 边:子 → 父(箭头指向父节点) */}
+          {/* Edges: child → parent (the arrow points at the parent) */}
           {parent.map((par, i) => {
             if (par === i) return null;
             const a = pos[i];
@@ -450,7 +455,7 @@ export function UFLab({
               />
             );
           })}
-          {/* 节点 */}
+          {/* Nodes */}
           {parent.map((par, i) => {
             const { x, y } = pos[i];
             const cls = `uf-node${par === i ? " root" : ""}${
@@ -477,7 +482,7 @@ export function UFLab({
             );
           })}
         </svg>
-        {/* parent 数组同步视图 */}
+        {/* Mirrored view of the parent array */}
         <div
           className="uf-arr"
           aria-label={L({ en: "parent array", zh: "parent 数组" })}

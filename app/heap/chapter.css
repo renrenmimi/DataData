@@ -1,4 +1,5 @@
-/* 第 9 章 · 堆与优先队列 专属样式(前缀 .hp-,颜色只用 token) */
+/* Chapter 9 · Heaps and priority queues — styles for this chapter only
+   (.hp- prefix, colours from tokens) */
 
 [data-ch="heap"] .hp-svg {
   width: 100%;
@@ -13,7 +14,7 @@
   stroke-width: 1.5;
 }
 
-/* 树节点 → 数组格 的投影虚线 */
+/* Dashed projection from a tree node down to its array slot */
 [data-ch="heap"] .hp-proj {
   stroke: var(--border-strong);
   stroke-width: 1;
@@ -79,7 +80,7 @@
   text-anchor: middle;
 }
 
-/* 数组视图行 */
+/* The array view row */
 [data-ch="heap"] .hp-array {
   display: flex;
   flex-wrap: wrap;
@@ -88,7 +89,8 @@
   padding-bottom: 26px;
 }
 
-/* 实验室状态行:英文比中文长,窄屏时让它整行换行,不挤压按钮 */
+/* Lab status line: English runs longer, so on a narrow screen it wraps to its
+   own line instead of squeezing the buttons */
 [data-ch="heap"] .hp-stat {
   margin-left: auto;
   font-size: 12px;
@@ -102,7 +104,7 @@
   }
 }
 
-/* 实验室数字输入框 */
+/* Number input in the lab */
 [data-ch="heap"] .hp-input {
   width: 92px;
   padding: 8px 12px;

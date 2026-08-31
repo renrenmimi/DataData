@@ -1,14 +1,19 @@
 "use client";
 
-// Quiz 引擎 —— 三种题型:
-//  - choice:单选,点击即判,答错给「针对性纠错」(每个错误选项一条,禁止通用文案),
-//    同时点亮正确项;计分按第一次点击。
-//  - multi:多选,勾选后「检查」;漏选/错选分别提示。
-//  - fill:填空,回车或按钮判定;可反复尝试,答对为止(计分按最终是否答对)。
-// 全部答完 → 结算面板,成绩写入进度系统(取历史最好成绩,决定章节「通关」状态)。
+// Quiz engine — three question types:
+//  - choice: single answer, graded on click; a wrong pick gets targeted
+//    feedback (one message per wrong option, never generic copy) and the
+//    correct option lights up. Scored on the first click.
+//  - multi: several answers, graded by the check button; missing picks and
+//    extra picks get separate hints.
+//  - fill: free text, graded on Enter or the button; retries allowed until
+//    correct (scored on whether it ends up correct).
+// All answered → summary panel, and the score goes to the progress system (the
+// best historical score decides whether the chapter counts as completed).
 //
-// 双语:q / opts / why / wrong / hint 等文案都接受 Loc<…>;
-// fill 的 answers 是一个「可接受答案」数组,中英两种写法都往里放即可。
+// Bilingual: q / opts / why / wrong / hint all accept Loc<…>;
+// a fill item's answers is a list of acceptable answers — put both the English
+// and the Chinese spellings in it.
 
 import { useEffect, useState, type ReactNode } from "react";
 import { useProgress } from "@/lib/progress";
@@ -21,7 +26,7 @@ export type QuizItem =
       q: Loc<ReactNode>;
       opts: Loc<ReactNode>[];
       correct: number;
-      /** 每个选项的针对性纠错(正确项可留 undefined) */
+      /** Targeted feedback per option (leave the correct one undefined) */
       wrong?: (Loc<ReactNode> | undefined)[];
       why: Loc<ReactNode>;
     }
@@ -38,7 +43,7 @@ export type QuizItem =
       type: "fill";
       q: Loc<ReactNode>;
       placeholder?: Loc<string>;
-      /** 允许的答案(不区分大小写、去空格后比较);中英写法都放进来 */
+      /** Accepted answers (compared case-insensitively after trimming); include both English and Chinese spellings */
       answers: string[];
       hint: Loc<ReactNode>;
       why: Loc<ReactNode>;
@@ -71,8 +76,9 @@ export function Quiz({ ch, items }: { ch: ChapterId; items: QuizItem[] }) {
   ).length;
   const allDone = answered === items.length;
 
-  // 全部答完 → 上报成绩。放在 effect 里而不是 setStates 的更新函数里:
-  // 更新函数必须是纯的,严格模式/并发渲染下会被调用多次,在里面做副作用会重复上报。
+  // All answered → report the score. This lives in an effect rather than in a
+  // setStates updater: updaters must be pure, Strict Mode and concurrent
+  // rendering call them more than once, and a side effect there reports twice.
   useEffect(() => {
     if (reported) return;
     if (states.length === 0) return;

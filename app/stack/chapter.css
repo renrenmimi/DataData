@@ -1,9 +1,10 @@
 /* ============================================================
-   第 4 章 · 栈 —— 章节专属样式
-   所有类名带 .stk- 前缀,颜色一律使用设计 token,深浅主题自动适配。
+   Chapter 4 · Stacks — styles for this chapter only.
+   Every class carries the .stk- prefix and colours come from design tokens, so
+   light and dark themes adapt on their own.
    ============================================================ */
 
-/* ---------- StackLab:一摞盘子 ---------- */
+/* ---------- StackLab: a stack of plates ---------- */
 
 .stk-well-wrap {
   display: flex;
@@ -12,7 +13,8 @@
   gap: 8px;
 }
 
-/* U 形容器:左右+底封死,只有顶端开口 —— “一端封死”的视觉化 */
+/* U-shaped container: closed left, right and bottom, open only at the top —
+   the visual form of "only one end is open" */
 .stk-well {
   display: flex;
   flex-direction: column;
@@ -100,7 +102,8 @@
   padding: 14px 0;
 }
 
-/* 英文比中文长,这里允许换行并居中,避免在窄屏被裁掉 */
+/* English runs longer, so this wraps and stays centred instead of being clipped
+   on a narrow screen */
 .stk-base {
   font-size: 11px;
   color: var(--text-3);
@@ -111,7 +114,7 @@
   line-height: 1.5;
 }
 
-/* ---------- CallStackDemo:调用栈 ---------- */
+/* ---------- CallStackDemo: the call stack ---------- */
 
 .stk-cs {
   display: flex;
@@ -120,7 +123,8 @@
   gap: 10px;
 }
 
-/* 帧内说明文字英文更长,列加宽并允许说明换到第二行 */
+/* The per-frame caption is longer in English, so the column widens and the
+   caption may take a second line */
 .stk-cs-col {
   display: flex;
   flex-direction: column;
@@ -192,7 +196,7 @@
   line-height: 1.5;
 }
 
-/* ---------- §02 内存图解:数组栈 vs 链表栈 ---------- */
+/* ---------- §02 Memory diagram: array-backed vs list-backed stack ---------- */
 
 .stk-figptrs {
   display: grid;
@@ -263,7 +267,7 @@
   color: var(--text);
 }
 
-/* ---------- 精讲 B(最小栈):格子里的“值 + 影子 min” ---------- */
+/* ---------- Walkthrough B (min stack): "value + shadow min" inside a cell ---------- */
 
 .stk-mc {
   display: flex;

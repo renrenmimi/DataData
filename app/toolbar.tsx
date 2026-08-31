@@ -1,8 +1,10 @@
 "use client";
 
-// 顶部工具条:侧栏开关 + 面包屑 + 界面语言 + ⌘K + 偏好代码语言 + 主题切换。
-// 「界面语言」(EN / 中文)与「偏好代码语言」(Java/Python/JS)是两件事,
-// 分别用两个 .seg 分段控制器;窄屏下只保留界面语言。
+// Top toolbar: sidebar toggle + breadcrumb + interface language + ⌘K +
+// preferred code language + theme toggle.
+// Interface language (English / Chinese) and preferred code language
+// (Java/Python/JS) are two separate things, each with its own .seg segmented
+// control; narrow screens keep only the interface language.
 
 import { usePathname } from "next/navigation";
 import { chapterByPath } from "@/lib/curriculum";

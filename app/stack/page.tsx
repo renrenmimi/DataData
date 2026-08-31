@@ -1,12 +1,14 @@
 "use client";
 
-// 第 4 章 · 栈 —— 十段式:
-// 直觉(LIFO)→ 内存(数组栈/链表栈)→ 核心操作(StackLab + 调用栈)→
-// 手写实现 → 三语言对照(为什么别用 java.util.Stack)→
-// 三大套路 + 单调栈专题 + 三道精讲(LC 20 / 155 / 739 逐帧)→ 题单 → 测验 → 要点。
+// Chapter 4 · Stacks — the ten-part format:
+// intuition (LIFO) → memory (array-backed stack / linked stack) → core operations (StackLab + the call stack) →
+// hand-written implementation → three-language comparison (why not to use java.util.Stack) →
+// three recurring patterns + a focused section on monotonic stacks + three walkthroughs
+// (LC 20 / 155 / 739, frame-by-frame) → problem set → quiz → key points.
 //
-// 双语:所有面向学习者的文案都用 <T en zh> 或 { en, zh },英文为默认语言。
-// 代码窗的 code 写成 { en, zh } —— 两版逐行等价,只有注释不同,hl 行号才对得上。
+// Bilingual: every learner-facing string goes through <T en zh> or { en, zh }; English is the default.
+// Code blocks pass code as { en, zh } — the two versions are line-for-line equivalent and differ only
+// in their comments, so the hl line numbers apply to both.
 
 import "./chapter.css";
 
@@ -26,9 +28,10 @@ import { PROBLEMS, QUIZ } from "@/lib/stack-data";
 import { T } from "@/lib/i18n";
 import { StackMemFig, StackLab, CallStackDemo } from "./viz";
 
-/* ================= 精讲动画帧 ================= */
+/* ================= Walkthrough animation frames ================= */
 
-// LC 20 有效的括号:栈画成一排 cell(下标 = 距栈底的层数),top 指针标栈顶
+// LC 20 Valid Parentheses: the stack is drawn as a row of cells (index = height above the bottom),
+// and the top pointer marks the top of the stack
 const F20: ArrayFrame[] = [
   {
     cells: [],
@@ -191,7 +194,7 @@ const F20: ArrayFrame[] = [
   },
 ];
 
-// LC 155 最小栈:每格 = 主栈的值 + 辅助栈冻结的 min
+// LC 155 Min Stack: each cell = the main stack's value + the min frozen in the helper stack
 const mc = (
   v: number,
   m: number,
@@ -351,7 +354,8 @@ const F155: ArrayFrame[] = [
   },
 ];
 
-// LC 739 每日温度:cells = 温度数组;lit = 在栈中等待,ok = 已结算,bad = 等不到
+// LC 739 Daily Temperatures: cells = the temperature array; lit = waiting in the stack,
+// ok = answered, bad = no warmer day ever comes
 const F739: ArrayFrame[] = [
   {
     cells: [{ v: 73 }, { v: 74 }, { v: 71 }, { v: 69 }, { v: 75 }, { v: 73 }],
@@ -644,7 +648,7 @@ const F739: ArrayFrame[] = [
   },
 ];
 
-/* ================= 页面 ================= */
+/* ================= Page ================= */
 
 const CHIPS = [
   { id: "intuition", n: "01", label: { en: "Intuition", zh: "直觉" } },
@@ -699,7 +703,7 @@ export default function StackChapter() {
         chips={CHIPS}
       />
 
-      {/* ================= §01 直觉 ================= */}
+      {/* ================= §01 Intuition ================= */}
       <Section
         id="intuition"
         index="01"
@@ -885,7 +889,7 @@ export default function StackChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §02 内存 ================= */}
+      {/* ================= §02 Memory ================= */}
       <Section
         id="memory"
         index="02"
@@ -998,7 +1002,7 @@ export default function StackChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §03 核心操作 ================= */}
+      {/* ================= §03 Core operations ================= */}
       <Section
         id="ops"
         index="03"
@@ -1236,7 +1240,7 @@ export default function StackChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §04 手写实现 ================= */}
+      {/* ================= §04 Building it from scratch ================= */}
       <Section
         id="impl"
         index="04"
@@ -1485,7 +1489,7 @@ public class ArrayStack {
         />
       </Section>
 
-      {/* ================= §05 三语言对照 ================= */}
+      {/* ================= §05 Three languages side by side ================= */}
       <Section
         id="langs"
         index="05"
@@ -1787,7 +1791,7 @@ const empty = stack.length === 0;`,
         </div>
       </Section>
 
-      {/* ================= §06 套路与精讲 ================= */}
+      {/* ================= §06 Patterns and walkthroughs ================= */}
       <Section
         id="patterns"
         index="06"
@@ -2021,7 +2025,7 @@ const empty = stack.length === 0;`,
           />
         </Callout>
 
-        {/* —— 精讲 A —— */}
+        {/* —— Walkthrough A —— */}
         <div className="sec-head" style={{ marginTop: 44 }}>
           <span className="sec-index">
             <T en="Walkthrough A" zh="精讲 A" />
@@ -2226,7 +2230,7 @@ const empty = stack.length === 0;`,
           />
         </Callout>
 
-        {/* —— 精讲 B —— */}
+        {/* —— Walkthrough B —— */}
         <div className="sec-head" style={{ marginTop: 44 }}>
           <span className="sec-index">
             <T en="Walkthrough B" zh="精讲 B" />
@@ -2476,7 +2480,7 @@ MinStack.prototype.getMin = function () { return this.mins.at(-1); }; // O(1)`,
           />
         </Callout>
 
-        {/* —— 精讲 C —— */}
+        {/* —— Walkthrough C —— */}
         <div className="sec-head" style={{ marginTop: 44 }}>
           <span className="sec-index">
             <T en="Walkthrough C" zh="精讲 C" />
@@ -2673,7 +2677,7 @@ MinStack.prototype.getMin = function () { return this.mins.at(-1); }; // O(1)`,
         </Callout>
       </Section>
 
-      {/* ================= §07 题单 ================= */}
+      {/* ================= §07 Problem set ================= */}
       <Section
         id="problems"
         index="07"

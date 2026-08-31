@@ -1,13 +1,16 @@
 "use client";
 
-// 第 2 章 · 字符串(双语)—— 「一个不许改字的数组」。
-// 十段式:直觉(不可变 / 编码 / 字符数组孪生)→ 内存与编码(ASCII→Unicode→UTF-8)→
-// 核心操作(重点:循环 += 为什么 O(n²))→ 手写实现(可变缓冲区 / indexOf / KMP)→
-// 三语言对照 → 对撞指针 · 滑窗 · 中心扩展 + 三道精讲 → 题单 → 测验 → 要点。
+// Chapter 2 · Strings (bilingual) — "an array whose characters cannot be changed".
+// Ten sections: intuition (immutability / encoding / the char-array twin) →
+// memory and encoding (ASCII → Unicode → UTF-8) → core operations (key point: why
+// += in a loop is O(n²)) → hand-written implementations (mutable buffer / indexOf / KMP) →
+// three-language comparison → converging pointers · sliding window · expand-around-center
+// + three walkthroughs → problem set → quiz → key points.
 //
-// 双语约定:JSX 行内用 <T en={…} zh={…} />,组件的文案 prop 传 { en, zh }。
-// 代码块的 code 也是 Loc<string>:两版<b>只有注释不同</b>,可执行行必须逐行一致,
-// 否则 hl 高亮行号会对不上。
+// Bilingual convention: inline JSX uses <T en={…} zh={…} />, component copy props take { en, zh }.
+// The code prop of a code block is also Loc<string>: the two versions differ only in their
+// comments, and every executable line must match line for line, otherwise the hl
+// highlight line numbers drift.
 
 import {
   Hero,
@@ -26,9 +29,9 @@ import { PROBLEMS, QUIZ } from "@/lib/string-data";
 import { EncodeLab, ConcatLab } from "./viz";
 import "./chapter.css";
 
-/* ================= 精讲动画帧 ================= */
+/* ================= Walkthrough animation frames ================= */
 
-// LC 125 验证回文串:对撞指针,s = "A?bB,a"
+// LC 125 Valid Palindrome: converging pointers, s = "A?bB,a"
 const S125 = ["A", "?", "b", "B", ",", "a"];
 const F125: ArrayFrame[] = [
   {
@@ -207,7 +210,7 @@ const F125: ArrayFrame[] = [
   },
 ];
 
-// LC 3 无重复字符的最长子串:滑动窗口 + Set,s = "abcabcbb"
+// LC 3 Longest Substring Without Repeating Characters: sliding window + Set, s = "abcabcbb"
 const S3 = ["a", "b", "c", "a", "b", "c", "b", "b"];
 const w3 = (
   l: number,
@@ -433,7 +436,7 @@ const F3: ArrayFrame[] = [
   },
 ];
 
-// LC 5 最长回文子串:中心扩展,s = "babad"
+// LC 5 Longest Palindromic Substring: expand around center, s = "babad"
 const S5 = ["b", "a", "b", "a", "d"];
 const CENTER = { en: "center", zh: "中心" };
 const F5: ArrayFrame[] = [
@@ -636,7 +639,7 @@ const F5: ArrayFrame[] = [
   },
 ];
 
-/* ================= 页面 ================= */
+/* ================= Page ================= */
 
 const CHIPS = [
   { id: "intuition", n: "01", label: { en: "Intuition", zh: "直觉" } },
@@ -713,7 +716,7 @@ export default function StringChapter() {
         chips={CHIPS}
       />
 
-      {/* ================= §01 直觉 ================= */}
+      {/* ================= §01 Intuition ================= */}
       <Section
         id="intuition"
         index="01"
@@ -924,7 +927,7 @@ export default function StringChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §02 内存与编码 ================= */}
+      {/* ================= §02 Memory and encoding ================= */}
       <Section
         id="encoding"
         index="02"
@@ -1303,7 +1306,7 @@ export default function StringChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §03 核心操作 ================= */}
+      {/* ================= §03 Core operations ================= */}
       <Section
         id="ops"
         index="03"
@@ -1558,7 +1561,7 @@ export default function StringChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §04 手写实现 ================= */}
+      {/* ================= §04 Building it from scratch ================= */}
       <Section
         id="impl"
         index="04"
@@ -2413,7 +2416,7 @@ KMP:  "ABAB" 的开头和结尾最长重叠是 "AB"(长度 2)
         </Callout>
       </Section>
 
-      {/* ================= §05 三语言对照 ================= */}
+      {/* ================= §05 Three languages side by side ================= */}
       <Section
         id="langs"
         index="05"
@@ -2910,7 +2913,7 @@ for (const ch of "a👍") console.log(ch); // 'a'、'👍':按码点遍历`,
         </Callout>
       </Section>
 
-      {/* ================= §06 套路与精讲 ================= */}
+      {/* ================= §06 Patterns and walkthroughs ================= */}
       <Section
         id="patterns"
         index="06"
@@ -3041,7 +3044,7 @@ for (const ch of "a👍") console.log(ch); // 'a'、'👍':按码点遍历`,
           </div>
         </div>
 
-        {/* —— 精讲 A —— */}
+        {/* —— Walkthrough A —— */}
         <div className="sec-head" style={{ marginTop: 44 }}>
           <span className="sec-index">
             <T en="Walkthrough A" zh="精讲 A" />
@@ -3230,7 +3233,7 @@ for (const ch of "a👍") console.log(ch); // 'a'、'👍':按码点遍历`,
           </p>
         </Callout>
 
-        {/* —— 精讲 B —— */}
+        {/* —— Walkthrough B —— */}
         <div className="sec-head" style={{ marginTop: 44 }}>
           <span className="sec-index">
             <T en="Walkthrough B" zh="精讲 B" />
@@ -3431,7 +3434,7 @@ for (const ch of "a👍") console.log(ch); // 'a'、'👍':按码点遍历`,
           </p>
         </Callout>
 
-        {/* —— 精讲 C —— */}
+        {/* —— Walkthrough C —— */}
         <div className="sec-head" style={{ marginTop: 44 }}>
           <span className="sec-index">
             <T en="Walkthrough C" zh="精讲 C" />
@@ -3672,7 +3675,7 @@ for (const ch of "a👍") console.log(ch); // 'a'、'👍':按码点遍历`,
         </Callout>
       </Section>
 
-      {/* ================= §07 题单 ================= */}
+      {/* ================= §07 Problem set ================= */}
       <Section
         id="problems"
         index="07"

@@ -1,21 +1,26 @@
 "use client";
 
-// 第 8 章 · 二叉搜索树的专属可视化:
-//  - BSTLab(招牌):交互式 BST —— 输入数字插入/查找,逐步动画展示
-//    「从根一路比较下坠」;附「顺序插入 1→5」按钮,亲眼看树退化成链表。
-//  - InorderFig:静态图 —— 为什么中序遍历必然升序(水平投影即有序数组)。
-//  - MiniTree:静态小树(删除三情况 / AVL 旋转 / 建树结果等图解用)。
-//  - TreeStepper:通用「树帧」播放器,精讲 LC 98 / LC 230 的逐帧动画用。
+// Chapter 8 · Dedicated visualizations for the binary search tree:
+//  - BSTLab (the centerpiece): an interactive BST — type a number to insert or search,
+//    and a step-by-step animation shows it "falling from the root, comparing on the way
+//    down"; the "insert 1→5 in order" button shows the tree degenerating into a list.
+//  - InorderFig: static diagram — why in-order traversal is necessarily ascending
+//    (its horizontal projection is exactly the sorted array).
+//  - MiniTree: small static tree (used by the three deletion cases, the AVL rotations,
+//    the build result, and similar diagrams).
+//  - TreeStepper: the generic "tree frame" player, used by the frame-by-frame
+//    animations of the LC 98 / LC 230 walkthroughs.
 //
-// 双语:标题、旁白、按钮、图内标签全部通过 <T> / useL() 切换。
-// 本章「高度」一律按边数计(与第 7、9 章统一):只有根时高度为 0,空树记 −1,
-// 所以 n 个节点的树高下限是 ⌊log₂n⌋。
+// Bilingual: titles, narration, buttons, and in-figure labels all switch through <T> / useL().
+// Height in this chapter is always counted in edges (matching chapters 7 and 9): a
+// root-only tree has height 0 and an empty tree is −1, so the lower bound on the height
+// of a tree with n nodes is ⌊log₂n⌋.
 
 import { useMemo, useState, type ReactNode } from "react";
 import { useStepper, StepControls } from "@/lib/stepper";
 import { useL, T, type Loc } from "@/lib/i18n";
 
-/* ================= 数据结构与工具 ================= */
+/* ================= Data structures and helpers ================= */
 
 interface BN {
   v: number;
@@ -40,7 +45,7 @@ function buildSample(): BN {
   return root!;
 }
 
-/** 查找 v 的比较路径(路径上每个节点的值)与是否命中 */
+/** The comparison path to v (the value of every node along the way) and whether v was found */
 function pathTo(root: BN | null, v: number): { path: number[]; found: boolean } {
   const path: number[] = [];
   let cur = root;
@@ -52,7 +57,7 @@ function pathTo(root: BN | null, v: number): { path: number[]; found: boolean } 
   return { path, found: false };
 }
 
-/** 布局:x = 中序位次(BST 的天然属性!),y = 深度 */
+/** Layout: x = in-order rank (a natural property of a BST), y = depth */
 function layout(root: BN | null, w: number) {
   const nodes: { v: number; x: number; y: number }[] = [];
   const edges: { x1: number; y1: number; x2: number; y2: number }[] = [];
@@ -479,7 +484,7 @@ export function BSTLab() {
   );
 }
 
-/* ================= InorderFig:中序为什么升序 ================= */
+/* ================= InorderFig: why in-order is ascending ================= */
 
 const IN_VALUES = [
   { v: 50, d: 0 },
@@ -501,7 +506,7 @@ const IN_EDGES: [number, number][] = [
 
 export function InorderFig() {
   const L = useL();
-  // x = 中序位次 —— 这正是要展示的核心事实
+  // x = in-order rank — exactly the fact this figure exists to show
   const order = [20, 30, 40, 50, 60, 70, 80];
   const X = (v: number) => 44 + order.indexOf(v) * 80;
   const Y = (d: number) => 38 + d * 66;
@@ -545,7 +550,7 @@ export function InorderFig() {
               </text>
             </g>
           ))}
-          {/* 垂直投影虚线 */}
+          {/* Dashed vertical projection lines */}
           {order.map((v) => (
             <line
               key={v}
@@ -556,7 +561,7 @@ export function InorderFig() {
               y2={268}
             />
           ))}
-          {/* 地面:升序数组 */}
+          {/* The ground line: the ascending array */}
           {order.map((v, i) => (
             <g key={v} className="bst-node ok">
               <rect x={X(v) - 20} y={270} width={40} height={36} rx={9} />
@@ -598,7 +603,7 @@ export function InorderFig() {
   );
 }
 
-/* ================= MiniTree:静态小树 ================= */
+/* ================= MiniTree: small static tree ================= */
 
 export interface MiniNode {
   id: number;
@@ -660,7 +665,7 @@ export function MiniTree({
   );
 }
 
-/* ================= TreeStepper:通用树帧播放器 ================= */
+/* ================= TreeStepper: generic tree-frame player ================= */
 
 export interface StepNode {
   id: number;
@@ -674,7 +679,7 @@ export interface TreeFrame {
   ok?: number[];
   bad?: number[];
   dim?: number[];
-  /** 节点下方的小标签(如上下界、计数) */
+  /** Small label under a node (bounds, counters, and the like) */
   tags?: Record<number, Loc<string>>;
   msg: Loc<ReactNode>;
 }

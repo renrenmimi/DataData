@@ -1,15 +1,18 @@
 "use client";
 
-// 第 9 章 · 堆与优先队列(Heap / Priority Queue)
-// 八段式:直觉(急诊分诊,只关心最值)→ 结构(完全二叉树 + 父≤子,存进数组)→
-// 核心操作(HeapLab:push 上浮 / pop 下沉 / O(n) 建堆)→ 手写 MinHeap →
-// 三语言对照(PriorityQueue / heapq / 无内置)→ 套路与精讲(Top-K,215/347/23)→
-// 题单 → 测验 → 要点。
+// Chapter 9 · Heap and priority queue (Heap / Priority Queue)
+// Eight sections: intuition (emergency triage, only the extreme matters) → structure
+// (complete binary tree + parent ≤ child, stored in an array) → core operations
+// (HeapLab: push sifts up / pop sifts down / O(n) heapify) → writing MinHeap by hand →
+// three-language comparison (PriorityQueue / heapq / no built-in) → patterns and
+// walkthroughs (Top-K, 215/347/23) → problem set → quiz → key points.
 //
-// 双语:所有面向学习者的文案都用 <T en zh> 或 { en, zh },英文为默认语言。
-// 代码窗的 code 写成 { en, zh } —— 两版逐行等价,只有注释不同,hl 行号才对得上。
-// 术语约定:height(树高)按边数计 = ⌊log₂n⌋;priority queue 是接口,
-// binary heap 是实现 —— 全章不把两者当同义词用。
+// Bilingual: every learner-facing string uses <T en zh> or { en, zh }, English is the default.
+// The code windows take code as { en, zh } — the two versions are line-for-line equivalent
+// and differ only in their comments, which is what keeps the hl line numbers aligned.
+// Terminology: height (of the tree) is counted in edges = ⌊log₂n⌋; a priority queue is
+// an interface and a binary heap is an implementation — the chapter never treats the two
+// as synonyms.
 
 import "./chapter.css";
 import {
@@ -28,11 +31,13 @@ import { PROBLEMS, QUIZ } from "@/lib/heap-data";
 import { T } from "@/lib/i18n";
 import { HeapLab, HeapMapFig } from "./viz";
 
-/* ================= 精讲动画帧 ================= */
+/* ================= Walkthrough animation frames ================= */
 
-// —— 精讲 A · LC 215:数组中第 K 个最大元素。容量 k=2 的小根堆,堆顶=门槛 ——
-// 输入 [3,2,1,5,6,4],第 2 大 = 5。
-// 格子约定:前面的格子 = 堆里的内容;末尾那个 lit / bad 的格子 = 正在被检验的新数。
+// — Walkthrough A · LC 215: kth largest element in an array. A min-heap of capacity
+//   k=2, whose top is the admission threshold —
+// Input [3,2,1,5,6,4], the 2nd largest = 5.
+// Cell convention: the leading cells = the contents of the heap; the trailing lit / bad
+// cell = the new number currently under test.
 const F215: ArrayFrame[] = [
   {
     cells: [{ v: 3, state: "ok" }],
@@ -189,8 +194,10 @@ const F215: ArrayFrame[] = [
   },
 ];
 
-// —— 精讲 B · LC 347:前 K 个高频元素。哈希计数 + 容量 k=2 小根堆(按频次) ——
-// 输入 [1,1,1,2,2,3],k=2。格子里画的是「频次」,末尾格子是待检验的新频次。
+// — Walkthrough B · LC 347: top k frequent elements. Hash counting + a min-heap of
+//   capacity k=2 ordered by frequency —
+// Input [1,1,1,2,2,3], k=2. The cells show frequencies; the trailing cell is the new
+// frequency under test.
 const F347: ArrayFrame[] = [
   {
     cells: [{ v: 3, state: "ok" }],
@@ -277,8 +284,9 @@ const F347: ArrayFrame[] = [
   },
 ];
 
-// —— 精讲 C · LC 23:合并 K 个升序链表。堆装每条链当前的头 ——
-// 链①1→4→5 链②1→3→4 链③2→6。格子里画的是「堆里的结点值」。
+// — Walkthrough C · LC 23: merge k sorted linked lists. The heap holds the current head
+//   of each list —
+// List ① 1→4→5, list ② 1→3→4, list ③ 2→6. The cells show the node values inside the heap.
 const F23: ArrayFrame[] = [
   {
     cells: [{ v: 1, state: "lit" }, { v: 1 }, { v: 2 }],
@@ -440,7 +448,7 @@ const F23: ArrayFrame[] = [
   },
 ];
 
-/* ================= 页面 ================= */
+/* ================= Page ================= */
 
 const CHIPS = [
   { id: "intuition", n: "01", label: { en: "Intuition", zh: "直觉" } },
@@ -497,7 +505,7 @@ export default function HeapChapter() {
         chips={CHIPS}
       />
 
-      {/* ================= §01 直觉 ================= */}
+      {/* ================= §01 Intuition ================= */}
       <Section
         id="intuition"
         index="01"
@@ -705,7 +713,7 @@ export default function HeapChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §02 结构 ================= */}
+      {/* ================= §02 The structure ================= */}
       <Section
         id="shape"
         index="02"
@@ -995,7 +1003,7 @@ export default function HeapChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §03 核心操作 ================= */}
+      {/* ================= §03 Core operations ================= */}
       <Section
         id="ops"
         index="03"
@@ -1384,7 +1392,7 @@ export default function HeapChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §04 手写实现 ================= */}
+      {/* ================= §04 Build one ================= */}
       <Section
         id="impl"
         index="04"
@@ -1849,7 +1857,7 @@ export default function HeapChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §05 三语言对照 ================= */}
+      {/* ================= §05 Three languages ================= */}
       <Section
         id="langs"
         index="05"
@@ -2286,7 +2294,7 @@ const q = new MinPriorityQueue({ priority: (x) => x.dist });`,
         </div>
       </Section>
 
-      {/* ================= §06 套路与精讲 ================= */}
+      {/* ================= §06 Patterns and Top-K ================= */}
       <Section
         id="patterns"
         index="06"
@@ -2386,7 +2394,7 @@ const q = new MinPriorityQueue({ priority: (x) => x.dist });`,
           />
         </Callout>
 
-        {/* —— 精讲 A —— */}
+        {/* — Walkthrough A — */}
         <div className="sec-head" style={{ marginTop: 40 }}>
           <span className="sec-index">
             <T en="EXAMPLE A" zh="精讲 A" />
@@ -2565,7 +2573,7 @@ var findKthLargest = function (nums, k) {
           />
         </Callout>
 
-        {/* —— 精讲 B —— */}
+        {/* — Walkthrough B — */}
         <div className="sec-head" style={{ marginTop: 44 }}>
           <span className="sec-index">
             <T en="EXAMPLE B" zh="精讲 B" />
@@ -2804,7 +2812,7 @@ class Solution:
           />
         </Callout>
 
-        {/* —— 精讲 C —— */}
+        {/* — Walkthrough C — */}
         <div className="sec-head" style={{ marginTop: 44 }}>
           <span className="sec-index">
             <T en="EXAMPLE C" zh="精讲 C" />
@@ -3056,7 +3064,7 @@ class Solution:
         </Callout>
       </Section>
 
-      {/* ================= §07 题单 ================= */}
+      {/* ================= §07 Problem set ================= */}
       <Section
         id="problems"
         index="07"

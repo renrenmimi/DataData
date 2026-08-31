@@ -1,9 +1,13 @@
-// 课程注册表 —— 全站唯一的章节清单。
-// 侧栏、命令面板、章节页脚(上一章/下一章)、进度系统都从这里取数据。
-// 新增章节:在 CHAPTERS 里插入一条,并保证 app/<id>/page.tsx 存在。
+// Curriculum registry — the one and only chapter list for the site.
+// The sidebar, command palette, chapter footer (prev/next) and progress system
+// all read from here.
+// To add a chapter: insert an entry in CHAPTERS and make sure app/<id>/page.tsx
+// exists.
 //
-// 双语:title / en / essence / tags 都是 Loc<string>,由消费方用 useL() 解析。
-// 本文件保持纯数据模块(不加 "use client"),服务端与客户端都能 import。
+// Bilingual: title / en / essence / tags are all Loc<string>, resolved by
+// consumers via useL().
+// Keep this a pure data module (no "use client") so server and client can both
+// import it.
 
 import type { Loc } from "@/lib/i18n";
 
@@ -27,20 +31,20 @@ export type ChapterId =
 export interface Chapter {
   id: ChapterId;
   href: string;
-  /** 章节编号展示:00–13,终章用 ✦ */
+  /** Displayed chapter number: 00–13, ✦ for the finale */
   num: string;
   title: Loc<string>;
-  /** 英文副标 —— hero 眉题与侧栏小字 */
+  /** English subtitle — hero kicker and sidebar caption */
   en: Loc<string>;
-  /** 一句话本质 */
+  /** One-line essence */
   essence: Loc<string>;
-  /** oklch 色相角,决定整章主题色 */
+  /** oklch hue angle; sets the theme hue for the whole chapter */
   hue: number;
-  /** 难度 1–5,世界地图与侧栏展示 */
+  /** Difficulty 1–5, shown on the world map and in the sidebar */
   level: 1 | 2 | 3 | 4 | 5;
-  /** LeetCode 出现频率 1–5(5 = 顶级高频) */
+  /** LeetCode frequency 1–5 (5 = extremely common) */
   freq: 1 | 2 | 3 | 4 | 5;
-  /** 本章可勾选的练习题数(进度分母的一部分)——由各章 lib 数据决定,这里只是索引用途 */
+  /** Checkable problems in this chapter (part of the progress denominator) — set by each chapter's lib data; listed here for indexing only */
   tags: Loc<string>[];
 }
 
@@ -346,12 +350,12 @@ export function prevNext(id: ChapterId): { prev?: Chapter; next?: Chapter } {
   };
 }
 
-/** 侧栏 / 命令面板 / 地图卡的英文副标:标题里已经含有它时就不必重复显示。 */
+/** English subtitle for the sidebar / command palette / map cards: skip it when the title already contains it. */
 export function subLabel(title: string, en: string): string | null {
   return title.includes(en) ? null : en;
 }
 
-/** 命令面板的搜索语料:两种语言都收进去,中英关键词都能命中。 */
+/** Search corpus for the command palette: both languages go in, so a keyword in either one matches. */
 export function searchCorpus(c: Chapter): string {
   const flat = (v: Loc<string>): string[] =>
     typeof v === "string" ? [v] : [v.en, v.zh];

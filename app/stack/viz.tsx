@@ -1,11 +1,13 @@
 "use client";
 
-// 第 4 章 · 栈的专属可视化:
-//  - StackMemFig:§02 静态图解 —— 数组栈(栈顶在尾)vs 链表栈(栈顶在头)。
-//  - StackLab:垂直堆叠的盘子,亲手 push / pop / peek,盯住栈顶指针与空栈边界。
-//  - CallStackDemo:函数调用栈逐帧(main → f → g),顺便解释栈溢出的来历。
+// Chapter 4 · The visualizations specific to stacks:
+//  - StackMemFig: the static figure for §02 — array-backed stack (top at the tail) vs linked stack (top at the head).
+//  - StackLab: a vertical pile of plates; push / pop / peek by hand and watch the top pointer
+//    and the empty-stack boundary.
+//  - CallStackDemo: the function call stack frame by frame (main → f → g), which also explains
+//    where stack overflow comes from.
 //
-// 双语:所有标题、旁白、按钮、帧内文字都通过 <T> / useL() 切换。
+// Bilingual: every title, narration, button and in-frame label switches through <T> / useL().
 
 import { Fragment, useRef, useState, type ReactNode } from "react";
 import { useStepper, StepControls } from "@/lib/stepper";

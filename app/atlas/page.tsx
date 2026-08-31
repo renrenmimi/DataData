@@ -1,8 +1,9 @@
 "use client";
 
-// 终章 · 选型地图 —— 全书的收束:
-// ① 交互式决策树(拿到题问什么);② 信号词→结构对照表;③ 终极复杂度表;
-// ④ 全书题单总表(汇总各章 PROBLEMS,进度全站互通);⑤ 下一步路线;⑥ 终极测验。
+// Finale · Selection atlas — where the whole course comes together:
+// ① interactive decision tree (what to ask when a problem lands); ② signal phrase →
+//    structure table; ③ the master complexity table; ④ the combined problem set (every
+//    chapter's PROBLEMS, progress shared site-wide); ⑤ what to learn next; ⑥ the final quiz.
 
 import Link from "next/link";
 import "./chapter.css";
@@ -36,7 +37,7 @@ import { PROBLEMS as P_UF } from "@/lib/union-find-data";
 import { PROBLEMS as P_GRAPH } from "@/lib/graph-data";
 import { PROBLEMS as P_ADV } from "@/lib/advanced-data";
 
-/* ---------- 全书题单分组 ---------- */
+/* ---------- Course-wide problem set groups ---------- */
 
 const GROUPS: { ch: ChapterId; problems: Problem[] }[] = [
   { ch: "array", problems: P_ARRAY },
@@ -56,7 +57,7 @@ const GROUPS: { ch: ChapterId; problems: Problem[] }[] = [
 
 const TOTAL = GROUPS.reduce((s, g) => s + g.problems.length, 0);
 
-/* ---------- 信号词 → 结构 ---------- */
+/* ---------- Signal phrase → structure ---------- */
 
 const SIGNALS: {
   signal: Loc<string>;
@@ -270,7 +271,7 @@ const SIGNALS: {
   },
 ];
 
-/* ---------- 终极测验 ---------- */
+/* ---------- Final quiz ---------- */
 
 const QUIZ: QuizItem[] = [
   {
@@ -670,7 +671,7 @@ const QUIZ: QuizItem[] = [
   },
 ];
 
-/* ---------- 页面 ---------- */
+/* ---------- Page ---------- */
 
 const CHIPS = [
   { id: "decision", n: "01", label: { en: "Decision tree", zh: "决策树" } },
@@ -845,7 +846,7 @@ export default function AtlasChapter() {
         chips={CHIPS}
       />
 
-      {/* §01 决策树 */}
+      {/* §01 Decision tree */}
       <Section
         id="decision"
         index="01"
@@ -887,7 +888,7 @@ export default function AtlasChapter() {
         </Callout>
       </Section>
 
-      {/* §02 信号词 */}
+      {/* §02 Signal phrases */}
       <Section
         id="signals"
         index="02"
@@ -932,7 +933,7 @@ export default function AtlasChapter() {
         </div>
       </Section>
 
-      {/* §03 终极复杂度表 */}
+      {/* §03 Master complexity table */}
       <Section
         id="bigtable"
         index="03"
@@ -999,7 +1000,7 @@ export default function AtlasChapter() {
         </div>
       </Section>
 
-      {/* §04 全书题单 */}
+      {/* §04 Course-wide problem set */}
       <Section
         id="problems"
         index="04"
@@ -1083,7 +1084,7 @@ export default function AtlasChapter() {
         })}
       </Section>
 
-      {/* §05 下一步 */}
+      {/* §05 What next */}
       <Section
         id="next"
         index="05"

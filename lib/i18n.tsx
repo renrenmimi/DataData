@@ -1,10 +1,13 @@
 "use client";
 
-// 全站双语基础设施(English default / 中文可切换)。
-//  - langScript:首帧前把语言写到 <html data-lang>,避免闪烁。
-//  - LangProvider / useLang:语言状态 + localStorage 持久化。
-//  - useL():把 Loc<T>({ en, zh } 或普通值)解析成当前语言的值。
-//  - <T en={…} zh={…} />:JSX 里的行内切换,可写在模块级常量数组里。
+// Site-wide bilingual infrastructure (English by default, switchable to Chinese).
+//  - langScript: writes the language onto <html data-lang> before the first
+//    paint to avoid a flash.
+//  - LangProvider / useLang: language state + localStorage persistence.
+//  - useL(): resolves a Loc<T> ({ en, zh } or a plain value) to the current
+//    language.
+//  - <T en={…} zh={…} />: inline switch for JSX, usable inside module-level
+//    constant arrays.
 
 import {
   createContext,

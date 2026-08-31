@@ -1,14 +1,15 @@
 "use client";
 
-// 第 5 章 · 队列的专属可视化:
-//  - QueueMemFig:§02 静态图解 —— 数组队列的三种设计:搬移 / 不搬移(空间浪费) / 取模绕圈。
-//  - RingLab:环形 SVG 循环队列(8 格),front/rear 指针动画,
-//    可切换「留一格空 / 计数器」两种满-空判定方案。
-//  - TwoStackPour:LC 232 双栈模拟队列的逐帧动画。
+// Chapter 5 · The visualizations specific to queues:
+//  - QueueMemFig: the static figure for §02 — the three designs for an array-backed queue:
+//    shift / don't shift (wasted space) / wrap around with modulo.
+//  - RingLab: an SVG ring rendering of a circular queue (8 cells) with animated front/rear pointers,
+//    switchable between the two full-vs-empty schemes ("leave one cell empty" / "keep a counter").
+//  - TwoStackPour: the frame-by-frame animation of LC 232, a queue simulated with two stacks.
 //
-// 双语:所有标题、旁白、按钮、图内文字都通过 <T> / useL() 切换。
-// 约定:rear 永远指向「下一个写入的位置」,front 指向「下一个出队的元素」——
-// 图解、RingLab 与 §04 的代码保持同一套语义。
+// Bilingual: every title, narration, button and figure label switches through <T> / useL().
+// Convention: rear always points at "the next slot to write", front at "the next element to dequeue" —
+// the figures, RingLab and the code in §04 all share these semantics.
 
 import { useRef, useState, type ReactNode } from "react";
 import { useStepper, StepControls } from "@/lib/stepper";
@@ -452,7 +453,7 @@ export function RingLab() {
             zh: "画成环形的 8 格循环队列",
           })}
         >
-          {/* 8 个槽位 */}
+          {/* Eight slots */}
           {Array.from({ length: CAP }).map((_, i) => {
             const p = polar(i, R);
             const lab = polar(i, R + 38);
@@ -474,7 +475,7 @@ export function RingLab() {
               </g>
             );
           })}
-          {/* front 指针(绿)*/}
+          {/* The front pointer (green) */}
           <g
             className="qu-ptr front"
             style={{ transform: `translate(${frontPos.x}px, ${frontPos.y}px)` }}
@@ -483,7 +484,7 @@ export function RingLab() {
               front ▸
             </text>
           </g>
-          {/* rear 指针(黄)*/}
+          {/* The rear pointer (amber) */}
           <g
             className="qu-ptr rear"
             style={{ transform: `translate(${rearPos.x}px, ${rearPos.y}px)` }}
@@ -492,7 +493,7 @@ export function RingLab() {
               rear ▸
             </text>
           </g>
-          {/* 中心状态 */}
+          {/* State in the centre */}
           <text className="qu-center-big" x={CX} y={CY - 2} textAnchor="middle">
             {isEmpty
               ? L({ en: "empty", zh: "空" })
@@ -551,7 +552,7 @@ export function RingLab() {
   );
 }
 
-/* ---------------- TwoStackPour(LC 232 逐帧)---------------- */
+/* ---------------- TwoStackPour (LC 232, frame by frame) ---------------- */
 
 interface PourFrame {
   inS: number[];

@@ -1,5 +1,6 @@
-// 品牌标:三个由浅入深的方块节点 + 一条连线,寓意「数据 + 结构」。
-// 纯 SVG,继承 currentColor,放在渐变底的 .brand-mark 里。
+// Brand mark: three square nodes of increasing opacity joined by one line —
+// "data + structure". Pure SVG, inherits currentColor, sits inside the
+// gradient-backed .brand-mark.
 
 export function BrandMark() {
   return (

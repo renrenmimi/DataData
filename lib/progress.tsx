@@ -1,9 +1,11 @@
 "use client";
 
-// 全站学习进度 —— localStorage 持久化。
-// 两类事实:① 勾掉的练习题("array/283" 这种 `${章节}/${LC题号}` 键);
-// ② 每章 Quiz 的最好成绩。章节状态由此推导:new(没动过)/ doing(动过)/ done(测验全对)。
-// 所有组件(侧栏、题单、Quiz、终章总表)共用这一个 context,别自己另存一份。
+// Site-wide learning progress — persisted in localStorage.
+// Two kinds of facts: (1) checked-off problems, keyed `${chapter}/${LC number}`
+// (for example "array/283"); (2) the best quiz score per chapter. Chapter state
+// is derived from those: new (untouched) / doing (touched) / done (perfect quiz).
+// Every consumer (sidebar, problem sets, quizzes, the finale's master table)
+// shares this one context — do not keep a second copy anywhere.
 
 import {
   createContext,
@@ -76,7 +78,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
     try {
       window.localStorage.setItem(KEY, JSON.stringify(next));
     } catch {
-      /* 私密模式等写入失败:仅内存态 */
+      /* Write failed (private browsing, quota, …) — stay in-memory only */
     }
   }, []);
 
@@ -95,7 +97,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
   const reportQuiz = useCallback(
     (ch: ChapterId, right: number, total: number) => {
       const prev = data.quiz[ch];
-      // 只保留最好成绩
+      // Keep only the best score
       if (prev && prev.right / prev.total >= right / total) return;
       persist({ ...data, quiz: { ...data.quiz, [ch]: { right, total } } });
     },

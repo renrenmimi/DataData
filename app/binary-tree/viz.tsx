@@ -1,20 +1,20 @@
 "use client";
 
-// 第 7 章 · 二叉树的可视化组件群(English default / 中文可切换):
-//  - TermTree / ShapeGallery:§01 术语全图解、真/满/完全三种形状对比(静态 SVG)。
-//  - FactorialLab:§03 factorial(3) 调用栈逐帧(递归第一课)。
-//  - RecurLab:§03 count(node) 数节点 —— 栈帧压弹 + 每节点返回值(核心)。
-//  - TraverseLab:§04 前/中/后/层序四种遍历,节点点亮 + 输出序列 + 栈/队列。
-//  - DepthLab / InvertLab / MirrorLab / LevelLab:§07 四道精讲的逐帧动画。
+// Chapter 7 · The visualization components for binary trees (English by default, switchable to Chinese):
+//  - TermTree / ShapeGallery: §01's complete terminology figure, and full/perfect/complete side by side (static SVG).
+//  - FactorialLab: §03's factorial(3) call stack, frame by frame (the first lesson in recursion).
+//  - RecurLab: §03's count(node) — stack frames pushed and popped + the value each node returns (the important one).
+//  - TraverseLab: §04's four traversals (pre/in/post/level order): nodes light up + output sequence + stack/queue.
+//  - DepthLab / InvertLab / MirrorLab / LevelLab: the frame-by-frame animations for §07's four walkthroughs.
 //
-// 双语:图内文字、旁白、按钮、图例全部走 <T> / useL()。
-// 节点值、下标、代码标识符不翻译。
+// Bilingual: figure text, narration, buttons and legends all go through <T> / useL().
+// Node values, indices and code identifiers are left untranslated.
 
 import { useState, type ReactNode } from "react";
 import { useStepper, StepControls } from "@/lib/stepper";
 import { useL, T, type Loc } from "@/lib/i18n";
 
-/* ================= 共享:SVG 树渲染 ================= */
+/* ================= Shared: SVG tree rendering ================= */
 
 type NodeState = "lit" | "ok" | "path" | "dim";
 
@@ -23,7 +23,7 @@ interface SvgNode {
   v: ReactNode;
   x: number;
   y: number;
-  /** 父节点 id(用于画边) */
+  /** Parent node id (used to draw edges) */
   p?: string;
 }
 
@@ -39,13 +39,13 @@ function TreeSvg({
   nodes: SvgNode[];
   w: number;
   h: number;
-  /** 节点状态:lit 当前 / ok 已完成 / path 在递归路径上 / dim 淡出 */
+  /** Node state: lit = current / ok = finished / path = on the recursion path / dim = faded out */
   state?: Record<string, NodeState | undefined>;
-  /** 节点下方的返回值标注(自底向上递归用) */
+  /** Return-value label drawn under the node (for bottom-up recursion) */
   ret?: Record<string, string | undefined>;
-  /** 覆盖坐标(InvertLab 的交换动画用) */
+  /** Coordinate overrides (used by InvertLab's swap animation) */
   pos?: Record<string, [number, number] | undefined>;
-  /** 附加 SVG 元素(辅助线、标签) */
+  /** Extra SVG elements (guide lines, labels) */
   extra?: ReactNode;
 }) {
   const at = (n: SvgNode): [number, number] => pos?.[n.id] ?? [n.x, n.y];
@@ -88,7 +88,7 @@ function TreeSvg({
   );
 }
 
-/* ================= TermTree:术语全图解 ================= */
+/* ================= TermTree: the complete terminology figure ================= */
 
 const TERM_NODES: SvgNode[] = [
   { id: "A", v: "A", x: 320, y: 52 },
@@ -117,7 +117,7 @@ export function TermTree() {
           state={{ A: "lit" }}
           extra={
             <>
-              {/* 层参考线 */}
+              {/* Guide lines for each level */}
               <line x1={30} y1={52} x2={610} y2={52} className="bt-guide" />
               <line x1={30} y1={142} x2={610} y2={142} className="bt-guide" />
               <line x1={30} y1={232} x2={610} y2={232} className="bt-guide" />
@@ -130,7 +130,7 @@ export function TermTree() {
               <text x={34} y={220} className="bt-lab">
                 {L({ en: "level 3 · depth 2", zh: "第 3 层 · 深度 2" })}
               </text>
-              {/* 称呼标注 */}
+              {/* The kinship labels */}
               <text x={320} y={16} textAnchor="middle" className="bt-lab acc">
                 {L({
                   en: "root — the node with no parent",
@@ -188,7 +188,7 @@ export function TermTree() {
   );
 }
 
-/* ================= ShapeGallery:真 / 满 / 完全 ================= */
+/* ================= ShapeGallery: full / perfect / complete ================= */
 
 function MiniTree({ missing }: { missing: number[] }) {
   const slots: { n: number; x: number; y: number; p?: number }[] = [
@@ -330,12 +330,12 @@ export function ShapeGallery() {
   );
 }
 
-/* ================= FactorialLab:递归第一课 ================= */
+/* ================= FactorialLab: the first lesson in recursion ================= */
 
 interface StackItem {
   name: string;
   note: Loc<string>;
-  /** 该帧已算出结果(右侧文字标绿) */
+  /** This frame has produced its result (the text on the right turns green) */
   done?: boolean;
   lit?: boolean;
 }
@@ -863,7 +863,7 @@ export function RecurLab() {
   );
 }
 
-/* ================= TraverseLab:四种遍历 ================= */
+/* ================= TraverseLab: the four traversals ================= */
 
 interface T7Node extends SvgNode {
   n: number;
@@ -1523,7 +1523,7 @@ const I_NODES: SvgNode[] = [
 
 type Pos = Record<string, [number, number] | undefined>;
 
-// P1:根的两棵子树整体互换;P2:再换 7 的孩子;P3:再换 2 的孩子
+// P1: swap the root's two subtrees as a whole; P2: then swap 7's children; P3: then swap 2's children
 const P1: Pos = {
   n2: [340, 124],
   n7: [120, 124],

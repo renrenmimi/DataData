@@ -1,6 +1,6 @@
-/* 第 7 章 · 二叉树 专属样式(前缀 .bt-,颜色全部走 token)*/
+/* Chapter 7 · Binary trees — styles for this chapter only (.bt- prefix, colours from tokens) */
 
-/* ---------- SVG 树通用 ---------- */
+/* ---------- Shared SVG tree ---------- */
 
 [data-ch="binary-tree"] .bt-svg {
   display: block;
@@ -80,7 +80,7 @@
   font-weight: 700;
 }
 
-/* ---------- 输出序列 / 栈 / 队列条 ---------- */
+/* ---------- Output sequence / stack / queue strip ---------- */
 
 [data-ch="binary-tree"] .bt-stage-col {
   flex-direction: column;
@@ -140,7 +140,7 @@
   background: var(--acc-soft);
 }
 
-/* ---------- 调用栈(FactorialLab / RecurLab)---------- */
+/* ---------- Call stack (FactorialLab / RecurLab) ---------- */
 
 [data-ch="binary-tree"] .bt-stackwrap {
   display: flex;
@@ -151,8 +151,9 @@
   width: 100%;
 }
 
-/* 英文栈帧文案(waiting for f(2) / resumes: 3 × 2 = 6)比中文长,
-   列宽放宽到 300px,帧内允许换行,避免溢出。 */
+/* The English frame captions (waiting for f(2) / resumes: 3 × 2 = 6) run longer
+   than the Chinese, so the column widens to 300px and a frame may wrap rather
+   than overflow. */
 [data-ch="binary-tree"] .bt-stackcol {
   display: flex;
   flex-direction: column;
@@ -209,7 +210,7 @@
   color: var(--text-3);
 }
 
-/* ---------- 层序结果面板(LevelLab)---------- */
+/* ---------- Level-order result panel (LevelLab) ---------- */
 
 [data-ch="binary-tree"] .bt-levels {
   display: flex;

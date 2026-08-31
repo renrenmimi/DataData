@@ -1,17 +1,22 @@
 "use client";
 
-// 通用「逐帧播放器」—— 算法慢动作的骨架。
-// ArrayStepper:一排单元格 + 指针标签 + 旁白,适合数组/字符串/栈/队列/
-// 双指针/滑动窗口类演示。每一帧是一张完整快照,组件负责播放控制
-// (上一步/下一步/自动播放/进度),帧数据由各章自己写。
-// 树/图等自由形态的动画请在章节内自建组件,但控制条样式(.viz-ctl)通用。
+// Generic frame-by-frame player — the skeleton for algorithm slow motion.
+// ArrayStepper: a row of cells + pointer labels + narration, suited to array /
+// string / stack / queue / two-pointer / sliding-window demos. Every frame is a
+// complete snapshot; the component owns playback control (prev / next /
+// autoplay / progress) and each chapter writes its own frame data.
+// Free-form animations (trees, graphs) need their own components inside the
+// chapter, but the control bar styling (.viz-ctl) is shared.
 //
-// 双语:title / 指针 label / 每帧 msg 都接受 Loc<…>。
+// Bilingual: title / pointer label / each frame's msg all accept Loc<…>.
 //
-// 「预测下一帧」模式(predict mode):打开后,点「下一步」不再直接前进,
-// 而是先给出三张候选快照让学习者选。干扰项由真实帧自动派生,针对四类典型误区:
-// ① 过头一帧(off-by-one)② 指针动了、数据没动 ③ 数据动了、指针没动
-// ④ 指针多走一格。选完再揭晓并前进 —— 把「看动画」变成「先思考」。
+// Predict mode: once enabled, "Next" no longer advances straight away — it
+// first offers three candidate snapshots to choose from. Distractors are
+// derived automatically from the real frames and target four typical
+// misconceptions: (1) one frame too far (off-by-one); (2) pointers moved but
+// data did not; (3) data moved but pointers did not; (4) a pointer overshot by
+// one cell. After the choice the answer is revealed and playback advances —
+// turning "watch the animation" into "predict first".
 
 import {
   isValidElement,
@@ -29,9 +34,9 @@ export interface ArrayCell {
 
 export interface ArrayFrame {
   cells: ArrayCell[];
-  /** 指针标签,渲染在单元格上方,如 { i: 2, label: "slow" } */
+  /** Pointer labels, rendered above the cells, e.g. { i: 2, label: "slow" } */
   ptrs?: { i: number; label: Loc<string> }[];
-  /** 本帧旁白 */
+  /** Narration for this frame */
   msg: Loc<ReactNode>;
 }
 
@@ -42,19 +47,21 @@ export function useStepper(total: number, intervalMs = 1100) {
   useEffect(() => {
     if (!playing) return;
     const id = setInterval(() => {
-      // 更新函数必须是纯的:这里只推进帧号,停止播放交给下面的 effect
+      // Updaters must be pure: this only advances the frame index, and the
+      // effect below is what stops playback
       setStep((s) => (s >= total - 1 ? s : s + 1));
     }, intervalMs);
     return () => clearInterval(id);
   }, [playing, total, intervalMs]);
 
-  // 播到最后一帧自动停
+  // Stop automatically on the last frame
   useEffect(() => {
     if (playing && step >= total - 1) setPlaying(false);
   }, [playing, step, total]);
 
-  // 帧数组被换掉(例如切换演示用例)导致总帧数变少时,把 step 拉回合法范围,
-  // 否则 frames[step] 会取到 undefined 而崩溃
+  // When the frame array is swapped out (a different demo case, say) and gets
+  // shorter, clamp step back into range — otherwise frames[step] is undefined
+  // and rendering crashes
   useEffect(() => {
     setStep((s) => (s > total - 1 ? Math.max(0, total - 1) : s));
   }, [total]);
@@ -85,13 +92,13 @@ export function StepControls({
   stepper,
   step,
   total,
-  /** 覆盖「下一步」的行为(预测模式用它拦截前进) */
+  /** Override what "Next" does (predict mode uses it to intercept advancing) */
   onNext,
-  /** 预测未作答时禁用「下一步」,避免两条前进路径打架 */
+  /** Disable "Next" while a prediction is unanswered, so two advance paths cannot conflict */
   nextDisabled,
-  /** 预测模式下禁用自动播放(否则会跳过预测) */
+  /** Disable autoplay in predict mode (it would skip the predictions) */
   playDisabled,
-  /** 额外控件(如预测模式开关),渲染在计数器之前 */
+  /** Extra controls (the predict-mode switch, for one), rendered before the counter */
   extra,
 }: {
   stepper: ReturnType<typeof useStepper>;
@@ -146,9 +153,9 @@ export function StepControls({
   );
 }
 
-/* ================= 预测下一帧:帧签名与干扰项生成 ================= */
+/* ========= Predict the next frame: frame signatures and distractors ========= */
 
-/** 把 ReactNode 抽成可比较的纯文本(单元格的值多为数字/短字符串) */
+/** Flatten a ReactNode to comparable plain text (cell values are mostly numbers or short strings) */
 function nodeText(v: ReactNode): string {
   if (v === null || v === undefined || typeof v === "boolean") return "";
   if (typeof v === "string" || typeof v === "number") return String(v);
@@ -160,7 +167,7 @@ function nodeText(v: ReactNode): string {
   return "?";
 }
 
-/** 指针标签取语言无关的形式,仅用于比较 */
+/** Language-independent form of a pointer label, used only for comparison */
 const rawLabel = (l: Loc<string>): string => (typeof l === "string" ? l : l.en);
 
 const cellSig = (f: ArrayFrame) =>
@@ -181,8 +188,9 @@ interface Challenge {
 }
 
 /**
- * 造一道预测题:正确答案是真实的下一帧,干扰项从真实帧派生,
- * 每个都对应一种典型误解。全部与正确答案去重后取两个。
+ * Build one prediction question: the correct answer is the real next frame and
+ * the distractors are derived from real frames, each matching a typical
+ * misconception. Deduplicated against the correct answer, then two are kept.
  */
 function buildChallenge(
   frames: ArrayFrame[],
@@ -203,13 +211,13 @@ function buildChallenge(
     distractors.push(f);
   };
 
-  // ① 过头一帧:真实存在,但快了一步(off-by-one 是最常见的误判)
+  // (1) One frame too far: a real frame, but a step ahead (off-by-one is the most common slip)
   push(frames[step + 2]);
-  // ② 指针动了,数据还没动
+  // (2) Pointers moved, data did not
   push({ cells: cur.cells, ptrs: next.ptrs, msg: "" });
-  // ③ 数据动了,指针忘了动
+  // (3) Data moved, pointers did not
   push({ cells: next.cells, ptrs: cur.ptrs, msg: "" });
-  // ④ 指针多走一格
+  // (4) A pointer overshot by one cell
   push({
     cells: next.cells,
     ptrs: (next.ptrs ?? []).map((p) => ({
@@ -218,7 +226,7 @@ function buildChallenge(
     })),
     msg: "",
   });
-  // ⑤ 兜底:序列里任何一帧都能当干扰项
+  // (5) Fallback: any frame in the sequence can serve as a distractor
   for (const fr of frames) push(fr);
 
   if (!distractors.length) return null;
@@ -231,7 +239,7 @@ function buildChallenge(
   return { options, correct: options.indexOf(next), picked: null };
 }
 
-/** 把一帧描述成一句话,供屏幕阅读器朗读选项内容 */
+/** Describe a frame in one sentence so screen readers can read an option aloud */
 function describeFrame(
   f: ArrayFrame,
   n: number,
@@ -257,7 +265,7 @@ function describeFrame(
     : `cells: ${cells}${ptrs ? `; pointers: ${ptrs}` : ""}`;
 }
 
-/** 迷你快照:预测选项里的小棋盘(复用 .cell 的状态配色) */
+/** Mini snapshot: the small board inside a prediction option (reuses .cell state colors) */
 function MiniBoard({
   frame,
   n,
@@ -330,7 +338,7 @@ export function ArrayStepper({
 }: {
   title: Loc<string>;
   frames: ArrayFrame[];
-  /** 单元格宽度(含间隙),用于指针定位 */
+  /** Cell width including the gap, used to position pointers */
   cellW?: number;
 }) {
   const L = useL();
@@ -343,7 +351,7 @@ export function ArrayStepper({
   const { step, prev: goPrev, next: goNext, toggle: goToggle } = stepper;
   const total = frames.length;
 
-  // 帧数组被换掉(切换演示用例)时,丢弃过期的预测题
+  // Drop a stale prediction question when the frame array is swapped out
   useEffect(() => {
     setChallenge(null);
   }, [total]);
@@ -352,7 +360,7 @@ export function ArrayStepper({
     ? Math.max(...frames.map((fr) => fr.cells.length))
     : 0;
 
-  // 点「下一步」:预测模式下先出题,否则直接前进
+  // "Next" click: in predict mode ask a question first, otherwise just advance
   const handleNext = useCallback(() => {
     if (!predictOn) {
       goNext();
@@ -360,7 +368,7 @@ export function ArrayStepper({
     }
     const c = buildChallenge(frames, step, n);
     if (c) setChallenge(c);
-    else goNext(); // 造不出干扰项(如全同帧)就正常前进
+    else goNext(); // If no distractor can be built (identical frames, say), just advance
   }, [predictOn, frames, step, n, goNext]);
 
   const pick = (i: number) => {
@@ -382,7 +390,7 @@ export function ArrayStepper({
     setChallenge(null);
   };
 
-  // 后退 / 重播时清掉未完成的预测
+  // Clear an unfinished prediction when stepping back or replaying
   const handlePrev = () => {
     setChallenge(null);
     goPrev();
@@ -392,15 +400,16 @@ export function ArrayStepper({
     goToggle();
   };
 
-  // step 可能短暂落在新帧数组之外(见 useStepper 里的收敛 effect),这里再夹一次
+  // step can briefly sit outside a freshly swapped frame array (see the
+  // clamping effect in useStepper), so clamp once more here
   const f = frames[Math.min(step, total - 1)];
-  if (!f) return null; // frames 为空:不渲染,避免 Math.max() = -Infinity 与空指针
+  if (!f) return null; // Empty frames: render nothing, so Math.max() = -Infinity and null access cannot happen
 
   const answered = !!challenge && challenge.picked !== null;
   const isRight = challenge && challenge.picked === challenge.correct;
   const miniW = n > 8 ? 26 : n > 5 ? 30 : 34;
 
-  // 答错时告诉学习者「差在哪一维」
+  // On a wrong answer, tell the learner which dimension differs
   let diffHint: ReactNode = null;
   if (challenge && challenge.picked !== null && !isRight) {
     const picked = challenge.options[challenge.picked];
@@ -434,7 +443,7 @@ export function ArrayStepper({
           className="viz-scroll"
           style={{ display: "flex", flexDirection: "column", gap: 6 }}
         >
-          {/* 指针行 */}
+          {/* Pointer row */}
           <div
             style={{
               display: "grid",
@@ -464,7 +473,7 @@ export function ArrayStepper({
               );
             })}
           </div>
-          {/* 单元格行 */}
+          {/* Cell row */}
           <div
             style={{
               display: "grid",
@@ -506,7 +515,7 @@ export function ArrayStepper({
         {L(f.msg)}
       </div>
 
-      {/* 预测面板 */}
+      {/* Prediction panel */}
       {challenge && (
         <div className="pf-panel" role="group">
           <div className="pf-q">

@@ -17,8 +17,9 @@ import Sidebar from "@/app/sidebar";
 import Toolbar from "@/app/toolbar";
 import CommandPalette from "@/app/command-palette";
 
-// 三套字体:Syne(超大展示字,几何感强)、Space Grotesk(界面/标题)、
-// JetBrains Mono(代码/数字)。中文回落到 PingFang SC / 苹方,globals.css 里拼接。
+// Three typefaces: Syne (oversized display, strongly geometric), Space Grotesk
+// (UI and headings), JetBrains Mono (code and numbers). Chinese falls back to
+// PingFang SC; the stacks are assembled in globals.css.
 const syne = Syne({
   subsets: ["latin"],
   weight: ["600", "700", "800"],
@@ -37,8 +38,9 @@ const jetbrains = JetBrains_Mono({
   variable: "--font-jb",
   display: "swap",
 });
-// 中文黑体:给标题 900 字重的冲击力(系统 PingFang 最粗仅 600)。
-// CJK 字形按 unicode-range 分片,浏览器只下载页面用到的字。
+// Chinese sans-serif: gives headings a real 900 weight (system PingFang stops
+// at 600). CJK glyphs are sharded by unicode-range, so the browser downloads
+// only the characters the page actually uses.
 const notoSC = Noto_Sans_SC({
   subsets: ["latin"],
   weight: ["400", "500", "700", "900"],

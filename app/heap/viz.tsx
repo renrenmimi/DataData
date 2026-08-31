@@ -1,30 +1,34 @@
 "use client";
 
-// 第 9 章 · 堆与优先队列的专属可视化:
-//  - HeapLab(招牌):小根堆「树视图 + 数组视图」双视图联动,
-//    push(上浮)/ pop(下沉)逐步动画,高亮每一对比较/交换;
-//    附「随机数组建堆」按钮,演示 Floyd O(n) 建堆。
-//  - HeapMapFig:静态图 —— 完全二叉树 ↔ 数组的下标映射(父子公式)。
+// Chapter 9 · Dedicated visualizations for the heap and priority queue:
+//  - HeapLab (the centerpiece): a min-heap with a linked "tree view + array view",
+//    step-by-step animation of push (sift up) / pop (sift down) that highlights every
+//    comparison and swap; the "heapify a random array" button demonstrates Floyd's
+//    O(n) heapify.
+//  - HeapMapFig: static diagram — the index mapping between a complete binary tree and
+//    an array (the parent/child formulas).
 //
-// 双语:标题、旁白、按钮、图内文字全部通过 <T> / useL() 切换。
-// 术语约定:height(树高)按「边数」计,n 个结点的完全二叉树高度 = ⌊log₂n⌋,
-// 所以一次上浮/下沉的交换次数 ≤ height —— 页面 §03 用的是同一套定义。
+// Bilingual: titles, narration, buttons, and in-figure text all switch through <T> / useL().
+// Terminology: height (of the tree) is counted in edges, so a complete binary tree with
+// n nodes has height ⌊log₂n⌋ and one sift up / sift down performs at most that many
+// swaps — §03 of the page uses the same definition.
 
 import { useState, type ReactNode } from "react";
 import { useL, T } from "@/lib/i18n";
 
-/* ================= 工具 ================= */
+/* ================= Helpers ================= */
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-/** 下标 i 在树视图中的坐标:深度 = ⌊log₂(i+1)⌋,层内序号决定 x */
+/** Coordinates of index i in the tree view: depth = ⌊log₂(i+1)⌋, rank within the level sets x */
 function treePos(i: number, w: number) {
   const d = Math.floor(Math.log2(i + 1));
   const k = i - (2 ** d - 1);
   return { x: ((k + 0.5) / 2 ** d) * w, y: 36 + d * 62, d };
 }
 
-/** n 个结点的完全二叉树高度(按边数):单结点为 0,空堆按惯例记 −1 */
+/** Height of a complete binary tree with n nodes, counted in edges: a single node is 0,
+ *  an empty heap is −1 by convention */
 const heightOf = (n: number) =>
   n <= 0 ? -1 : n === 1 ? 0 : Math.floor(Math.log2(n));
 
@@ -36,7 +40,7 @@ const TW = 600;
 export function HeapLab() {
   const L = useL();
   const [arr, setArr] = useState<number[]>([10, 20, 15, 30, 40]);
-  const [hot, setHot] = useState<[number, number] | null>(null); // 正在比较/交换的下标对
+  const [hot, setHot] = useState<[number, number] | null>(null); // the pair of indices currently being compared or swapped
   const [okIdx, setOkIdx] = useState<number | null>(null);
   const [busy, setBusy] = useState(false);
   const [input, setInput] = useState("");
@@ -444,7 +448,7 @@ export function HeapLab() {
         />
       </div>
       <div className="viz-stage" style={{ flexDirection: "column", gap: 10 }}>
-        {/* 树视图 */}
+        {/* Tree view */}
         <svg
           viewBox={`0 0 ${TW} ${svgH}`}
           className="hp-svg"
@@ -478,7 +482,7 @@ export function HeapLab() {
             </text>
           )}
         </svg>
-        {/* 数组视图 */}
+        {/* Array view */}
         <div
           className="hp-array"
           aria-label={L({ en: "Array view of the heap", zh: "堆的数组视图" })}
@@ -538,7 +542,7 @@ export function HeapLab() {
   );
 }
 
-/* ================= HeapMapFig:数组 ↔ 树 映射 ================= */
+/* ================= HeapMapFig: array ↔ tree mapping ================= */
 
 const FIG_VALUES = [10, 20, 15, 30, 40, 60];
 
@@ -547,7 +551,7 @@ export function HeapMapFig() {
   const W = 560;
   const cellW = 56;
   const rowX = (i: number) => W / 2 + (i - FIG_VALUES.length / 2) * (cellW + 8) + cellW / 2;
-  const hi = (i: number) => i === 1 || i === 3 || i === 4; // 高亮 i=1 与它的孩子
+  const hi = (i: number) => i === 1 || i === 3 || i === 4; // highlight i=1 and its children
   return (
     <div className="viz">
       <div className="viz-title">
@@ -566,7 +570,7 @@ export function HeapMapFig() {
             zh: "堆的位置如何映射到数组下标",
           })}
         >
-          {/* 树 */}
+          {/* Tree */}
           {FIG_VALUES.map((_, i) => {
             if (i === 0) return null;
             const p = (i - 1) >> 1;
@@ -588,7 +592,7 @@ export function HeapMapFig() {
               </g>
             );
           })}
-          {/* 投影虚线:节点 → 数组格 */}
+          {/* Dashed projection: node → array cell */}
           {FIG_VALUES.map((_, i) => {
             const pos = treePos(i, W);
             return (
@@ -602,7 +606,7 @@ export function HeapMapFig() {
               />
             );
           })}
-          {/* 数组行 */}
+          {/* Array row */}
           {FIG_VALUES.map((v, i) => (
             <g key={i} className={`hp-node${hi(i) ? " lit" : ""}`}>
               <rect x={rowX(i) - cellW / 2} y={270} width={cellW} height={40} rx={10} />

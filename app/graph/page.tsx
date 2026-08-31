@@ -1,12 +1,16 @@
 "use client";
 
-// 第 12 章 · 图 —— 数据结构最一般的形态。
-// 结构:直觉与术语 → 两种表示法 → 遍历(BFS/DFS 招牌交互)→ 手写实现 →
-// 三语言对照 → 三大专题精讲(网格 / 拓扑 / 最短路,逐帧动画 + 三语言题解)→
-// 题单 → 测验 → 要点。前 11 章的结构在这里全部现形:链表、树、网格都是图的特例。
+// Chapter 12 · Graphs — the most general form a data structure takes.
+// Structure: intuition and terminology → the two representations → traversal (the
+// BFS/DFS centerpiece interaction) → from-scratch implementation → three-language
+// comparison → three major walkthrough topics (grid / topological sort / shortest path,
+// frame-by-frame animation + three-language solutions) → problem set → quiz → key
+// points. Every structure from the first 11 chapters surfaces here: linked lists, trees,
+// and grids are all special cases of a graph.
 //
-// 双语:所有面向学习者的文案都用 <T en zh> 或 { en, zh },英文为默认语言。
-// 代码窗的 code 写成 { en, zh } —— 两版逐行等价,只有注释不同,hl 行号才对得上。
+// Bilingual: every learner-facing string uses <T en zh> or { en, zh }, English is the default.
+// The code windows take code as { en, zh } — the two versions are line-for-line equivalent
+// and differ only in their comments, which is what keeps the hl line numbers aligned.
 
 import {
   Hero,
@@ -32,7 +36,7 @@ import {
 } from "./viz";
 import "./chapter.css";
 
-/* ================= 页面 ================= */
+/* ================= Page ================= */
 
 const CHIPS = [
   { id: "intuition", n: "01", label: { en: "Intuition", zh: "直觉与术语" } },
@@ -86,7 +90,7 @@ export default function GraphChapter() {
         chips={CHIPS}
       />
 
-      {/* ================= §01 直觉与术语 ================= */}
+      {/* ================= §01 Intuition and terminology ================= */}
       <Section
         id="intuition"
         index="01"
@@ -504,7 +508,7 @@ export default function GraphChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §02 两种表示法 ================= */}
+      {/* ================= §02 Two representations ================= */}
       <Section
         id="repr"
         index="02"
@@ -754,7 +758,7 @@ export default function GraphChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §03 遍历 ================= */}
+      {/* ================= §03 Traversal ================= */}
       <Section
         id="traverse"
         index="03"
@@ -1066,7 +1070,7 @@ export default function GraphChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §04 手写实现 ================= */}
+      {/* ================= §04 Build them ================= */}
       <Section
         id="build"
         index="04"
@@ -1704,7 +1708,7 @@ function gridDfs(grid, r, c) {
         </Callout>
       </Section>
 
-      {/* ================= §05 三语言对照 ================= */}
+      {/* ================= §05 Three languages ================= */}
       <Section
         id="langs"
         index="05"
@@ -2027,7 +2031,7 @@ const seen = new Set();`,
         </Callout>
       </Section>
 
-      {/* ================= §06 三大专题 ================= */}
+      {/* ================= §06 Three patterns ================= */}
       <Section
         id="topics"
         index="06"
@@ -2045,7 +2049,7 @@ const seen = new Set();`,
           </span>
         }
       >
-        {/* —— 专题一:网格 —— */}
+        {/* — Pattern 1: grids — */}
         <div className="sec-head" style={{ marginTop: 8 }}>
           <span className="sec-index">
             <T en="Pattern 1" zh="专题一" />
@@ -2295,7 +2299,7 @@ const seen = new Set();`,
           />
         </Callout>
 
-        {/* —— 专题二:拓扑排序 —— */}
+        {/* — Pattern 2: topological sort — */}
         <div className="sec-head" style={{ marginTop: 40 }}>
           <span className="sec-index">
             <T en="Pattern 2" zh="专题二" />
@@ -2634,7 +2638,7 @@ class Solution:
           />
         </Callout>
 
-        {/* —— 专题三:最短路径 —— */}
+        {/* — Pattern 3: shortest path — */}
         <div className="sec-head" style={{ marginTop: 40 }}>
           <span className="sec-index">
             <T en="Pattern 3" zh="专题三" />
@@ -3111,7 +3115,7 @@ var networkDelayTime = function (times, n, k) {
         </Callout>
       </Section>
 
-      {/* ================= §07 题单 ================= */}
+      {/* ================= §07 Problem set ================= */}
       <Section
         id="problems"
         index="07"
