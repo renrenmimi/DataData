@@ -66,6 +66,12 @@ lib/<ch>-data.tsx      本章题单 PROBLEMS + 测验 QUIZ 数据
 - `ArrayFrame = { cells: {v: ReactNode, state?: "lit"|"ok"|"bad"|"ghost"}[], ptrs?: {i:number,label:string}[], msg: ReactNode }`
 - `<ArrayStepper title="…" frames={ArrayFrame[]} cellW?={56} />`
 - 自由形态动画(树/图)自建组件,复用 `useStepper(total)` + `<StepControls stepper={s} step={s.step} total={n} />` + `.viz/.viz-stage/.viz-msg/.viz-ctl` 样式。
+- **「预测下一帧」模式**:`ArrayStepper` 自带,无需各章配置。学习者开启后,点「下一步」
+  先出三张候选快照(正确的下一帧 + 2 个自动派生的干扰项:过头一帧 / 指针动了数据没动 /
+  数据动了指针没动 / 指针多走一格),选完给针对性纠错(指出差在格子还是指针)并计分。
+  样式在 globals.css 第 14 段(`.pf-*`)。
+- `StepControls` 的可选参数:`onNext`(拦截前进)`nextDisabled` `playDisabled`
+  `extra`(额外控件)—— 自建动画若也想做预测题,可复用这几个口子。
 
 ### lib/quiz.tsx
 - `<Quiz ch="stack" items={QuizItem[]} />`;题型:
@@ -142,5 +148,5 @@ var(--border)` 等 token,深浅主题自动适配,禁止写死颜色。
 
 ## GitHub / 其他
 
-- 无 git 仓库(用户没要求);提交需用户明确要求。
+- 仓库:https://github.com/renrenmimi/DataData(public,main 分支);提交/推送需用户明确要求。
 - 参考项目(外壳形式来源):../SYSDesigner ../AgentLab —— 只读参考,勿改。
