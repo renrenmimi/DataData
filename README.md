@@ -13,13 +13,13 @@ course, code comments included.
 Sister sites: [AlgoAlgo](https://algo-algo.vercel.app) (algorithms) and
 [APIer](https://apier-eta.vercel.app) (HTTP, REST and GraphQL).
 
-![The course home — 14 chapters, three languages side by side](docs/home.jpg)
+![The course home: 14 chapters, a language toggle, and the shape-shifting hero](docs/home.jpg)
 
-*The course home — 14 chapters, three languages side by side*
+*The home page — 14 chapters, and one toggle for English or 中文*
 
-![Inside a chapter: memory diagram, live visualization, and code](docs/array.jpg)
+![Inside a chapter: a frame-by-frame walkthrough above the solution in three languages](docs/array.jpg)
 
-*Inside a chapter: memory diagram, live visualization, and code*
+*Inside a chapter — a frame-by-frame walkthrough (with predict mode), then the same solution in Java, Python and JavaScript*
 
 ## Chapters
 
