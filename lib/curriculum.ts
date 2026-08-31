@@ -44,7 +44,7 @@ export interface Chapter {
   level: 1 | 2 | 3 | 4 | 5;
   /** LeetCode frequency 1–5 (5 = extremely common) */
   freq: 1 | 2 | 3 | 4 | 5;
-  /** Checkable problems in this chapter (part of the progress denominator) — set by each chapter's lib data; listed here for indexing only */
+  /** Patterns this chapter teaches — shown in the command palette and part of its search index */
   tags: Loc<string>[];
 }
 
