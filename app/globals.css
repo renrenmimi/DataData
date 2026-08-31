@@ -2280,3 +2280,228 @@ li code {
 .sec-index {
   text-shadow: 0 0 16px var(--acc-glow);
 }
+
+/* ============================================================
+   14. 预测下一帧(ArrayStepper 的 predict 模式)
+   ============================================================ */
+
+/* 控制条里的开关 */
+.pf-toggle.on {
+  border-color: var(--acc-border);
+  background: var(--acc-soft);
+  color: var(--acc-ink);
+  box-shadow: 0 0 14px var(--acc-glow);
+}
+
+.pf-score {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--acc-ink);
+  border: 1px solid var(--acc-border);
+  background: var(--acc-soft);
+  border-radius: 999px;
+  padding: 3px 10px;
+}
+
+/* 面板 */
+.pf-panel {
+  margin-top: 14px;
+  padding: 16px 18px;
+  border-radius: 18px;
+  border: 1px solid transparent;
+  background:
+    linear-gradient(
+      145deg,
+      oklch(var(--acc-l) var(--acc-c) var(--hue) / 0.11),
+      var(--panel-solid) 72%
+    )
+      padding-box,
+    linear-gradient(
+      135deg,
+      oklch(72% 0.16 var(--hue) / 0.55),
+      transparent 58%,
+      oklch(66% 0.14 var(--hue2) / 0.4)
+    )
+      border-box;
+  animation: fade-up 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.pf-q {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 14px;
+}
+
+.pf-badge {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: var(--acc-ink);
+  border: 1px solid var(--acc-border);
+  background: var(--acc-soft);
+  border-radius: 999px;
+  padding: 3px 10px;
+  flex: 0 0 auto;
+}
+
+/* 选项:自适应铺开,窄屏自动堆叠 */
+.pf-opts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 11px;
+}
+
+.pf-opt {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 14px;
+  border-radius: 15px;
+  border: 1px solid var(--border-strong);
+  background: var(--panel);
+  cursor: pointer;
+  transition: transform 0.22s var(--ease-spring), border-color 0.2s,
+    box-shadow 0.2s, opacity 0.2s;
+  text-align: left;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.pf-opt:hover:not(:disabled) {
+  border-color: var(--acc);
+  background: var(--acc-soft);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px var(--acc-glow);
+}
+
+.pf-opt:disabled {
+  cursor: default;
+}
+
+.pf-opt.right {
+  border-color: color-mix(in oklab, var(--ok) 62%, transparent);
+  background: var(--ok-bg);
+  box-shadow: 0 0 22px color-mix(in oklab, var(--ok) 22%, transparent);
+}
+
+.pf-opt.wrong {
+  border-color: color-mix(in oklab, var(--risk) 62%, transparent);
+  background: var(--risk-bg);
+}
+
+.pf-opt.muted {
+  opacity: 0.42;
+}
+
+.pf-key {
+  flex: 0 0 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  border: 1px solid var(--border-strong);
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--text-3);
+  transition: all 0.2s;
+}
+
+.pf-opt:hover:not(:disabled) .pf-key {
+  border-color: var(--acc);
+  color: var(--acc-ink);
+}
+
+.pf-opt.right .pf-key {
+  background: var(--ok);
+  border-color: var(--ok);
+  color: #04140c;
+}
+
+.pf-opt.wrong .pf-key {
+  background: var(--risk);
+  border-color: var(--risk);
+  color: #fff;
+}
+
+/* 迷你快照 */
+.pf-board {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: max-content;
+}
+
+.pf-row {
+  display: grid;
+  /* 列宽已含间距(cellW),格子自身取 cellW-3 形成视觉间隙,这里不再叠加 gap */
+  gap: 0;
+}
+
+.pf-ptr {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  min-height: 13px;
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--acc);
+  white-space: nowrap;
+}
+
+.pf-board .cell {
+  border-width: 1.2px;
+  transition: none;
+}
+
+/* .cell.lit 默认会上浮 4px,迷你棋盘里不需要 */
+.pf-board .cell.lit {
+  transform: none;
+  box-shadow: 0 0 0 1px var(--acc), 0 0 10px var(--acc-glow);
+}
+
+/* 反馈 */
+.pf-feedback {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 13px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  animation: fade-up 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.pf-feedback.ok {
+  background: var(--ok-bg);
+  color: var(--ok);
+  border: 1px solid color-mix(in oklab, var(--ok) 32%, transparent);
+}
+
+.pf-feedback.no {
+  background: var(--risk-bg);
+  color: var(--risk);
+  border: 1px solid color-mix(in oklab, var(--risk) 32%, transparent);
+}
+
+.pf-verdict {
+  flex: 1;
+  min-width: 200px;
+}
+
+@media (max-width: 560px) {
+  .pf-opts {
+    grid-template-columns: 1fr;
+  }
+}
