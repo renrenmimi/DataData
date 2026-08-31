@@ -17,28 +17,26 @@
 // data did not; (3) data moved but pointers did not; (4) a pointer overshot by
 // one cell. After the choice the answer is revealed and playback advances —
 // turning "watch the animation" into "predict first".
+//
+// The construction of those options is pure and lives in lib/predict.ts, which
+// is where the regression tests exercise it. This file owns only the state:
+// which question is open, whether it has been answered, and the score. The
+// score is scoped to one frame dataset — see the reset effect below.
 
-import {
-  isValidElement,
-  useCallback,
-  useEffect,
-  useState,
-  type ReactNode,
-} from "react";
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import { useL, useLang, T, type Loc } from "@/lib/i18n";
+import {
+  buildChallenge,
+  describeFrame,
+  diffKind,
+  framesSig,
+  type ArrayCell,
+  type ArrayFrame,
+  type Challenge,
+} from "@/lib/predict";
 
-export interface ArrayCell {
-  v: ReactNode;
-  state?: "lit" | "ok" | "bad" | "ghost";
-}
-
-export interface ArrayFrame {
-  cells: ArrayCell[];
-  /** Pointer labels, rendered above the cells, e.g. { i: 2, label: "slow" } */
-  ptrs?: { i: number; label: Loc<string> }[];
-  /** Narration for this frame */
-  msg: Loc<ReactNode>;
-}
+// Re-exported so chapters keep importing the frame types from "@/lib/stepper".
+export type { ArrayCell, ArrayFrame };
 
 export function useStepper(total: number, intervalMs = 1100) {
   const [step, setStep] = useState(0);
@@ -153,118 +151,6 @@ export function StepControls({
   );
 }
 
-/* ========= Predict the next frame: frame signatures and distractors ========= */
-
-/** Flatten a ReactNode to comparable plain text (cell values are mostly numbers or short strings) */
-function nodeText(v: ReactNode): string {
-  if (v === null || v === undefined || typeof v === "boolean") return "";
-  if (typeof v === "string" || typeof v === "number") return String(v);
-  if (Array.isArray(v)) return v.map(nodeText).join("");
-  if (isValidElement(v)) {
-    const props = v.props as { children?: ReactNode };
-    return nodeText(props.children);
-  }
-  return "?";
-}
-
-/** Language-independent form of a pointer label, used only for comparison */
-const rawLabel = (l: Loc<string>): string => (typeof l === "string" ? l : l.en);
-
-const cellSig = (f: ArrayFrame) =>
-  f.cells.map((c) => `${nodeText(c.v)}:${c.state ?? ""}`).join(",");
-
-const ptrSig = (f: ArrayFrame) =>
-  (f.ptrs ?? [])
-    .map((p) => `${p.i}@${rawLabel(p.label)}`)
-    .sort()
-    .join(",");
-
-const fullSig = (f: ArrayFrame) => `${cellSig(f)}||${ptrSig(f)}`;
-
-interface Challenge {
-  options: ArrayFrame[];
-  correct: number;
-  picked: number | null;
-}
-
-/**
- * Build one prediction question: the correct answer is the real next frame and
- * the distractors are derived from real frames, each matching a typical
- * misconception. Deduplicated against the correct answer, then two are kept.
- */
-function buildChallenge(
-  frames: ArrayFrame[],
-  step: number,
-  n: number,
-): Challenge | null {
-  const cur = frames[step];
-  const next = frames[step + 1];
-  if (!cur || !next) return null;
-
-  const seen = new Set([fullSig(next)]);
-  const distractors: ArrayFrame[] = [];
-  const push = (f: ArrayFrame | null | undefined) => {
-    if (!f || distractors.length >= 2) return;
-    const s = fullSig(f);
-    if (seen.has(s)) return;
-    seen.add(s);
-    distractors.push(f);
-  };
-
-  // (1) One frame too far: a real frame, but a step ahead (off-by-one is the most common slip)
-  push(frames[step + 2]);
-  // (2) Pointers moved, data did not
-  push({ cells: cur.cells, ptrs: next.ptrs, msg: "" });
-  // (3) Data moved, pointers did not
-  push({ cells: next.cells, ptrs: cur.ptrs, msg: "" });
-  // (4) A pointer overshot by one cell
-  push({
-    cells: next.cells,
-    ptrs: (next.ptrs ?? []).map((p) => ({
-      ...p,
-      i: Math.min(p.i + 1, Math.max(0, n - 1)),
-    })),
-    msg: "",
-  });
-  // (5) Fallback: any frame in the sequence can serve as a distractor
-  for (const fr of frames) push(fr);
-
-  if (!distractors.length) return null;
-
-  const options = [next, ...distractors];
-  for (let i = options.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [options[i], options[j]] = [options[j], options[i]];
-  }
-  return { options, correct: options.indexOf(next), picked: null };
-}
-
-/** Describe a frame in one sentence so screen readers can read an option aloud */
-function describeFrame(
-  f: ArrayFrame,
-  n: number,
-  lang: "en" | "zh",
-): string {
-  const cells = Array.from({ length: n })
-    .map((_, i) => {
-      const c = f.cells[i];
-      if (!c) return "-";
-      const v = nodeText(c.v) || "-";
-      return c.state ? `${v}(${c.state})` : v;
-    })
-    .join(", ");
-  const ptrs = (f.ptrs ?? [])
-    .map((p) =>
-      lang === "zh"
-        ? `${rawLabel(p.label)} 在第 ${p.i} 格`
-        : `${rawLabel(p.label)} at index ${p.i}`,
-    )
-    .join("; ");
-  return lang === "zh"
-    ? `格子:${cells}${ptrs ? `;指针:${ptrs}` : ""}`
-    : `cells: ${cells}${ptrs ? `; pointers: ${ptrs}` : ""}`;
-}
-
 /** Mini snapshot: the small board inside a prediction option (reuses .cell state colors) */
 function MiniBoard({
   frame,
@@ -351,10 +237,20 @@ export function ArrayStepper({
   const { step, prev: goPrev, next: goNext, toggle: goToggle } = stepper;
   const total = frames.length;
 
-  // Drop a stale prediction question when the frame array is swapped out
+  // Score scope: one prediction score belongs to one frame dataset. Chapters
+  // that let the learner switch demo cases swap `frames`, and carrying a score
+  // across that switch would attribute answers to a walkthrough they were never
+  // given. Both the score and any unfinished question therefore reset whenever
+  // the dataset changes.
+  //
+  // Keyed on the frame contents rather than on `frames.length` (two demos can
+  // be the same length) or on array identity (a chapter building the array
+  // inline would otherwise reset the score on every render).
+  const datasetKey = useMemo(() => framesSig(frames), [frames]);
   useEffect(() => {
     setChallenge(null);
-  }, [total]);
+    setScore({ right: 0, total: 0 });
+  }, [datasetKey]);
 
   const n = frames.length
     ? Math.max(...frames.map((fr) => fr.cells.length))
@@ -372,12 +268,16 @@ export function ArrayStepper({
   }, [predictOn, frames, step, n, goNext]);
 
   const pick = (i: number) => {
-    if (!challenge || challenge.picked !== null) return;
-    setChallenge({ ...challenge, picked: i });
-    setScore((s) => ({
-      right: s.right + (i === challenge.correct ? 1 : 0),
-      total: s.total + 1,
-    }));
+    setChallenge((c) => {
+      // Answer once per question: a second pick is ignored even if it is
+      // dispatched before this state update has been rendered.
+      if (!c || c.picked !== null) return c;
+      setScore((s) => ({
+        right: s.right + (i === c.correct ? 1 : 0),
+        total: s.total + 1,
+      }));
+      return { ...c, picked: i };
+    });
   };
 
   const commit = () => {
@@ -412,17 +312,17 @@ export function ArrayStepper({
   // On a wrong answer, tell the learner which dimension differs
   let diffHint: ReactNode = null;
   if (challenge && challenge.picked !== null && !isRight) {
-    const picked = challenge.options[challenge.picked];
-    const right = challenge.options[challenge.correct];
-    const cellsDiffer = cellSig(picked) !== cellSig(right);
-    const ptrsDiffer = ptrSig(picked) !== ptrSig(right);
+    const kind = diffKind(
+      challenge.options[challenge.picked],
+      challenge.options[challenge.correct],
+    );
     diffHint =
-      cellsDiffer && ptrsDiffer ? (
+      kind === "both" ? (
         <T
           en="Both the cells and the pointers differ from your pick."
           zh="数据格和指针位置都和你选的不一样。"
         />
-      ) : cellsDiffer ? (
+      ) : kind === "cells" ? (
         <T
           en="The pointers were right — it is the cell contents (or their highlight) that differ."
           zh="指针位置对了 —— 差在格子的内容或高亮状态。"
