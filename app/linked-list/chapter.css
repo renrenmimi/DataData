@@ -1,4 +1,4 @@
-/* 第 3 章 · 链表 —— 章节专属样式(全部 .ll- 前缀,颜色只用 token) */
+/* Chapter 3 · Linked lists — styles for this chapter only (.ll- prefix, colours from tokens) */
 
 .ll-svg {
   width: 100%;
@@ -13,7 +13,7 @@
   user-select: none;
 }
 
-/* 图例小圆点 */
+/* Legend dot */
 .ll-legend {
   display: flex;
   flex-wrap: wrap;

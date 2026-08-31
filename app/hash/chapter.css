@@ -1,6 +1,6 @@
-/* 第 6 章 · 哈希表 专属样式(前缀 .hs-,颜色全部走 token)*/
+/* Chapter 6 · Hash tables — styles for this chapter only (.hs- prefix, colours from tokens) */
 
-/* ---------- HashLab:哈希函数流水线 ---------- */
+/* ---------- HashLab: the hash-function pipeline ---------- */
 
 [data-ch="hash"] .hs-pipeline {
   display: flex;
@@ -137,7 +137,7 @@
   box-shadow: 0 0 0 3px var(--acc-soft);
 }
 
-/* ---------- CollisionLab:链地址 / 线性探测 ---------- */
+/* ---------- CollisionLab: separate chaining / linear probing ---------- */
 
 [data-ch="hash"] .hs-chains {
   display: flex;
@@ -182,7 +182,7 @@
   font-family: var(--font-mono);
 }
 
-/* 探测视图:一排格子 + 扫描痕迹 */
+/* Probing view: a row of cells plus the trail of the scan */
 
 [data-ch="hash"] .hs-probe-scan {
   color: var(--warn);

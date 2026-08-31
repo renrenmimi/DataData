@@ -1,10 +1,13 @@
 "use client";
 
-// 第 1 章 · 数组 —— 全书样板章。
-// 十段式结构:直觉 → 内存 → 核心操作 → 动态数组 → 三语言对照 →
-// 双指针/滑动窗口 + 三道精讲(逐帧动画 + 三语言题解)→ 题单 → 测验 → 要点。
+// Chapter 1 · Arrays — the template chapter for the whole course.
+// Ten sections: intuition → memory → core operations → dynamic arrays →
+// three-language comparison → two pointers / sliding window + three
+// walkthroughs (frame-by-frame animation + solutions in three languages) →
+// problem set → quiz → key points.
 //
-// 双语:所有面向学习者的文案都用 <T en zh> 或 { en, zh },英文为默认语言。
+// Bilingual: every learner-facing string goes through <T en zh> or { en, zh },
+// with English as the default language.
 
 import {
   Hero,
@@ -22,9 +25,9 @@ import { PROBLEMS, QUIZ } from "@/lib/array-data";
 import { T } from "@/lib/i18n";
 import { IndexLab, ShiftLab, GrowLab, MatrixLab } from "./viz";
 
-/* ================= 精讲动画帧 ================= */
+/* ================= Walkthrough animation frames ================= */
 
-// LC 283 移动零:slow/fast 同向双指针
+// LC 283 Move Zeroes: slow/fast pointers moving in the same direction
 const F283: ArrayFrame[] = [
   {
     cells: [{ v: 0 }, { v: 1 }, { v: 0 }, { v: 3 }, { v: 12 }],
@@ -192,7 +195,7 @@ const F283: ArrayFrame[] = [
   },
 ];
 
-// LC 11 盛最多水:对撞指针
+// LC 11 Container With Most Water: converging pointers
 const H11 = [1, 8, 6, 2, 5, 4, 8, 3, 7];
 const F11: ArrayFrame[] = [
   {
@@ -337,7 +340,7 @@ const F11: ArrayFrame[] = [
   },
 ];
 
-// LC 209 长度最小的子数组:滑动窗口,target = 7
+// LC 209 Minimum Size Subarray Sum: sliding window, target = 7
 const N209 = [2, 3, 1, 2, 4, 3];
 const win = (l: number, r: number, extra?: { ok?: boolean }): ArrayFrame["cells"] =>
   N209.map((v, i) => ({
@@ -492,7 +495,7 @@ const F209: ArrayFrame[] = [
   },
 ];
 
-/* ================= 页面 ================= */
+/* ================= Page ================= */
 
 const CHIPS = [
   { id: "intuition", n: "01", label: { en: "Intuition", zh: "直觉" } },
@@ -556,7 +559,7 @@ export default function ArrayChapter() {
         chips={CHIPS}
       />
 
-      {/* ================= §01 直觉 ================= */}
+      {/* ================= §01 Intuition ================= */}
       <Section
         id="intuition"
         index="01"
@@ -695,7 +698,7 @@ export default function ArrayChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §02 内存 ================= */}
+      {/* ================= §02 Memory ================= */}
       <Section
         id="memory"
         index="02"
@@ -820,7 +823,7 @@ export default function ArrayChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §03 核心操作 ================= */}
+      {/* ================= §03 Core operations ================= */}
       <Section
         id="ops"
         index="03"
@@ -1211,7 +1214,7 @@ var search = function (nums, target) {
         </Callout>
       </Section>
 
-      {/* ================= §04 动态数组 ================= */}
+      {/* ================= §04 Dynamic arrays ================= */}
       <Section
         id="dynamic"
         index="04"
@@ -1413,7 +1416,7 @@ var search = function (nums, target) {
         </Callout>
       </Section>
 
-      {/* ================= §05 手写动态数组 ================= */}
+      {/* ================= §05 Building a dynamic array ================= */}
       <Section
         id="build"
         index="05"
@@ -1777,7 +1780,7 @@ class DynArray {
         </Callout>
       </Section>
 
-      {/* ================= §06 二维数组与矩阵 ================= */}
+      {/* ================= §06 Two dimensions and matrices ================= */}
       <Section
         id="matrix"
         index="06"
@@ -1916,7 +1919,7 @@ class DynArray {
         </Callout>
       </Section>
 
-      {/* ================= §07 三语言对照 ================= */}
+      {/* ================= §07 Three languages side by side ================= */}
       <Section
         id="langs"
         index="07"
@@ -2232,7 +2235,7 @@ for (const v of arr) console.log(v);  // 遍历`,
         </p>
       </Section>
 
-      {/* ================= §08 双指针与滑窗 ================= */}
+      {/* ================= §08 Two pointers and sliding windows ================= */}
       <Section
         id="patterns"
         index="08"
@@ -2345,7 +2348,7 @@ for (const v of arr) console.log(v);  // 遍历`,
           </div>
         </div>
 
-        {/* —— 精讲 1 —— */}
+        {/* —— Walkthrough 1 —— */}
         <div className="sec-head" style={{ marginTop: 44 }}>
           <span className="sec-index">
             <T en="WORKED A" zh="精讲 A" />
@@ -2494,7 +2497,7 @@ for (const v of arr) console.log(v);  // 遍历`,
           />
         </Callout>
 
-        {/* —— 精讲 2 —— */}
+        {/* —— Walkthrough 2 —— */}
         <div className="sec-head" style={{ marginTop: 44 }}>
           <span className="sec-index">
             <T en="WORKED B" zh="精讲 B" />
@@ -2659,7 +2662,7 @@ for (const v of arr) console.log(v);  // 遍历`,
           />
         </Callout>
 
-        {/* —— 精讲 3 —— */}
+        {/* —— Walkthrough 3 —— */}
         <div className="sec-head" style={{ marginTop: 44 }}>
           <span className="sec-index">
             <T en="WORKED C" zh="精讲 C" />
@@ -2833,7 +2836,7 @@ for (const v of arr) console.log(v);  // 遍历`,
         </Callout>
       </Section>
 
-      {/* ================= §09 题单 ================= */}
+      {/* ================= §09 Problem set ================= */}
       <Section
         id="problems"
         index="09"

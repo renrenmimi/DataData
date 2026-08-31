@@ -1,30 +1,34 @@
 "use client";
 
-// 第 10 章 · 前缀树(Trie)的专属可视化:
-//  - TrieLab(招牌):输入单词插入(SVG 树生长 + 共享前缀复用),查询单词/前缀,
-//    区分「命中单词 / 是前缀非单词 / 未命中」三种结果。
-//  - StaticTrie:根据词表自动布局的静态结构图(§02 结构 / isEnd 图解复用)。
-//  - TrieStepper:通用「Trie 帧」播放器,精讲 LC 208 / LC 211 的逐帧动画用。
+// Chapter 10 · Dedicated visualizations for the prefix tree (Trie):
+//  - TrieLab (the centerpiece): type a word to insert it (the SVG tree grows and shared
+//    prefixes are reused), then query a word or prefix and see all three outcomes:
+//    word found / prefix but not a word / no match.
+//  - StaticTrie: a static structure diagram laid out automatically from a word list
+//    (reused by the §02 structure figure and the isEnd figure).
+//  - TrieStepper: the generic "trie frame" player, used by the frame-by-frame
+//    animations of the LC 208 / LC 211 walkthroughs.
 //
-// 双语:所有标题、旁白、图例、按钮、无障碍文案都通过 <T> / useL() 切换。
+// Bilingual: all titles, narration, legends, buttons, and accessibility strings switch
+// through <T> / useL().
 
 import { useMemo, useRef, useState, type ReactNode } from "react";
 import { useStepper, StepControls } from "@/lib/stepper";
 import { useL, T, type Loc } from "@/lib/i18n";
 
-/* ================= 数据结构与工具 ================= */
+/* ================= Data structures and helpers ================= */
 
 interface TNode {
   id: number;
-  /** 从父节点连到本节点的那条边上的字符;根节点为 "" */
+  /** The character on the edge from the parent down to this node; "" for the root */
   ch: string;
   isEnd: boolean;
-  /** isEnd 为 true 时,记录到此结束的完整单词(用于图上标注) */
+  /** When isEnd is true, the complete word that ends here (used for labels in the figure) */
   word?: string;
   children: Map<string, TNode>;
 }
 
-/** 用一批单词建一棵 Trie;返回根与下一个可用 id */
+/** Build a trie from a batch of words; returns the root and the next free id */
 function buildTrie(words: string[], startId = 1): { root: TNode; nextId: number } {
   let id = startId;
   const root: TNode = { id: id++, ch: "", isEnd: false, children: new Map() };
@@ -64,7 +68,7 @@ function countNodes(n: TNode): number {
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-/* ---- 布局:x = 叶子列位次(树整齐铺开),y = 深度 ---- */
+/* ---- Layout: x = leaf column rank (spreads the tree out evenly), y = depth ---- */
 
 interface LayNode {
   id: number;
@@ -135,7 +139,8 @@ function layout(root: TNode, w: number): { nodes: LayNode[]; edges: LayEdge[]; h
   return { nodes, edges, height: TOP + maxDepth * ROW + 46 };
 }
 
-/** 复用的 SVG 节点组:字符在圈内,isEnd 加一圈「接受态」外环 + 词标 */
+/** Shared SVG node group: the character sits inside the circle; an isEnd node gets an
+ *  extra "accepting state" outer ring plus its word label */
 function TrieNodeG({
   n,
   cls,
@@ -166,7 +171,7 @@ function TrieNodeG({
   );
 }
 
-/* ================= TrieLab(招牌) ================= */
+/* ================= TrieLab (the centerpiece) ================= */
 
 const CAP = 32;
 const LAB_W = 640;
@@ -243,7 +248,7 @@ export function TrieLab() {
     setBusy(true);
     clearMarks();
 
-    // 在克隆上走一遍:能复用的复用,缺的现建
+    // Walk the clone: reuse whatever exists, create whatever is missing
     const newRoot = cloneTrie(root);
     let cur = newRoot;
     let id = nextId.current;
@@ -281,7 +286,8 @@ export function TrieLab() {
     setRoot(newRoot);
     setBorn(bornIds);
 
-    // 沿路径逐节点点亮 —— 前缀复用段会先亮,再看到新节点接在末尾
+    // Light the path up node by node — the reused prefix segment lights first, then the
+    // new nodes appended at the end
     let acc: number[] = [];
     for (const pid of pathIds) {
       acc = [...acc, pid];
@@ -554,7 +560,7 @@ export function TrieLab() {
   );
 }
 
-/* ================= StaticTrie:静态结构图 ================= */
+/* ================= StaticTrie: static structure diagram ================= */
 
 export function StaticTrie({
   words,
@@ -565,7 +571,7 @@ export function StaticTrie({
   words: string[];
   w?: number;
   caption?: Loc<ReactNode>;
-  /** 需要额外高亮的完整单词的词尾节点(用 word 匹配) */
+  /** Word-end nodes that need extra highlighting, matched by their complete word */
   emphasize?: string[];
 }) {
   const L = useL();
@@ -609,7 +615,7 @@ export function StaticTrie({
   );
 }
 
-/* ================= TrieStepper:通用「Trie 帧」播放器 ================= */
+/* ================= TrieStepper: generic "trie frame" player ================= */
 
 export interface TStepNode {
   id: number;

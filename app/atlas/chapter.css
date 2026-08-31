@@ -1,4 +1,4 @@
-/* 终章 · 选型地图 专属样式(.atl- 前缀) */
+/* Finale · Decision atlas — styles for this chapter only (.atl- prefix) */
 
 .atl-decision {
   min-height: 320px;
@@ -111,14 +111,14 @@
   color: var(--text-3);
 }
 
-/* 信号词表 */
+/* Signal-phrase table */
 .atl-signal {
   font-family: var(--font-mono);
   font-weight: 700;
   color: var(--acc-ink);
 }
 
-/* 全书题单分组 */
+/* Whole-course problem set, grouped */
 .atl-group {
   margin: 26px 0;
 }
@@ -149,7 +149,7 @@
   color: var(--text-3);
 }
 
-/* 总进度横幅 */
+/* Overall progress banner */
 .atl-banner {
   display: flex;
   align-items: center;

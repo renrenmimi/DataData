@@ -1,9 +1,10 @@
 "use client";
 
-// 序章 · 世界地图 —— 全书入口。
-// 三件事:① 建立「数据结构 = 组织方式」的第一直觉(变形 hero);
-// ② 给出全书通用的两把尺子:内存模型 + Big-O(交互实验室);
-// ③ 铺开 14 章世界地图,讲清怎么用这套课。
+// Prologue · world map — the entry point for the whole course.
+// Three jobs: (1) build the first intuition that a data structure is a way of
+// organizing data (the morphing hero); (2) hand over the two yardsticks used
+// throughout the course: the memory model and Big-O (interactive labs);
+// (3) lay out the 14-chapter world map and explain how to work through it.
 
 import Link from "next/link";
 import "./home.css";
@@ -21,7 +22,7 @@ import { Quiz, type QuizItem } from "@/lib/quiz";
 import { CodeTabs } from "@/lib/code";
 import { HeroMorph, BigOLab, RefLab } from "./home-viz";
 
-/* ---------- 复杂度速查表数据 ---------- */
+/* ---------- Complexity cheat-sheet data ---------- */
 
 const CHEAT: {
   name: Loc<string>;
@@ -154,7 +155,7 @@ const CHEAT: {
   },
 ];
 
-/* ---------- 序章 Quiz ---------- */
+/* ---------- Prologue quiz ---------- */
 
 const QUIZ: QuizItem[] = [
   {
@@ -434,7 +435,7 @@ const QUIZ: QuizItem[] = [
   },
 ];
 
-/* ---------- 页面 ---------- */
+/* ---------- Page ---------- */
 
 export default function Home() {
   const L = useL();
@@ -528,7 +529,7 @@ export default function Home() {
         </Reveal>
       </header>
 
-      {/* §01 为什么 */}
+      {/* §01 Why it exists */}
       <Section
         id="why"
         index="01"
@@ -654,7 +655,7 @@ export default function Home() {
         </div>
       </Section>
 
-      {/* §02 内存模型 */}
+      {/* §02 The memory model */}
       <Section
         id="memory"
         index="02"
@@ -777,7 +778,7 @@ export default function Home() {
         </Callout>
       </Section>
 
-      {/* §03 变量与引用 */}
+      {/* §03 Variables and references */}
       <Section
         id="refs"
         index="03"
@@ -1079,7 +1080,7 @@ console.log(a === b);   // true —— 比较的是纸条`,
         </Callout>
       </Section>
 
-      {/* §05 速查表 */}
+      {/* §05 Cheat sheet */}
       <Section
         id="cheatsheet"
         index="05"
@@ -1146,7 +1147,7 @@ console.log(a === b);   // true —— 比较的是纸条`,
         </p>
       </Section>
 
-      {/* §06 世界地图 */}
+      {/* §06 World map */}
       <Section
         id="map"
         index="06"
@@ -1204,7 +1205,7 @@ console.log(a === b);   // true —— 比较的是纸条`,
         </div>
       </Section>
 
-      {/* §07 用法 */}
+      {/* §07 How to use it */}
       <Section
         id="howto"
         index="07"

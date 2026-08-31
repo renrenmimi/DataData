@@ -1,6 +1,7 @@
-// 第 3 章 · 链表 —— 题单与测验数据(English default / 中文可切换)。
-// 题单覆盖:删除/遍历、快慢指针、dummy 哨兵、反转、双链表综合,从 Easy 铺到 Hard;
-// hint 只给方向不剧透,key 用一段话把最优解讲透。
+// Chapter 3 · Linked lists — problem set and quiz data (English default / Chinese toggle).
+// Problems cover deletion/traversal, fast-and-slow pointers, dummy sentinels, reversal, and doubly
+// linked list synthesis, ramping from Easy to Hard;
+// hint points a direction without spoilers, key explains the optimal solution in one paragraph.
 
 import type { Problem } from "@/lib/problems";
 import type { QuizItem } from "@/lib/quiz";

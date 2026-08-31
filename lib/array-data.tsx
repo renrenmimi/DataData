@@ -1,9 +1,10 @@
-// 第 1 章 · 数组 —— 题单与测验数据。
-// 题单选自 LeetCode Hot 100 / NeetCode 150 里的数组高频题,难度从 Easy 铺到 Hard;
-// hint 只给方向不剧透,key 用一段话把最优解讲透。
+// Chapter 1 · Arrays — problem set and quiz data.
+// Problems are high-frequency array questions from LeetCode Hot 100 / NeetCode 150, ramping
+// from Easy to Hard; hint points a direction without spoilers, key explains the optimal
+// solution in one paragraph.
 //
-// 双语:title / tags / hint / key / 测验全部用 { en, zh } 成对给出;
-// 题目标题的 en 用 LeetCode 官方英文名。
+// Bilingual: title / tags / hint / key and the entire quiz come in { en, zh } pairs;
+// the en side of each problem title uses the official LeetCode English name.
 
 import type { Problem } from "@/lib/problems";
 import type { QuizItem } from "@/lib/quiz";

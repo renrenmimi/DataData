@@ -1,9 +1,10 @@
 /* ============================================================
-   第 5 章 · 队列与双端队列 —— 章节专属样式
-   所有类名带 .qu- 前缀,颜色一律使用设计 token,深浅主题自动适配。
+   Chapter 5 · Queues and deques — styles for this chapter only.
+   Every class carries the .qu- prefix and colours come from design tokens, so
+   light and dark themes adapt on their own.
    ============================================================ */
 
-/* ---------- RingLab:环形循环队列 ---------- */
+/* ---------- RingLab: the circular queue ---------- */
 
 .qu-ring text {
   font-family: var(--font-mono);
@@ -69,7 +70,7 @@
   font-size: 10.5px;
 }
 
-/* ---------- §02 内存图解:搬家 / 浪费 / 绕圈 ---------- */
+/* ---------- §02 Memory diagram: relocate / waste / wrap around ---------- */
 
 .qu-memrow {
   display: flex;
@@ -83,8 +84,8 @@
   border-top: 1px dashed var(--border);
 }
 
-/* 宽度按英文标题("Design 2 · Move front" + "dequeue O(1), wastes space")留足,
-   中文更短,同样容得下。 */
+/* The width is sized for the English headings ("Design 2 · Move front" plus
+   "dequeue O(1), wastes space"); the Chinese is shorter and fits too. */
 .qu-memrow-label {
   width: 152px;
   flex: none;
@@ -145,7 +146,7 @@
   color: var(--text);
 }
 
-/* ---------- 精讲 A:双栈倒水动画 ---------- */
+/* ---------- Walkthrough A: pouring between two stacks ---------- */
 
 .qu-pour {
   display: flex;

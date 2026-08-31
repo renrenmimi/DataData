@@ -1,22 +1,27 @@
 "use client";
 
-// 第 12 章 · 图 的可视化组件群(English default / 中文可切换):
-//  - GraphSvg:通用的 SVG 图渲染器(节点 + 边 + 有向箭头 + 边权 + 状态)。
-//  - TermGraph / MiniConcepts:§01 术语全图解、无向/有向/带权 三连图。
-//  - ReprLab:§02 同一张图的「邻接矩阵 vs 邻接表」互动对照。
-//  - GraphLab:§03 招牌组件 —— BFS/DFS 一键切换 + 逐帧慢放(队列/栈/visited 实时显示)。
-//  - GridDfsLab:§06 LC200 岛屿数量,DFS 淹没法逐帧。
-//  - TopoLab:§06 LC207 拓扑排序,Kahn 入度法逐帧(入度表 + 队列变化)。
-//  - DijkstraLab:§06 LC743 Dijkstra,贪心 + 小根堆,dist 表逐步演算。
+// Chapter 12 · The graph visualization components (English default / Chinese toggle):
+//  - GraphSvg: the generic SVG graph renderer (nodes + edges + directed arrows + edge
+//    weights + state).
+//  - TermGraph / MiniConcepts: the §01 full terminology diagram, plus the
+//    undirected / directed / weighted trio.
+//  - ReprLab: the §02 interactive "adjacency matrix vs. adjacency list" comparison of
+//    one and the same graph.
+//  - GraphLab: the §03 centerpiece — a one-click BFS/DFS switch plus frame-by-frame
+//    playback (queue / stack / visited shown live).
+//  - GridDfsLab: §06 LC200 number of islands, DFS flood fill frame by frame.
+//  - TopoLab: §06 LC207 topological sort, Kahn's in-degree method frame by frame
+//    (in-degree table + queue changes).
+//  - DijkstraLab: §06 LC743 Dijkstra, greedy + min-heap, the dist table evaluated step by step.
 //
-// 双语:图内文字、旁白、按钮、图例全部走 <T>。
-// 顶点编号、代码标识符、权重数字不翻译。
+// Bilingual: in-figure text, narration, buttons, and legends all go through <T>.
+// Vertex numbers, code identifiers, and weight values are not translated.
 
 import { useId, useState, type ReactNode } from "react";
 import { useStepper, StepControls } from "@/lib/stepper";
 import { T } from "@/lib/i18n";
 
-/* ================= 通用:SVG 图渲染器 ================= */
+/* ================= Generic: SVG graph renderer ================= */
 
 type NState = "lit" | "ok" | "fringe" | "dim" | undefined;
 
@@ -108,7 +113,7 @@ function GraphSvg({
         </marker>
       </defs>
 
-      {/* 边 */}
+      {/* Edges */}
       {edges.map((e) => {
         const na = byId.get(e.a)!;
         const nb = byId.get(e.b)!;
@@ -126,7 +131,7 @@ function GraphSvg({
         const dx = nb.x - na.x;
         const dy = nb.y - na.y;
         const len = Math.hypot(dx, dy) || 1;
-        // 权重标签沿边的法线方向偏移一点,避免压在线上
+        // Offset the weight label along the edge normal so it does not sit on the line
         const ox = (-dy / len) * 11;
         const oy = (dx / len) * 11;
         return (
@@ -157,7 +162,7 @@ function GraphSvg({
         );
       })}
 
-      {/* 节点 */}
+      {/* Nodes */}
       {nodes.map((n) => {
         const st = state?.[n.id];
         return (
@@ -183,7 +188,7 @@ function GraphSvg({
   );
 }
 
-/* ================= §01 TermGraph:术语全图解 ================= */
+/* ================= §01 TermGraph: full terminology diagram ================= */
 
 const TERM_NODES: GSNode[] = [
   { id: 0, x: 90, y: 80, label: "A" },
@@ -211,14 +216,14 @@ export function TermGraph() {
         />
       </div>
       <div className="viz-stage">
-        {/* viewBox 比图形本身宽一些,给较长的英文标注留出右侧空间 */}
+        {/* The viewBox is wider than the figure itself, leaving room on the right for longer English annotations */}
         <svg
           viewBox="0 0 560 270"
           className="gr-svg"
           style={{ maxWidth: 560 }}
           aria-hidden
         >
-          {/* 复用 GraphSvg 的画法,这里内联以叠加标注 */}
+          {/* Same drawing as GraphSvg, inlined here so the annotations can be layered on top */}
           {TERM_EDGES.map((e) => {
             const na = TERM_NODES.find((n) => n.id === e.a)!;
             const nb = TERM_NODES.find((n) => n.id === e.b)!;
@@ -243,7 +248,7 @@ export function TermGraph() {
               </text>
             </g>
           ))}
-          {/* 标注 */}
+          {/* Annotations */}
           <text x={90} y={44} textAnchor="middle" className="gr-lab acc">
             <T en="vertex (V)" zh="顶点 vertex(V)" />
           </text>
@@ -294,7 +299,7 @@ export function TermGraph() {
   );
 }
 
-/* ================= §01 MiniConcepts:无向 / 有向 / 带权 ================= */
+/* ================= §01 MiniConcepts: undirected / directed / weighted ================= */
 
 function TinyGraph({
   directed,
@@ -403,7 +408,7 @@ export function MiniConcepts() {
   );
 }
 
-/* ================= §02 ReprLab:邻接矩阵 vs 邻接表 ================= */
+/* ================= §02 ReprLab: adjacency matrix vs. adjacency list ================= */
 
 const REPR_ADJ: number[][] = [
   [1, 2], // 0
@@ -470,7 +475,7 @@ export function ReprLab() {
           </div>
         </div>
 
-        {/* 邻接矩阵 */}
+        {/* Adjacency matrix */}
         <div className="gr-repr-col">
           <div className="gr-lane-cap">
             <T
@@ -528,7 +533,7 @@ export function ReprLab() {
           </div>
         </div>
 
-        {/* 邻接表 */}
+        {/* Adjacency list */}
         <div className="gr-repr-col">
           <div className="gr-lane-cap">
             <T
@@ -600,7 +605,7 @@ export function ReprLab() {
   );
 }
 
-/* ================= §03 GraphLab:招牌 —— BFS / DFS 逐帧 ================= */
+/* ================= §03 GraphLab: the centerpiece — BFS / DFS frame by frame ================= */
 
 const ADJ: number[][] = [
   [1, 2], // 0
@@ -1069,7 +1074,7 @@ export function GraphLab() {
   );
 }
 
-/* ================= §06 GridDfsLab:LC200 岛屿数量 ================= */
+/* ================= §06 GridDfsLab: LC200 number of islands ================= */
 
 const GRID: number[][] = [
   [1, 1, 0, 0, 1],
@@ -1274,7 +1279,7 @@ export function GridDfsLab() {
   );
 }
 
-/* ================= §06 TopoLab:LC207 拓扑排序(Kahn)================= */
+/* ================= §06 TopoLab: LC207 topological sort (Kahn) ================= */
 
 const TOPO_ADJ: number[][] = [
   [1, 2], // 0 → 1,2
@@ -1560,7 +1565,7 @@ export function TopoLab() {
   );
 }
 
-/* ================= §06 DijkstraLab:LC743 最短路径 ================= */
+/* ================= §06 DijkstraLab: LC743 shortest path ================= */
 
 const DJ_NODES: GSNode[] = [
   { id: 0, x: 55, y: 100 },

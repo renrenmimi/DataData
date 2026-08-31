@@ -1,5 +1,6 @@
-/* 第 11 章 · 并查集 —— 本章专属样式(全部带 .uf- 前缀,颜色只用 token)。
-   英文文案比中文长,.uf-stat / figcaption 都允许换行,不靠缩小字号硬塞。 */
+/* Chapter 11 · Union-find — styles for this chapter only (.uf- prefix, colours
+   from tokens). The English copy runs longer than the Chinese, so .uf-stat and
+   figcaption are allowed to wrap rather than being crammed in at a smaller size. */
 
 [data-ch="union-find"] .uf-svg {
   width: 100%;
@@ -82,7 +83,7 @@
   user-select: none;
 }
 
-/* parent 数组一行小格子 */
+/* The parent array as a row of small cells */
 .uf-arr {
   display: flex;
   gap: 4px;
@@ -98,7 +99,8 @@
   border-radius: 10px;
 }
 
-/* 图例:英文更长,允许自然换行并在窄屏独占一行 */
+/* Legend: longer in English, so it wraps naturally and takes its own line on a
+   narrow screen */
 .uf-stat {
   font-family: var(--font-mono);
   font-size: 12px;
@@ -119,7 +121,7 @@
   color: var(--acc-ink);
 }
 
-/* before/after 对比小图(路径压缩) */
+/* Before/after figure (path compression) */
 .uf-cmp {
   display: grid;
   grid-template-columns: 1fr 1fr;

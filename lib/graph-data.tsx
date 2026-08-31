@@ -1,8 +1,9 @@
-// 第 12 章 · 图 —— 题单与测验数据(English default / 中文可切换)。
-// 题单选自 LeetCode 图论高频题:网格 DFS/BFS、拓扑排序、最短路、隐式图,由易到难。
-// hint 只给方向不剧透,key 用一段话把最优解讲透。
-// 双语:title / tags / hint / key / 所有测验文案都写成 { en, zh }。
-// 题目标题用 LeetCode 官方英文名,zh 保留官方中文名。
+// Chapter 12 · Graphs — problem set and quiz data (English default / Chinese toggle).
+// Problems are high-frequency LeetCode graph questions — grid DFS/BFS, topological sort, shortest
+// paths, implicit graphs — ordered from easy to hard.
+// hint points a direction without spoilers; key explains the optimal solution in one paragraph.
+// Bilingual: title / tags / hint / key and every quiz string are written as { en, zh }.
+// Problem titles use the official LeetCode English name; zh keeps the official Chinese name.
 
 import type { Problem } from "@/lib/problems";
 import type { QuizItem } from "@/lib/quiz";

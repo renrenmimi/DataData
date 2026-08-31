@@ -1,4 +1,4 @@
-/* 序章(首页)专属样式:变形 hero / Big-O 实验室 / 世界地图 */
+/* Prologue (home) styles: the morphing hero / Big-O lab / world map */
 
 .home-hero {
   display: grid;
@@ -73,7 +73,7 @@
   letter-spacing: 0.05em;
 }
 
-/* — 变形动画 — */
+/* — Morphing animation — */
 
 .hm-wrap {
   position: relative;
@@ -140,7 +140,7 @@
   color: var(--acc-ink);
 }
 
-/* — 内存模型 — */
+/* — Memory model — */
 
 .mem-strip {
   display: flex;
@@ -183,7 +183,7 @@
   background: oklch(var(--acc-l) var(--acc-c) var(--hue2) / 0.13);
 }
 
-/* — 引用实验室 — */
+/* — Reference lab — */
 
 .ref-tag {
   fill: var(--panel-2);
@@ -235,7 +235,7 @@
   fill: var(--text-3);
 }
 
-/* — Big-O 实验室 — */
+/* — Big-O lab — */
 
 .bigo-legend {
   display: flex;
@@ -321,7 +321,7 @@
   accent-color: var(--acc);
 }
 
-/* — 世界地图 — */
+/* — World map — */
 
 .map-grid {
   display: grid;
@@ -438,7 +438,7 @@
   color: oklch(var(--acc-l) var(--acc-c) var(--hue));
 }
 
-/* — 三步用法 — */
+/* — How to use the course, in three steps — */
 
 .howto {
   counter-reset: step;

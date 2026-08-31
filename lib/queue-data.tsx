@@ -1,9 +1,11 @@
-// 第 5 章 · 队列与双端队列 —— 题单与测验数据(English default / 中文可切换)。
-// 题单从模拟铺到「前缀和 + 单调队列」Hard;hint 只给方向,key 一段话讲透最优解。
-// 注:原题单中的 LC 346(数据流中的移动平均值)为会员题,已替换为 641 / 946。
+// Chapter 5 · Queues and deques — problem set and quiz data (English default / Chinese toggle).
+// Problems ramp from plain simulation up to a "prefix sum + monotonic queue" Hard; hint points a
+// direction only, key explains the optimal solution in one paragraph.
+// Note: LC 346 (Moving Average from Data Stream) in the original set is premium-only and has been
+// replaced by 641 / 946.
 //
-// 双语:title / tags / hint / key / q / opts / why 全部写成 { en, zh },
-// 题目标题的 en 用 LeetCode 官方英文名。
+// Bilingual: title / tags / hint / key / q / opts / why are all written as { en, zh },
+// and the en side of each problem title uses the official LeetCode English name.
 
 import type { Problem } from "@/lib/problems";
 import type { QuizItem } from "@/lib/quiz";

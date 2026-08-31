@@ -1,9 +1,10 @@
-// 第 13 章 · 组合与进阶 —— 题单与测验数据。
-// 题单围绕本章的几台"组合机器"选题:LRU/LFU(哈希 + 链表)、前缀和对照组、
-// 线段树 / 树状数组、跳表,外加一道回头串联哈希章的设计题。
-// hint 只给方向不剧透,key 用一段话把最优解讲透。
+// Chapter 13 · Composition and advanced structures — problem set and quiz data.
+// Problems are picked around this chapter's "composite machines": LRU/LFU (hash table +
+// linked list), the prefix-sum baseline, segment tree / Fenwick tree, skip list, plus one
+// design problem that ties back to the hash table chapter.
+// hint points a direction without spoilers; key explains the optimal solution in one paragraph.
 //
-// 双语:title / tags / hint / key 都写成 { en, zh };题目标题用 LeetCode 官方英文名。
+// Bilingual: title / tags / hint / key are all { en, zh } pairs; problem titles use the official LeetCode English names.
 
 import type { Problem } from "@/lib/problems";
 import type { QuizItem } from "@/lib/quiz";

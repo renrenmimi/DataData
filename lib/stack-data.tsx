@@ -1,5 +1,6 @@
-// 第 4 章 · 栈 —— 题单与测验数据(English default / 中文可切换)。
-// 题单从配对消除铺到单调栈 Hard;hint 只给方向不剧透,key 一段话讲透最优解。
+// Chapter 4 · Stacks — problem set and quiz data (English default / Chinese toggle).
+// Problems ramp from pairwise cancellation up to monotonic stack Hards; hint points a direction
+// without spoilers, key explains the optimal solution in one paragraph.
 
 import type { Problem } from "@/lib/problems";
 import type { QuizItem } from "@/lib/quiz";

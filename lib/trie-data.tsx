@@ -1,9 +1,10 @@
-// 第 10 章 · 前缀树(Trie)—— 题单与测验数据(English default / 中文可切换)。
-// 题单聚焦「前缀匹配 / 字典树 / 0-1 Trie」三大套路,由易到难;
-// hint 只给方向不剧透,key 用一段话把最优解讲透。
+// Chapter 10 · Tries (prefix trees) — problem set and quiz data (English default / Chinese toggle).
+// Problems focus on three patterns — prefix matching, dictionary trie, and 0-1 trie — ordered from
+// easy to hard; hint points a direction without spoilers, key explains the optimal solution in one
+// paragraph.
 //
-// 双语:title / tags / hint / key / q / opts / why 全部写成 { en, zh },
-// 题目标题的 en 用 LeetCode 官方英文名。
+// Bilingual: title / tags / hint / key / q / opts / why are all written as { en, zh },
+// and the en side of each problem title uses the official LeetCode English name.
 
 import type { Problem } from "@/lib/problems";
 import type { QuizItem } from "@/lib/quiz";

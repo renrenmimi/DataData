@@ -1,19 +1,22 @@
 "use client";
 
-// 第 2 章 · 字符串的两个专属可视化(双语):
-//  - EncodeLab:输入任意字符串,逐字符展示 Unicode 码点与 UTF-8 字节
-//    (用 codePointAt 逐码点遍历,正确处理 emoji 的 UTF-16 代理对)。
-//  - ConcatLab:同一任务两种拼法赛跑 ——「每次 += 全量重建」vs
-//    「用可变容器追加」,实时累计拷贝的字符数,亲眼看 O(n²) 和 O(n) 拉开差距。
+// Chapter 2 · the two visualizations that belong to the string chapter (bilingual):
+//  - EncodeLab: type any string and see the Unicode code point and UTF-8 bytes of each
+//    character (walked code point by code point with codePointAt, so emoji surrogate
+//    pairs in UTF-16 are handled correctly).
+//  - ConcatLab: two ways of building the same string race each other — rebuilding the
+//    whole string on every += vs. appending into a mutable container — with a running
+//    count of copied characters that makes the gap between O(n²) and O(n) visible.
 
 import { useEffect, useMemo, useState } from "react";
 import { useL, T } from "@/lib/i18n";
 
 /* ================= EncodeLab ================= */
 
-/** 手写 UTF-8 编码:按码点大小分 1/2/3/4 字节 —— 和标准一致,纯教学用 */
+/** Hand-written UTF-8 encoding: 1/2/3/4 bytes depending on the code point
+ *  — matches the standard, for teaching purposes only */
 function utf8Bytes(cp: number): number[] {
-  if (cp <= 0x7f) return [cp]; // ASCII 区:1 字节,最高位 0
+  if (cp <= 0x7f) return [cp]; // The ASCII range: one byte, high bit 0
   if (cp <= 0x7ff)
     return [0xc0 | (cp >> 6), 0x80 | (cp & 0x3f)]; // 110xxxxx 10xxxxxx
   if (cp <= 0xffff)
@@ -37,24 +40,24 @@ interface EncRow {
   ch: string;
   cp: number;
   bytes: number[];
-  /** 这个码点在 UTF-16 里占几个编码单元(1 或 2,2 = 代理对) */
+  /** How many UTF-16 code units this code point occupies (1 or 2; 2 = surrogate pair) */
   units: number;
 }
 
-/** 用 codePointAt 逐「码点」切分 —— emoji 是代理对,要一次跨过 2 个下标 */
+/** Split by code point using codePointAt — an emoji is a surrogate pair, so skip 2 indices at once */
 function analyze(input: string): EncRow[] {
   const rows: EncRow[] = [];
   let i = 0;
   while (i < input.length && rows.length < 10) {
     const cp = input.codePointAt(i)!;
-    const units = cp > 0xffff ? 2 : 1; // 超出 BMP → 代理对,占 2 个 UTF-16 单元
+    const units = cp > 0xffff ? 2 : 1; // Beyond the BMP → a surrogate pair, two UTF-16 units
     rows.push({
       ch: String.fromCodePoint(cp),
       cp,
       bytes: utf8Bytes(cp),
       units,
     });
-    i += units; // 关键:按码点前进,不能傻傻地 i++
+    i += units; // The point: advance by code point, never a naive i++
   }
   return rows;
 }
@@ -237,21 +240,22 @@ export function EncodeLab() {
 
 /* ================= ConcatLab ================= */
 
-const N = 60; // 总共追加 60 个字符
+const N = 60; // 60 characters appended in total
 
-/** 预计算两种策略在第 k 步之后的累计拷贝字符数 */
+/** Precompute how many characters each strategy has copied in total after step k */
 function precompute() {
   const naive: number[] = [0];
   const builder: number[] = [0];
-  let cap = 8; // 可变缓冲区初始容量 8
+  let cap = 8; // The mutable buffer starts with capacity 8
   let len = 0;
   let nSum = 0;
   let bSum = 0;
   for (let k = 1; k <= N; k++) {
-    // 朴素 +=:新串长 k,要把旧的 k-1 个字符全部重抄 + 写 1 个新字符
+    // Naive +=: the new string has length k, so recopy all k-1 old characters and write 1 new one
     nSum += k;
     naive.push(nSum);
-    // 可变缓冲区:写 1 个字符;仅当容量满时翻倍并搬家(拷贝 len 个)
+    // Mutable buffer: write 1 character; only when full, double the capacity
+    // and relocate (copying len characters)
     if (len === cap) {
       bSum += len;
       cap *= 2;
@@ -269,19 +273,19 @@ export function ConcatLab() {
   const [playing, setPlaying] = useState(false);
   useEffect(() => {
     if (!playing) return;
-    // 更新函数保持纯粹:只推进进度,停止播放交给下面的 effect
+    // Keep the updater pure: it only advances progress; stopping playback is the effect below
     const id = setInterval(() => {
       setStep((s) => (s >= N ? s : s + 1));
     }, 90);
     return () => clearInterval(id);
   }, [playing]);
 
-  // 跑到终点自动停
+  // Stop automatically once the run reaches the end
   useEffect(() => {
     if (playing && step >= N) setPlaying(false);
   }, [playing, step]);
 
-  const max = naive[N]; // 用朴素法的总量做比例尺
+  const max = naive[N]; // Scale everything against the naive total
   const nv = naive[step];
   const bv = builder[step];
   const done = step >= N;

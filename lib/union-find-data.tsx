@@ -1,10 +1,14 @@
-// 第 11 章 · 并查集 —— 题单与测验数据(English default / 中文可切换)。
-// 并查集题目高频但集中:连通性判断、连通块计数、等价类合并、找环。
-// 题单由易到难;305 是会员题,以 2316 替换(同为「连通块计数」思想)。
+// Chapter 11 · Union-find — problem set and quiz data (English default / Chinese toggle).
+// Union-find problems are frequent but tightly clustered: connectivity checks, counting connected
+// components, merging equivalence classes, and cycle detection.
+// The set runs easy to hard; LC 305 is premium-only, so 2316 stands in (same "count the connected
+// components" idea).
 //
-// 题目标题用 LeetCode 官方英文名;tags / hint / key / 测验文案都写成 { en, zh }。
-// 复杂度口径:两个优化都开时,m 次操作总代价 O(m·α(n)),α 是反阿克曼函数,
-// 实际可存下的 n 都有 α(n) ≤ 4 —— 全章统一说「近乎常数」,不写成 O(1)。
+// Problem titles use the official LeetCode English name; tags / hint / key and the quiz strings are
+// all { en, zh } pairs.
+// Complexity convention: with both optimizations enabled, m operations cost O(m·α(n)) in total, where
+// α is the inverse Ackermann function; every n that actually fits in memory has α(n) ≤ 4 — the whole
+// chapter says "near-constant" rather than writing O(1).
 
 import type { Problem } from "@/lib/problems";
 import type { QuizItem } from "@/lib/quiz";

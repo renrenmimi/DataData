@@ -1,7 +1,8 @@
 "use client";
 
-// 左侧导航栏:品牌 + 全部章节(每章自己的主题色圆点编号)+ 学习进度。
-// 章节清单来自 lib/curriculum.ts;进度来自 lib/progress.tsx。
+// Left navigation: brand + every chapter (each numbered dot in its own theme
+// hue) + learning progress.
+// The chapter list comes from lib/curriculum.ts, progress from lib/progress.tsx.
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";

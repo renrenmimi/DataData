@@ -1,12 +1,13 @@
 "use client";
 
-// 第 6 章 · 哈希表 —— 全书的「空间换时间」代表作。
-// 结构:为什么 → 哈希函数(HashLab)→ 冲突解决(CollisionLab)→ 手写 HashMap →
-// 三语言对照(hashCode/equals 契约、dict 顺序、Map vs Object)→
-// 三大信号 + 三道精讲(LC 1 / 49 / 128,逐帧)→ 题单 10 题 → 测验 8 题。
+// Chapter 6 · Hash tables — the course's flagship example of trading space for time.
+// Structure: why → hash functions (HashLab) → collision resolution (CollisionLab) → hand-written HashMap →
+// three-language comparison (the hashCode/equals contract, dict ordering, Map vs Object) →
+// three tell-tale signals + three walkthroughs (LC 1 / 49 / 128, frame-by-frame) → 10-problem set → 8-question quiz.
 //
-// 双语:所有面向学习者的文案都用 <T en zh> 或 { en, zh },英文为默认语言。
-// 代码窗的 code 写成 { en, zh } —— 两版逐行等价,只有注释不同,hl 行号才对得上。
+// Bilingual: every learner-facing string goes through <T en zh> or { en, zh }; English is the default.
+// Code blocks pass code as { en, zh } — the two versions are line-for-line equivalent and differ only
+// in their comments, so the hl line numbers apply to both.
 
 import {
   Hero,
@@ -25,9 +26,9 @@ import { T } from "@/lib/i18n";
 import { HashLab, CollisionLab } from "./viz";
 import "./chapter.css";
 
-/* ================= 精讲动画帧 ================= */
+/* ================= Walkthrough animation frames ================= */
 
-// LC 1 两数之和:一遍哈希,先查表再存表。nums = [11,2,15,7],target = 9
+// LC 1 Two Sum: a single pass over the map — look up first, then store. nums = [11,2,15,7], target = 9
 const F1: ArrayFrame[] = [
   {
     cells: [{ v: 11 }, { v: 2 }, { v: 15 }, { v: 7 }],
@@ -134,7 +135,7 @@ const F1: ArrayFrame[] = [
   },
 ];
 
-// LC 49 字母异位词分组:排序签名做 key
+// LC 49 Group Anagrams: the sorted signature is the key
 const W49 = ["eat", "tea", "tan", "ate", "nat", "bat"];
 const c49 = (
   states: (undefined | "lit" | "ok" | "bad" | "ghost")[],
@@ -283,7 +284,7 @@ const F49: ArrayFrame[] = [
   },
 ];
 
-// LC 128 最长连续序列:Set + 只从起点数
+// LC 128 Longest Consecutive Sequence: a Set, and count only from the start of a run
 const N128 = [100, 4, 200, 1, 3, 2];
 const c128 = (
   states: (undefined | "lit" | "ok" | "bad" | "ghost")[],
@@ -445,7 +446,7 @@ const F128: ArrayFrame[] = [
   },
 ];
 
-/* ================= 页面 ================= */
+/* ================= Page ================= */
 
 const CHIPS = [
   { id: "intuition", n: "01", label: { en: "Intuition", zh: "直觉" } },
@@ -496,7 +497,7 @@ export default function HashChapter() {
         chips={CHIPS}
       />
 
-      {/* ================= §01 直觉 ================= */}
+      {/* ================= §01 Intuition ================= */}
       <Section
         id="intuition"
         index="01"
@@ -674,7 +675,7 @@ export default function HashChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §02 哈希函数 ================= */}
+      {/* ================= §02 The hash function ================= */}
       <Section
         id="hashfn"
         index="02"
@@ -877,7 +878,7 @@ export default function HashChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §03 冲突解决 ================= */}
+      {/* ================= §03 Resolving collisions ================= */}
       <Section
         id="collision"
         index="03"
@@ -1195,7 +1196,7 @@ export default function HashChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §04 手写实现 ================= */}
+      {/* ================= §04 Building it from scratch ================= */}
       <Section
         id="impl"
         index="04"
@@ -1660,7 +1661,7 @@ public class MyHashMap<K, V> {
         </Callout>
       </Section>
 
-      {/* ================= §05 三语言对照 ================= */}
+      {/* ================= §05 Three languages side by side ================= */}
       <Section
         id="langs"
         index="05"
@@ -2144,7 +2145,7 @@ obj["1"];            // "a" —— key 被转成字符串,1 和 "1" 是同一个
         </Callout>
       </Section>
 
-      {/* ================= §06 套路与精讲 ================= */}
+      {/* ================= §06 Patterns and walkthroughs ================= */}
       <Section
         id="patterns"
         index="06"
@@ -2263,7 +2264,7 @@ obj["1"];            // "a" —— key 被转成字符串,1 和 "1" 是同一个
           </div>
         </div>
 
-        {/* —— 精讲 A —— */}
+        {/* —— Walkthrough A —— */}
         <div className="sec-head" style={{ marginTop: 44 }}>
           <span className="sec-index">
             <T en="Deep dive A" zh="精讲 A" />
@@ -2423,7 +2424,7 @@ obj["1"];            // "a" —— key 被转成字符串,1 和 "1" 是同一个
           />
         </Callout>
 
-        {/* —— 精讲 B —— */}
+        {/* —— Walkthrough B —— */}
         <div className="sec-head" style={{ marginTop: 44 }}>
           <span className="sec-index">
             <T en="Deep dive B" zh="精讲 B" />
@@ -2585,7 +2586,7 @@ class Solution:
           />
         </Callout>
 
-        {/* —— 精讲 C —— */}
+        {/* —— Walkthrough C —— */}
         <div className="sec-head" style={{ marginTop: 44 }}>
           <span className="sec-index">
             <T en="Deep dive C" zh="精讲 C" />
@@ -2767,7 +2768,7 @@ class Solution:
         </Callout>
       </Section>
 
-      {/* ================= §07 题单 ================= */}
+      {/* ================= §07 Problem set ================= */}
       <Section
         id="problems"
         index="07"

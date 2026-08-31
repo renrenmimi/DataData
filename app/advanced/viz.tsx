@@ -1,17 +1,21 @@
 "use client";
 
-// 第 13 章 · 组合与进阶 —— 七个专属可视化:
-//  - LRUAnatomy:静态结构图 —— 哈希表条目"指进"双向链表(两个结构互相咬合)。
-//  - LRULab:容量 3 的可操作 LRU 缓存(本章招牌):put/get 亲手玩,
-//    看节点搬头部、尾部淘汰、哈希条目同步点亮。
-//  - LFUBuckets:LFU 频次分桶静态图解(LC 460 的心脏)。
-//  - SegAnatomy:[2,5,1,4,9,3] 建出的线段树静态图。
-//  - SegLab:8 叶子线段树 —— 点叶子看更新路径点亮;拖查询区间看"打包"命中。
-//  - SkipLab:跳表查找路径逐帧回放(从顶层往右走,过头就下楼)。
-//  - BloomLab:16 位布隆过滤器 —— 插入/查询/亲手抓一次假阳性。
+// Chapter 13 · Composition and advanced structures — seven dedicated visualizations:
+//  - LRUAnatomy: static structure diagram — hash entries point into the doubly linked
+//    list (the two structures interlock).
+//  - LRULab: a working LRU cache of capacity 3 (the centerpiece of this chapter):
+//    call put/get by hand and watch nodes move to the head, the tail get evicted, and
+//    the matching hash entry light up.
+//  - LFUBuckets: static diagram of the LFU frequency buckets (the heart of LC 460).
+//  - SegAnatomy: static segment tree built from [2,5,1,4,9,3].
+//  - SegLab: an 8-leaf segment tree — click a leaf to light up its update path; drag the
+//    query range to see which nodes get "packed" into the answer.
+//  - SkipLab: frame-by-frame replay of a skip list search (walk right along the top
+//    level, drop down one level on every overshoot).
+//  - BloomLab: a 16-bit Bloom filter — insert, query, and catch a false positive by hand.
 //
-// 双语:所有面向学习者的文案(标题、旁白、SVG 标签、按钮、aria-label)
-// 都用 <T en zh> 或 useL() 解析,英文为默认语言。
+// Bilingual: every learner-facing string (titles, narration, SVG labels, buttons,
+// aria-labels) resolves through <T en zh> or useL(), English is the default.
 
 import { Fragment, useMemo, useRef, useState, type ReactNode } from "react";
 import { useStepper, StepControls } from "@/lib/stepper";
@@ -20,13 +24,14 @@ import { T, useL } from "@/lib/i18n";
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 /* ================================================================
-   LRUAnatomy —— 静态结构图:哈希表指进双向链表
+   LRUAnatomy — static structure diagram: hash entries point into a doubly linked list
    ================================================================ */
 
 export function LRUAnatomy() {
   const L = useL();
-  // 链表顺序(头→尾):B(最新) → A → C(最旧);哈希表按 key 字母序列出,
-  // 故意与链表顺序不同 —— 强调"哈希表不懂顺序,链表不懂查找"。
+  // List order (head → tail): B (newest) → A → C (oldest); the hash entries are listed
+  // alphabetically by key, deliberately different from the list order — the point is that
+  // the hash map knows nothing about order and the list knows nothing about lookup.
   const nodes = [
     { key: "HEAD", x: 250, dummy: true },
     { key: "B", x: 355, dummy: false },
@@ -57,7 +62,7 @@ export function LRUAnatomy() {
             zh: "哈希表条目指向双向链表节点的结构图",
           })}
         >
-          {/* 哈希表面板 */}
+          {/* Hash map panel */}
           <rect
             x={18}
             y={70}
@@ -92,7 +97,7 @@ export function LRUAnatomy() {
               >
                 {r.key} → <T en="node ref" zh="节点引用" />
               </text>
-              {/* 弯曲箭头:哈希条目 → 链表节点(一步定位) */}
+              {/* Curved arrow: hash entry → list node (a one-step jump) */}
               <path
                 d={`M 152 ${r.y} C 210 ${r.y}, ${r.target - 40} 210, ${r.target} 172`}
                 fill="none"
@@ -104,7 +109,7 @@ export function LRUAnatomy() {
               <circle cx={r.target} cy={170} r={3} fill="var(--acc)" />
             </g>
           ))}
-          {/* 双向链表 */}
+          {/* Doubly linked list */}
           <text x={452} y={95} textAnchor="middle" fontSize={12} fontWeight={700} fill="var(--text-2)">
             <T
               en="doubly linked list (newest on the left, oldest on the right)"
@@ -140,7 +145,7 @@ export function LRUAnatomy() {
               </text>
             </g>
           ))}
-          {/* prev/next 双向箭头 */}
+          {/* prev/next arrows in both directions */}
           {nodes.slice(0, -1).map((n, i) => {
             const nx = nodes[i + 1].x;
             const midL = n.x + 36;
@@ -154,7 +159,7 @@ export function LRUAnatomy() {
               </g>
             );
           })}
-          {/* 注解 */}
+          {/* Annotations */}
           <text x={93} y={278} textAnchor="middle" fontSize={11} fill="var(--text-2)">
             <T en={'answers "where": O(1)'} zh="管「在哪」:O(1) 定位" />
           </text>
@@ -190,7 +195,7 @@ export function LRUAnatomy() {
 }
 
 /* ================================================================
-   LRULab —— 容量 3 的可操作 LRU(本章招牌)
+   LRULab — a working LRU cache of capacity 3 (the centerpiece of this chapter)
    ================================================================ */
 
 const LRU_CAP = 3;
@@ -202,7 +207,7 @@ interface LruEntry {
 }
 
 export function LRULab() {
-  // list[0] = 链表头部(最新),list[尾] = 最旧
+  // list[0] = the head of the list (newest), the last element = the oldest
   const [list, setList] = useState<LruEntry[]>([]);
   const [hot, setHot] = useState<string | null>(null);
   const [dying, setDying] = useState<string | null>(null);
@@ -496,7 +501,7 @@ export function LRULab() {
 }
 
 /* ================================================================
-   LFUBuckets —— 频次分桶静态图解
+   LFUBuckets — static diagram of the frequency buckets
    ================================================================ */
 
 export function LFUBuckets() {
@@ -588,7 +593,7 @@ export function LFUBuckets() {
 }
 
 /* ================================================================
-   SegAnatomy —— [2,5,1,4,9,3] 建出的线段树(静态)
+   SegAnatomy — the segment tree built from [2,5,1,4,9,3] (static)
    ================================================================ */
 
 interface SegNode {
@@ -717,13 +722,13 @@ export function SegAnatomy() {
 }
 
 /* ================================================================
-   SegLab —— 8 叶子交互线段树
+   SegLab — interactive 8-leaf segment tree
    ================================================================ */
 
 const SEG_N = 8;
 const SEG_INIT = [5, 2, 7, 4, 6, 1, 3, 8];
 
-// 每个树节点(1 起)负责的区间 [lo, hi],模块级一次算好
+// The range [lo, hi] each tree node (1-based) covers, computed once at module level
 const SEG_RANGES: Record<number, [number, number]> = {};
 (function fillRange(node: number, lo: number, hi: number) {
   SEG_RANGES[node] = [lo, hi];
@@ -733,7 +738,7 @@ const SEG_RANGES: Record<number, [number, number]> = {};
   fillRange(2 * node + 1, mid + 1, hi);
 })(1, 0, SEG_N - 1);
 
-// 节点坐标:叶子等距排开,父节点取孩子中点
+// Node coordinates: leaves are spread out evenly, a parent sits at its children's midpoint
 const SEG_POS: Record<number, { x: number; y: number }> = {};
 for (let i = 8; i <= 15; i++) SEG_POS[i] = { x: 50 + (i - 8) * 80, y: 272 };
 for (let i = 7; i >= 1; i--)
@@ -768,7 +773,7 @@ export function SegLab() {
     />,
   );
 
-  // 数组版线段树:tree[1] 是根,tree[8..15] 是叶子
+  // Array-backed segment tree: tree[1] is the root, tree[8..15] are the leaves
   const tree = useMemo(() => {
     const t = new Array(16).fill(0);
     for (let i = 0; i < SEG_N; i++) t[8 + i] = vals[i];
@@ -857,12 +862,12 @@ export function SegLab() {
     const pack: number[] = [];
     const split: number[] = [];
     (function go(node: number, lo: number, hi: number) {
-      if (r < lo || hi < l) return; // 完全不相交:直接不管
+      if (r < lo || hi < l) return; // no overlap at all: ignore this node
       if (l <= lo && hi <= r) {
-        pack.push(node); // 整个被包住:打包命中
+        pack.push(node); // fully covered: packed into the answer
         return;
       }
-      split.push(node); // 部分相交:劈开问孩子
+      split.push(node); // partial overlap: split and ask the children
       const mid = (lo + hi) >> 1;
       go(2 * node, lo, mid);
       go(2 * node + 1, mid + 1, hi);
@@ -1085,7 +1090,7 @@ export function SegLab() {
               </g>
             );
           })}
-          {/* 查询区间标尺 */}
+          {/* Query range ruler */}
           {mode === "query" && (
             <g>
               <line
@@ -1183,29 +1188,30 @@ export function SegLab() {
 }
 
 /* ================================================================
-   SkipLab —— 跳表查找路径逐帧回放
+   SkipLab — frame-by-frame replay of a skip list search
    ================================================================ */
 
-// 固定跳表:L0 全量,L1/L2 是抽样出的"快线"
+// Fixed skip list: L0 holds every key, L1/L2 are sampled "express lanes"
 //   L2: H ──────────────→ 19 ─────────────────→ ∞
 //   L1: H ──→ 7 ────────→ 19 ────→ 29 → 37 ───→ ∞
 //   L0: H → 3 → 7 → 11 → 19 → 23 → 29 → 37 → 43 → ∞
 const SKIP_COLS = ["H", "3", "7", "11", "19", "23", "29", "37", "43", "∞"];
 const SKIP_LEVELS: number[][] = [
-  // 每层出现的列下标(0=H,9=∞)
-  [0, 4, 9], // L2(顶层)
+  // Column indices present on each level (0 = H, 9 = ∞)
+  [0, 4, 9], // L2 (top level)
   [0, 2, 4, 6, 7, 9], // L1
   [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], // L0
 ];
-// 层标签只写层号:两个字符,不会和最左边的 H 节点重叠,也不需要翻译
+// Row labels carry only the level number: two characters, so they never overlap the
+// leftmost H node and need no translation
 const SKIP_ROW_LABELS = ["L2", "L1", "L0"];
 const skipX = (col: number) => 36 + col * 64;
 const skipY = (lvlRow: number) => 48 + lvlRow * 72; // lvlRow: 0=L2, 1=L1, 2=L0
 
 interface SkipFrame {
   cur: string; // "col-row"
-  path: string[]; // 走过的节点
-  edges: [string, string][]; // 走过的边(节点 id 对)
+  path: string[]; // nodes visited
+  edges: [string, string][]; // edges walked (pairs of node ids)
   found?: boolean;
   msg: ReactNode;
 }
@@ -1413,7 +1419,7 @@ export function SkipLab() {
             zh: "跳表三层结构与查找路径",
           })}
         >
-          {/* 层标签 */}
+          {/* Level labels */}
           {SKIP_ROW_LABELS.map((t, row) => (
             <text
               key={t}
@@ -1426,7 +1432,7 @@ export function SkipLab() {
               {t}
             </text>
           ))}
-          {/* 塔:同一 key 的多层用竖虚线连起来 */}
+          {/* Towers: the levels of one key are joined by a dashed vertical line */}
           {SKIP_COLS.map((_, col) => {
             const rows = SKIP_LEVELS.map((lvl, r) => (lvl.includes(col) ? r : -1)).filter(
               (r) => r >= 0,
@@ -1444,7 +1450,7 @@ export function SkipLab() {
               />
             );
           })}
-          {/* 每层的水平指针 */}
+          {/* Horizontal pointers on each level */}
           {SKIP_LEVELS.map((cols, row) =>
             cols.slice(0, -1).map((c, i) => {
               const nc = cols[i + 1];
@@ -1468,7 +1474,7 @@ export function SkipLab() {
               );
             }),
           )}
-          {/* 下楼的竖直高亮边 */}
+          {/* Highlighted vertical edge for dropping down a level */}
           {f.edges
             .filter(([a, b]) => a.split("-")[0] === b.split("-")[0])
             .map(([a, b]) => {
@@ -1488,7 +1494,7 @@ export function SkipLab() {
                 />
               );
             })}
-          {/* 节点 */}
+          {/* Nodes */}
           {SKIP_LEVELS.map((cols, row) => cols.map((c) => nodeAt(c, row)))}
         </svg>
       </div>
@@ -1501,7 +1507,7 @@ export function SkipLab() {
 }
 
 /* ================================================================
-   BloomLab —— 16 位布隆过滤器
+   BloomLab — a 16-bit Bloom filter
    ================================================================ */
 
 const BLOOM_M = 16;

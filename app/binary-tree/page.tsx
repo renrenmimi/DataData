@@ -1,13 +1,14 @@
 "use client";
 
-// 第 7 章 · 二叉树 —— 全书篇幅最大的一章,同时承担「递归入门」的职责。
-// 结构:为什么(层级天然存在)→ 内存(TreeNode = 引用×2)→
-// 递归入门(factorial 调用栈 + count(node) 逐帧)→ 四种遍历(TraverseLab)→
-// 手写实现 → 三语言对照 → 两种递归做法 + 四道精讲(104/226/101/102)→
-// 题单 11 题 → 测验 8 题。
+// Chapter 7 · Binary trees — the longest chapter in the course, and also the introduction to recursion.
+// Structure: why (hierarchies exist naturally) → memory (TreeNode = two references) →
+// recursion primer (factorial call stack + count(node) frame-by-frame) → four traversals (TraverseLab) →
+// hand-written implementation → three-language comparison → two recursive approaches + four
+// walkthroughs (104/226/101/102) → 11-problem set → 8-question quiz.
 //
-// 双语:所有面向学习者的文案都用 <T en zh> 或 { en, zh },英文为默认语言。
-// 代码窗的 code 写成 { en, zh } —— 两版逐行等价,只有注释不同,hl 行号才对得上。
+// Bilingual: every learner-facing string goes through <T en zh> or { en, zh }; English is the default.
+// Code blocks pass code as { en, zh } — the two versions are line-for-line equivalent and differ only
+// in their comments, so the hl line numbers apply to both.
 
 import {
   Hero,
@@ -103,7 +104,7 @@ export default function BinaryTreeChapter() {
         chips={CHIPS}
       />
 
-      {/* ================= §01 直觉 ================= */}
+      {/* ================= §01 Intuition ================= */}
       <Section
         id="intuition"
         index="01"
@@ -385,7 +386,7 @@ export default function BinaryTreeChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §02 内存 ================= */}
+      {/* ================= §02 Memory ================= */}
       <Section
         id="memory"
         index="02"
@@ -524,7 +525,7 @@ export default function BinaryTreeChapter() {
         </div>
       </Section>
 
-      {/* ================= §03 递归入门 ================= */}
+      {/* ================= §03 An introduction to recursion ================= */}
       <Section
         id="recursion"
         index="03"
@@ -851,7 +852,7 @@ console.log(factorial(3)); // 6`,
         </Callout>
       </Section>
 
-      {/* ================= §04 四种遍历 ================= */}
+      {/* ================= §04 The four traversals ================= */}
       <Section
         id="traverse"
         index="04"
@@ -1088,7 +1089,7 @@ console.log(factorial(3)); // 6`,
         </Callout>
       </Section>
 
-      {/* ================= §05 手写实现 ================= */}
+      {/* ================= §05 Building it from scratch ================= */}
       <Section
         id="impl"
         index="05"
@@ -1613,7 +1614,7 @@ function levelOrder(root) {
         </Callout>
       </Section>
 
-      {/* ================= §06 三语言对照 ================= */}
+      {/* ================= §06 Three languages side by side ================= */}
       <Section
         id="langs"
         index="06"
@@ -2081,7 +2082,7 @@ console.log(root.right.left.val); // 15`,
         </div>
       </Section>
 
-      {/* ================= §07 套路与精讲 ================= */}
+      {/* ================= §07 Patterns and walkthroughs ================= */}
       <Section
         id="patterns"
         index="07"
@@ -2241,7 +2242,7 @@ console.log(root.right.left.val); // 15`,
           />
         </div>
 
-        {/* —— 精讲 A —— */}
+        {/* —— Walkthrough A —— */}
         <div className="sec-head" style={{ marginTop: 44 }}>
           <span className="sec-index">
             <T en="Walkthrough A" zh="精讲 A" />
@@ -2395,7 +2396,7 @@ console.log(root.right.left.val); // 15`,
           />
         </Callout>
 
-        {/* —— 精讲 B —— */}
+        {/* —— Walkthrough B —— */}
         <div className="sec-head" style={{ marginTop: 44 }}>
           <span className="sec-index">
             <T en="Walkthrough B" zh="精讲 B" />
@@ -2539,7 +2540,7 @@ console.log(root.right.left.val); // 15`,
           />
         </Callout>
 
-        {/* —— 精讲 C —— */}
+        {/* —— Walkthrough C —— */}
         <div className="sec-head" style={{ marginTop: 44 }}>
           <span className="sec-index">
             <T en="Walkthrough C" zh="精讲 C" />
@@ -2711,7 +2712,7 @@ console.log(root.right.left.val); // 15`,
           />
         </Callout>
 
-        {/* —— 精讲 D —— */}
+        {/* —— Walkthrough D —— */}
         <div className="sec-head" style={{ marginTop: 44 }}>
           <span className="sec-index">
             <T en="Walkthrough D" zh="精讲 D" />
@@ -2926,7 +2927,7 @@ class Solution:
         </Callout>
       </Section>
 
-      {/* ================= §08 题单 ================= */}
+      {/* ================= §08 Problem set ================= */}
       <Section
         id="problems"
         index="08"

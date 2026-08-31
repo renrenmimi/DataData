@@ -1,12 +1,12 @@
 "use client";
 
-// 第 1 章 · 数组的四个专属可视化:
-//  - IndexLab:点任意单元格,看「地址 = 首地址 + i × 4」怎么一步算出。
-//  - MatrixLab:点矩阵任意一格,看行优先压平后的一维下标。
-//  - ShiftLab:亲手在任意位置插入/删除,数一数搬了几次。
-//  - GrowLab:往动态数组里 push,亲眼看扩容与均摊 O(1)。
+// Chapter 1 · the four visualizations that belong to the array chapter:
+//  - IndexLab: click any cell to see how "address = base + i × 4" resolves in one step.
+//  - MatrixLab: click any matrix cell to see its row-major flattened index.
+//  - ShiftLab: insert/delete at any position by hand and count the moves.
+//  - GrowLab: push into a dynamic array and watch resizing and amortized O(1).
 //
-// 双语:所有标题、旁白、按钮、aria-label 都通过 <T> / useL() 切换。
+// Bilingual: every title, narration, button and aria-label switches via <T> / useL().
 
 import { useRef, useState } from "react";
 import { useL, T } from "@/lib/i18n";
@@ -107,7 +107,7 @@ export function MatrixLab() {
         className="viz-stage"
         style={{ flexDirection: "column", gap: 30, alignItems: "center" }}
       >
-        {/* 二维视图 */}
+        {/* The two-dimensional view */}
         <div
           style={{
             display: "grid",
@@ -138,7 +138,7 @@ export function MatrixLab() {
             )),
           )}
         </div>
-        {/* 一维真身 */}
+        {/* What it really is: one dimension */}
         <div style={{ display: "flex", columnGap: 3, rowGap: 30, flexWrap: "wrap", justifyContent: "center", paddingBottom: 22 }}>
           {MAT.flat().map((v, k) => (
             <div
@@ -202,7 +202,7 @@ export function ShiftLab() {
 
   const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-  // 删除会让数组变短,idx 可能停留在越界位置 —— 统一用夹紧后的 pos
+  // Deleting shortens the array, so idx can end up out of range — always use the clamped pos
   const pos = Math.min(idx, cells.length - 1);
 
   const insert = async () => {
@@ -212,7 +212,7 @@ export function ShiftLab() {
     nextVal.current = ((nextVal.current + 3) % 9) + 1;
     let arr = [...cells];
     let moves = 0;
-    // 从尾巴开始,把 idx 右侧的元素一个个往右搬
+    // Starting from the tail, shift every element right of idx one slot to the right
     arr = [...arr, arr[arr.length - 1]];
     for (let j = arr.length - 2; j > pos; j--) {
       setMoving(j);
@@ -412,7 +412,7 @@ export function GrowLab() {
       return;
     }
 
-    // 扩容:申请 2 倍新数组,逐个搬运
+    // Resize: allocate a new array of twice the capacity and relocate element by element
     setPhase("growing");
     setOldSnapshot(items);
     const newCap = cap * 2;

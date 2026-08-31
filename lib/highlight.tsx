@@ -1,7 +1,8 @@
-// 轻量语法高亮器 —— 零依赖,支持 java / python / js 三种语言。
-// 思路:一个主正则扫全文(注释 | 字符串 | 数字 | 标识符 | 运算符),
-// 标识符再按「关键字 / 大写开头类型 / 后面跟 ( 的函数」分类;
-// 最后按换行切成行,供 CodeBlock 渲染行号与高亮行。
+// Lightweight syntax highlighter — zero dependencies, supports java / python / js.
+// Approach: one master regex sweeps the source (comment | string | number |
+// identifier | operator); identifiers are then classified as keyword,
+// capitalized type, or function (followed by "("); finally the tokens are split
+// on newlines so CodeBlock can render line numbers and highlighted lines.
 
 export type CodeLangId = "java" | "python" | "js";
 
@@ -37,14 +38,14 @@ const RE: Record<CodeLangId, RegExp> = {
   js: /(\/\/[^\n]*|\/\*[\s\S]*?\*\/)|(`(?:[^`\\]|\\.)*`|"(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*')|(\b0x[\da-fA-F_]+\b|\b\d[\d_]*(?:\.[\d_]+)?\b)|([A-Za-z_$][\w$]*)|([+\-*/%=<>!&|^~?:]+)/g,
 };
 
-/** 标识符后是否紧跟 "("(允许空格)→ 视作函数名 */
+/** Is the identifier immediately followed by "(" (spaces allowed)? → a function name */
 function isCall(code: string, end: number): boolean {
   let i = end;
   while (i < code.length && code[i] === " ") i++;
   return code[i] === "(";
 }
 
-/** 把整段代码高亮成「行 × token」二维数组 */
+/** Highlight a whole snippet into a lines × tokens matrix */
 export function highlight(code: string, lang: CodeLangId): Tok[][] {
   const re = new RegExp(RE[lang].source, "g");
   const toks: Tok[] = [];
@@ -69,7 +70,7 @@ export function highlight(code: string, lang: CodeLangId): Tok[][] {
   }
   if (last < code.length) toks.push({ t: "", s: code.slice(last) });
 
-  // 按换行切行(token 内部可能含 \n,比如多行注释/三引号字符串)
+  // Split into lines (a token may contain \n — block comments, triple-quoted strings)
   const lines: Tok[][] = [[]];
   for (const tok of toks) {
     const parts = tok.s.split("\n");

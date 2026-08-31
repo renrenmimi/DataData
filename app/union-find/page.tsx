@@ -1,20 +1,27 @@
 "use client";
 
-// 第 11 章 · 并查集(Union-Find / Disjoint Set Union)—— 八段式:
-// 动态连通性 → parent 数组 = 一片森林(UFLab)→ 两大优化 → 手写实现 →
-// 三语言对照 → 三道精讲(逐帧)→ 题单 → 测验 → 要点。
+// Chapter 11 · Union-Find (Disjoint Set Union) — eight sections:
+// dynamic connectivity → the parent array is a forest (UFLab) → the two optimizations →
+// from-scratch implementation → three-language comparison → three walkthroughs
+// (frame by frame) → problem set → quiz → key points.
 //
-// 双语:所有面向学习者的文案都用 <T en zh> 或 { en, zh },英文为默认语言。
-// 代码窗的 code 写成 { en, zh } —— 两版逐行等价,只有注释不同,hl 行号才对得上。
+// Bilingual: every learner-facing string uses <T en zh> or { en, zh }, English is the default.
+// The code windows take code as { en, zh } — the two versions are line-for-line equivalent
+// and differ only in their comments, which is what keeps the hl line numbers aligned.
 //
-// 口径约定(全章统一,勿改):
-//  · 并查集只回答两个问题:两个元素是否在同一集合;把两个集合合并。
-//  · 它维护的是一片森林,每个集合是一棵树,树根是该集合的代表元。
-//  · 复杂度:两个优化都开时,n 个元素上的 m 次操作总代价 O(m·α(n));
-//    α 是反阿克曼函数,任何存得下的 n 都有 α(n) ≤ 4 —— 说「近乎常数」,不写 O(1)。
-//  · 只开一个优化时是均摊 O(log n)。
-//  · rank 是树高的上界,不是精确高度(路径压缩会把树压扁但不回调 rank)。
-//  · 只能合并,不能拆分;要删除就把整串操作离线倒序处理。
+// Conventions for the whole chapter (do not change):
+//  · Union-find answers exactly two questions: are two elements in the same set, and
+//    merge two sets.
+//  · What it maintains is a forest: every set is one tree, and the root of that tree is
+//    the set's representative.
+//  · Complexity: with both optimizations enabled, m operations over n elements cost
+//    O(m·α(n)) in total; α is the inverse Ackermann function, and α(n) ≤ 4 for any n
+//    that fits in memory — call it "near constant", never write O(1).
+//  · With only one of the optimizations it is amortized O(log n).
+//  · rank is an upper bound on the tree height, not the exact height (path compression
+//    flattens the tree without lowering rank).
+//  · Sets can only be merged, never split; to support deletion, process the whole
+//    operation sequence offline in reverse.
 
 import {
   Hero,
@@ -33,9 +40,10 @@ import { T } from "@/lib/i18n";
 import { UFLab } from "./viz";
 import "./chapter.css";
 
-/* ================= 精讲动画帧 ================= */
+/* ================= Walkthrough animation frames ================= */
 
-// LC 547 省份数量:4 城市邻接矩阵,cells = parent 数组,count 从 4 减到 2
+// LC 547 number of provinces: 4 cities as an adjacency matrix, cells = the parent array,
+// count drops from 4 to 2
 const F547: ArrayFrame[] = [
   {
     cells: [{ v: 0, state: "ok" }, { v: 1, state: "ok" }, { v: 2, state: "ok" }, { v: 3, state: "ok" }],
@@ -139,7 +147,8 @@ const F547: ArrayFrame[] = [
   },
 ];
 
-// LC 684 冗余连接:逐边 union,遇「已连通还加边」= 环。节点 1..5,cells[0] 占位
+// LC 684 redundant connection: union edge by edge; an edge between two already-connected
+// nodes closes a cycle. Nodes are 1..5, so cells[0] is a placeholder
 const F684: ArrayFrame[] = [
   {
     cells: [
@@ -295,7 +304,8 @@ const F684: ArrayFrame[] = [
   },
 ];
 
-// LC 200 岛屿数量(并查集视角):2×4 网格拍扁成一维,idx = r*4+c
+// LC 200 number of islands (union-find view): the 2×4 grid is flattened into one
+// dimension, idx = r*4+c
 const F200: ArrayFrame[] = [
   {
     cells: [
@@ -411,7 +421,7 @@ const F200: ArrayFrame[] = [
   },
 ];
 
-/* ================= 页面 ================= */
+/* ================= Page ================= */
 
 const CHIPS = [
   { id: "why", n: "01", label: { en: "Why it exists", zh: "为什么需要它" } },
@@ -477,7 +487,7 @@ export default function UnionFindChapter() {
         chips={CHIPS}
       />
 
-      {/* ================= §01 为什么需要它 ================= */}
+      {/* ================= §01 Why it exists ================= */}
       <Section
         id="why"
         index="01"
@@ -773,7 +783,7 @@ export default function UnionFindChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §02 一个数组 = 一片森林 ================= */}
+      {/* ================= §02 One array = one forest ================= */}
       <Section
         id="memory"
         index="02"
@@ -981,7 +991,7 @@ find(x) {
         </Callout>
       </Section>
 
-      {/* ================= §03 两大优化 ================= */}
+      {/* ================= §03 Two optimizations ================= */}
       <Section
         id="optimize"
         index="03"
@@ -1352,7 +1362,7 @@ find(x) {
         </Callout>
       </Section>
 
-      {/* ================= §04 手写实现 ================= */}
+      {/* ================= §04 Build one ================= */}
       <Section
         id="impl"
         index="04"
@@ -1713,7 +1723,7 @@ find(x) {
         </div>
       </Section>
 
-      {/* ================= §05 三语言对照 ================= */}
+      {/* ================= §05 Three languages ================= */}
       <Section
         id="langs"
         index="05"
@@ -1969,7 +1979,7 @@ uf.union(ids.get("a@x.com"), ids.get("b@x.com"));`,
         </Callout>
       </Section>
 
-      {/* ================= §06 套路与精讲 ================= */}
+      {/* ================= §06 Patterns and problems ================= */}
       <Section
         id="patterns"
         index="06"
@@ -2079,7 +2089,7 @@ uf.union(ids.get("a@x.com"), ids.get("b@x.com"));`,
           </div>
         </div>
 
-        {/* —— 精讲 A —— */}
+        {/* — Walkthrough A — */}
         <div className="sec-head" style={{ marginTop: 44 }}>
           <span className="sec-index">
             <T en="WALKTHROUGH A" zh="精讲 A" />
@@ -2247,7 +2257,7 @@ uf.union(ids.get("a@x.com"), ids.get("b@x.com"));`,
           />
         </Callout>
 
-        {/* —— 精讲 B —— */}
+        {/* — Walkthrough B — */}
         <div className="sec-head" style={{ marginTop: 44 }}>
           <span className="sec-index">
             <T en="WALKTHROUGH B" zh="精讲 B" />
@@ -2460,7 +2470,7 @@ uf.union(ids.get("a@x.com"), ids.get("b@x.com"));`,
           />
         </Callout>
 
-        {/* —— 精讲 C —— */}
+        {/* — Walkthrough C — */}
         <div className="sec-head" style={{ marginTop: 44 }}>
           <span className="sec-index">
             <T en="WALKTHROUGH C" zh="精讲 C" />
@@ -2739,7 +2749,7 @@ uf.union(ids.get("a@x.com"), ids.get("b@x.com"));`,
         </Callout>
       </Section>
 
-      {/* ================= §07 题单 ================= */}
+      {/* ================= §07 Problem set ================= */}
       <Section
         id="problems"
         index="07"

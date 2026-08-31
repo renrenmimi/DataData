@@ -1,14 +1,17 @@
 "use client";
 
-// 第 13 章 · 组合与进阶 —— 全书压轴。
-// 十段式结构:组合的艺术 → LRU(重头戏)→ LFU 一瞥 → 线段树 → 树状数组 →
-// 跳表 → 布隆过滤器 → 三道精讲(逐帧动画 + 三语言题解)→ 题单 → 测验 → 要点。
-// 前 12 章的所有结构在这里被拼装成"机器":可自由引用任何一章。
+// Chapter 13 · Composition and advanced structures — the finale of the course.
+// Ten sections: the art of composition → LRU (the centerpiece) → a look at LFU →
+// segment tree → Fenwick tree → skip list → Bloom filter → three walkthroughs
+// (frame-by-frame animation + three-language solutions) → problem set → quiz → key points.
+// Every structure from the first 12 chapters is assembled into a "machine" here, so any
+// earlier chapter may be referenced freely.
 //
-// 双语:所有面向学习者的文案都用 <T en zh> 或 { en, zh },英文为默认语言。
-// 代码窗的 code 写成 { en, zh } —— 两版逐行等价,只有注释不同,hl 行号才对得上。
-// 每一节都要说清「拼了哪两个结构」和「为什么这个组合能拿到要求的复杂度」,
-// 不能只报结论。
+// Bilingual: every learner-facing string uses <T en zh> or { en, zh }, English is the default.
+// The code windows take code as { en, zh } — the two versions are line-for-line equivalent
+// and differ only in their comments, which is what keeps the hl line numbers aligned.
+// Every section must state which two structures are being combined and why that
+// combination reaches the required complexity, not merely report the conclusion.
 
 import {
   Hero,
@@ -35,10 +38,10 @@ import {
 } from "./viz";
 import "./chapter.css";
 
-/* ================= 精讲动画帧 ================= */
+/* ================= Walkthrough animation frames ================= */
 
-// —— 精讲 A:LC 146 LRU(容量 2,官方样例的完整操作序列)——
-// 单元格 = 双向链表从头到尾的顺序(左新右旧)
+// — Walkthrough A: LC 146 LRU (capacity 2, the full operation sequence of the official example) —
+// Cells = the doubly linked list from head to tail (newest on the left, oldest on the right)
 const F146: ArrayFrame[] = [
   {
     cells: [],
@@ -209,9 +212,9 @@ const F146: ArrayFrame[] = [
   },
 ];
 
-// —— 精讲 B:LC 307 用树状数组 ——
+// — Walkthrough B: LC 307 with a Fenwick tree —
 // a[1..8] = [3,1,4,1,5,9,2,6](1-based),tree = [×,3,4,4,9,5,14,2,31]
-// 演示 add(3,+2) 的上行三跳,与 query(7) 的下行三跳
+// Shows the three upward hops of add(3, +2) and the three downward hops of query(7)
 const bitCells = (
   t: (number | string)[],
   marks: Record<number, "lit" | "ok">,
@@ -357,7 +360,7 @@ const F307: ArrayFrame[] = [
   },
 ];
 
-// —— 精讲 C:LC 380 数组 + 哈希 ——
+// — Walkthrough C: LC 380, array + hash map —
 const F380: ArrayFrame[] = [
   {
     cells: [{ v: 5, state: "lit" }],
@@ -484,7 +487,7 @@ const F380: ArrayFrame[] = [
   },
 ];
 
-/* ================= 页面 ================= */
+/* ================= Page ================= */
 
 const CHIPS = [
   { id: "combine", n: "01", label: { en: "Combining", zh: "组合的艺术" } },
@@ -537,7 +540,7 @@ export default function AdvancedChapter() {
         chips={CHIPS}
       />
 
-      {/* ================= §01 组合的艺术 ================= */}
+      {/* ================= §01 The art of composition ================= */}
       <Section
         id="combine"
         index="01"
@@ -2089,7 +2092,7 @@ class LFUCache:
         </Callout>
       </Section>
 
-      {/* ================= §04 线段树 ================= */}
+      {/* ================= §04 Segment tree ================= */}
       <Section
         id="segtree"
         index="04"
@@ -2672,7 +2675,7 @@ class LFUCache:
         </Callout>
       </Section>
 
-      {/* ================= §05 树状数组 ================= */}
+      {/* ================= §05 Fenwick tree ================= */}
       <Section
         id="bit"
         index="05"
@@ -3095,7 +3098,7 @@ class LFUCache:
         </div>
       </Section>
 
-      {/* ================= §06 跳表 ================= */}
+      {/* ================= §06 Skip list ================= */}
       <Section
         id="skiplist"
         index="06"
@@ -3787,7 +3790,7 @@ class Skiplist {
         </Callout>
       </Section>
 
-      {/* ================= §07 布隆过滤器 ================= */}
+      {/* ================= §07 Bloom filter ================= */}
       <Section
         id="bloom"
         index="07"
@@ -4071,7 +4074,7 @@ class Skiplist {
         </Callout>
       </Section>
 
-      {/* ================= §08 精讲 ================= */}
+      {/* ================= §08 Walkthroughs ================= */}
       <Section
         id="featured"
         index="08"
@@ -4089,7 +4092,7 @@ class Skiplist {
           </span>
         }
       >
-        {/* —— 精讲 A —— */}
+        {/* — Walkthrough A — */}
         <div className="sec-head" style={{ marginTop: 24 }}>
           <span className="sec-index">
             <T en="Example A" zh="精讲 A" />
@@ -4363,7 +4366,7 @@ class LRUCache:
           />
         </Callout>
 
-        {/* —— 精讲 B —— */}
+        {/* — Walkthrough B — */}
         <div className="sec-head" style={{ marginTop: 44 }}>
           <span className="sec-index">
             <T en="Example B" zh="精讲 B" />
@@ -4667,7 +4670,7 @@ class LRUCache:
           />
         </Callout>
 
-        {/* —— 精讲 C —— */}
+        {/* — Walkthrough C — */}
         <div className="sec-head" style={{ marginTop: 44 }}>
           <span className="sec-index">
             <T en="Example C" zh="精讲 C" />
@@ -5007,7 +5010,7 @@ class RandomizedSet:
         </Callout>
       </Section>
 
-      {/* ================= §09 题单 ================= */}
+      {/* ================= §09 Problem set ================= */}
       <Section
         id="problems"
         index="09"

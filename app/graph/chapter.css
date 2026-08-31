@@ -1,6 +1,7 @@
-/* 第 12 章 · 图 专属样式(前缀 .gr-,颜色全部走 token,深浅主题自适配)*/
+/* Chapter 12 · Graphs — styles for this chapter only (.gr- prefix, colours from
+   tokens so both themes adapt) */
 
-/* ---------- 通用 SVG 图 ---------- */
+/* ---------- Shared SVG graph ---------- */
 
 [data-ch="graph"] .gr-svg {
   display: block;
@@ -123,7 +124,7 @@
   font-weight: 700;
 }
 
-/* ---------- 遍历/拓扑:图 + 侧栏两列布局 ---------- */
+/* ---------- Traversal / topological sort: graph plus side panel, two columns ---------- */
 
 [data-ch="graph"] .gr-wrap {
   display: flex;
@@ -160,7 +161,7 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--text-3);
-  /* 英文标题比中文长,允许换行并留出行距 */
+  /* English titles run longer, so allow wrapping and leave some leading */
   line-height: 1.5;
   text-wrap: pretty;
 }
@@ -209,7 +210,7 @@
   padding: 3px 0;
 }
 
-/* ---------- §02 邻接矩阵 vs 邻接表 ---------- */
+/* ---------- §02 Adjacency matrix vs adjacency list ---------- */
 
 [data-ch="graph"] .gr-repr {
   flex-direction: row;
@@ -328,7 +329,7 @@
   line-height: 1.6;
 }
 
-/* ---------- §01 三连图小卡 ---------- */
+/* ---------- §01 The three small concept cards ---------- */
 
 [data-ch="graph"] .gr-mini3 {
   display: grid;
@@ -342,7 +343,7 @@
   max-width: 185px;
 }
 
-/* ---------- §06 岛屿网格 ---------- */
+/* ---------- §06 Island grid ---------- */
 
 [data-ch="graph"] .gr-grid {
   display: flex;
@@ -411,7 +412,7 @@
   font-size: 18px;
 }
 
-/* ---------- §06 Dijkstra 距离表 ---------- */
+/* ---------- §06 Dijkstra distance table ---------- */
 
 [data-ch="graph"] .gr-djpanel {
   width: 100%;
@@ -461,7 +462,7 @@
   outline-offset: -1.5px;
 }
 
-/* ---------- 响应式 ---------- */
+/* ---------- Responsive ---------- */
 
 @media (max-width: 720px) {
   [data-ch="graph"] .gr-mini3 {

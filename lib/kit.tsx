@@ -1,13 +1,17 @@
 "use client";
 
-// 章节页通用原语:
-//  - Reveal:滚动进入视口时淡入上移(IntersectionObserver)。
-//  - Hero:章节开场(眉题 / 渐变大标题 / 本质一句话 / 巨型编号水印 / 段落跳转 chips)。
-//  - Section:编号章节段(§01 · 标题 + 描述 + 右侧徽章),自带 Reveal。
-//  - Callout:提示框(idea/warn/deep/story/win 五种语气)。
-//  - BigO:复杂度徽章。 KeyPoints:章末要点卡。 ChapterFooter:上一章/下一章。
+// Shared primitives for chapter pages:
+//  - Reveal: fades and lifts in when scrolled into view (IntersectionObserver).
+//  - Hero: chapter opening (kicker / gradient title / one-line essence / giant
+//    number watermark / section-jump chips).
+//  - Section: numbered section (§01 · title + description + badge on the
+//    right), with Reveal built in.
+//  - Callout: notice box (idea/warn/deep/story/win tones).
+//  - BigO: complexity badge. KeyPoints: end-of-chapter takeaways.
+//    ChapterFooter: prev/next chapter.
 //
-// 所有文案类 prop 都接受 Loc<…>:直接给值 = 两种语言共用,给 { en, zh } = 按语言切换。
+// Every copy prop accepts Loc<…>: a plain value is shared by both languages,
+// { en, zh } switches per language.
 
 import {
   useEffect,
@@ -77,11 +81,11 @@ export function Hero({
   children,
 }: {
   ch: ChapterId;
-  /** 渐变标题,例如 <>数组 <span className="grad">Array</span></> */
+  /** Gradient title, e.g. <>The <span className="grad">Array</span></> */
   title: Loc<ReactNode>;
   essence: Loc<ReactNode>;
   chips?: HeroChip[];
-  /** hero 右侧/下方的自定义视觉(每章专属动画) */
+  /** Custom visual beside or below the hero (the chapter's own animation) */
   children?: ReactNode;
 }) {
   const L = useL();
@@ -188,7 +192,7 @@ export function Callout({
 
 /* ---------- BigO ---------- */
 
-/** o 取值:1 | logn | n | nlogn | n2 | 2n,label 缺省按 o 生成 */
+/** o is one of 1 | logn | n | nlogn | n2 | 2n; label defaults to text derived from o */
 export function BigO({ o, label }: { o: string; label?: Loc<string> }) {
   const L = useL();
   const text =

@@ -1,152 +1,247 @@
-# CLAUDE.md — DataData · 看得见的数据结构
+# CLAUDE.md — DataData · Data structures you can see
 
-新会话先读完这份文件再动手。
+Read this file end to end before touching anything.
 
-## 这是什么
+## Language convention (read first)
 
-**DataData(看得见的数据结构)**:面向零基础学习者的交互式数据结构课程网站。
-承诺:**学完这一套课,不需要再从任何别的渠道学数据结构。**
-每章同一个节奏:直觉类比 → 内存图解 → 操作拆解(交互可视化)→ 手写实现 →
-Java/Python/JS 三语言对照 → LeetCode 高频精讲(逐帧动画)→ 题单 → 通关测验。
+- **Everything written for developers is in English**: commit messages, PR titles
+  and bodies, code comments, this file, and any docs added later.
+- **Everything a learner reads stays bilingual.** The site defaults to English
+  with a 中文 toggle, so user-facing copy is authored as `{ en, zh }` pairs
+  (type `Loc<T>` from `lib/i18n.tsx`) — never English-only, never Chinese-only.
+- Chinese inside a `zh:` value is content, not a comment. Never "clean it up".
 
-目标受众下限:**刚会写 hello world 的完全新手**。因此:
-- 每个结论必须给「为什么」,不许只给结论;
-- 比喻先行,再上术语;术语第一次出现时用中文+英文双写;
-- 假设读者不知道「引用/指针」是什么 —— 序章 §03 专门教过,后续章节可引用它。
+## What this is
 
-## 课程结构(15 页,由易到难)
+**DataData** is an interactive data-structures course for complete beginners.
+The promise: **finish this course and you need no other source to learn data
+structures.**
 
-`lib/curriculum.ts` 是唯一的章节注册表(路由/编号/主题色相/难度/标签)。
-序章(/)Big-O+内存+引用 → 01 数组(含矩阵、二分)→ 02 字符串(含 KMP 思想)→
-03 链表 → 04 栈(含单调栈)→ 05 队列(含循环队列、单调队列)→ 06 哈希表(含 Set)→
-07 二叉树(含递归入门)→ 08 BST(含 AVL/红黑/TreeMap/B+树概念)→ 09 堆 →
-10 Trie → 11 并查集 → 12 图(含拓扑排序、Dijkstra)→ 13 进阶组合(LRU/LFU/
-线段树/树状数组/跳表/布隆过滤器)→ ✦ 终章选型地图(决策树+全书题单总表)。
+Every chapter follows the same rhythm: intuition by analogy → memory diagram →
+operations broken down (interactive visualization) → implement it from scratch →
+Java / Python / JavaScript side by side → high-frequency LeetCode walkthroughs
+(frame-by-frame animation) → problem set → closing quiz.
 
-## 技术栈与命令
+The floor for the audience is **someone who has only ever written hello world.**
+So:
 
-- Next.js 15(App Router)+ React 19 + TypeScript,**纯 CSS 无 Tailwind**。
-- **本机默认 Node 16 跑不动**,一切命令加:
+- every conclusion needs its "why" — never state a result and move on;
+- analogy first, terminology second; on first use give a term in both languages
+  (e.g. 「哈希表(hash table)」in the zh copy, "hash table" in the en copy);
+- assume the reader does not know what a reference or a pointer is — the
+  prologue §03 teaches it, and later chapters may link back to it.
+
+## Course structure (15 pages, easy to hard)
+
+`lib/curriculum.ts` is the single registry (route / number / theme hue /
+difficulty / tags).
+
+Prologue (`/`) Big-O + memory + references → 01 array (incl. matrices, binary
+search) → 02 string (incl. the idea behind KMP) → 03 linked list → 04 stack
+(incl. monotonic stack) → 05 queue (incl. circular queue, monotonic deque) →
+06 hash table (incl. Set) → 07 binary tree (incl. an introduction to recursion) →
+08 BST (incl. AVL / red-black / TreeMap / B+ tree concepts) → 09 heap →
+10 trie → 11 union-find → 12 graph (incl. topological sort, Dijkstra) →
+13 composites and beyond (LRU / LFU / segment tree / Fenwick tree / skip list /
+Bloom filter) → ✦ finale: the decision atlas (decision tree + full problem index).
+
+## Stack and commands
+
+- Next.js 15 (App Router) + React 19 + TypeScript, **plain CSS, no Tailwind**.
+- **The machine's default Node 16 cannot run this.** Prefix every command with:
   `export PATH="$HOME/.nvm/versions/node/v22.21.1/bin:$PATH"`
-- 构建验证:`npm run build`;并行写章节时**不要各自跑 build**(.next 冲突),
-  用 `npx tsc --noEmit --incremental false` 做类型检查。
-- 预览:`.claude/launch.json` 已配置(autoPort)。
+- Build check: `npm run build`. When several agents write chapters in parallel,
+  **do not each run a build** (they fight over `.next`) — use
+  `npx tsc --noEmit --incremental false` instead.
+- Preview: `.claude/launch.json` is already configured (autoPort).
+- `scripts/check-comment-only.py` proves a working-tree diff touches only
+  comment lines. Use it whenever you edit comments in bulk, so a translation
+  pass can never silently rewrite a `zh:` value.
 
-## 文件布局与所有权
+## File layout and ownership
 
 ```
-app/globals.css        全站设计系统 —— 章节作者【禁止改】
-app/layout.tsx         外壳(sidebar/toolbar/cmdk/aurora)—— 禁止改
+app/globals.css        site-wide design system — chapter authors MUST NOT edit
+app/layout.tsx         shell (sidebar / toolbar / cmdk / aurora) — do not edit
 lib/kit.tsx lib/code.tsx lib/quiz.tsx lib/problems.tsx lib/stepper.tsx
-lib/highlight.tsx lib/progress.tsx lib/curriculum.ts    共享库 —— 禁止改
-app/<ch>/page.tsx      章节主页面("use client",数据+组合)
-app/<ch>/viz.tsx       本章专属可视化组件
-app/<ch>/chapter.css   本章专属样式(page.tsx 里 import "./chapter.css")
-lib/<ch>-data.tsx      本章题单 PROBLEMS + 测验 QUIZ 数据
+lib/highlight.tsx lib/progress.tsx lib/curriculum.ts lib/i18n.tsx
+                       shared libraries — do not edit
+app/<ch>/page.tsx      chapter page ("use client"; data + composition)
+app/<ch>/viz.tsx       visualizations specific to this chapter
+app/<ch>/chapter.css   styles specific to this chapter (imported by page.tsx)
+lib/<ch>-data.tsx      this chapter's PROBLEMS + QUIZ data
 ```
 
-每章配色由 `<main className="page" data-ch="<章节id>">` 自动生效
-(色相注册在 globals.css 的 `[data-ch=…]` 段,已全部就位,勿动)。
+Each chapter's palette comes free from `<main className="page" data-ch="<id>">`
+(hues are registered in the `[data-ch=…]` block of globals.css — all present,
+leave them alone).
 
-## 组件契约(共享库 API,按此使用)
+**Every `page.tsx` must `import "./chapter.css"`.** Forgetting it is a silent
+failure: the whole chapter renders unstyled and SVG visualizations collapse to
+zero width.
+
+## Component contracts (shared library API)
+
+All user-facing props take `Loc<T>` — either a plain value or `{ en, zh }`.
+Resolve one with `const L = useL(); L(value)`, or switch inline with
+`<T en="…" zh="…" />`.
+
+### lib/i18n.tsx
+
+- `type Loc<T> = T | { en: T; zh: T }`
+- `useL()` → `L(value)` picks the current language.
+- `<T en={…} zh={…} />` works anywhere in JSX, including module-level constants.
+- `useLang()` → `{ lang, setLang }` when you need the raw `"en" | "zh"`.
 
 ### lib/kit.tsx
-- `<Hero ch="stack" title={<>栈 <span className="grad">Stack</span></>} essence={<>…</>} chips={[{id:"intuition",n:"01",label:"直觉"},…]} />`
-- `<Section id="ops" index="03" title="…" desc="…" badge={<span className="chip">…</span>}>{children}</Section>`(自带滚动淡入)
-- `<Callout tone="idea|warn|deep|story|win" title="…">{<p>…</p>}</Callout>`
-- `<BigO o="1|logn|n|nlogn|n2|2n" label="可选覆盖文字" />`
-- `<KeyPoints points={[<>…</>, …]} />`、`<ChapterFooter ch="stack" />`、`<Reveal delay={120}>…</Reveal>`
+
+- `<Hero ch="stack" title={{en: <>Stack</>, zh: <>栈</>}} essence={…} chips={[{id, n, label}]} />`
+- `<Section id="ops" index="03" title={…} desc={…} badge={…}>{children}</Section>`
+  (fades in on scroll)
+- `<Callout tone="idea|warn|deep|story|win" title={…}>{children}</Callout>`
+- `<BigO o="1|logn|n|nlogn|n2|2n" label?={…} />`
+- `<KeyPoints points={[…]} />`, `<ChapterFooter ch="stack" />`,
+  `<Reveal delay={120}>…</Reveal>`
 
 ### lib/code.tsx
-- `<CodeBlock lang="java|python|js" code={string} title? hl?={[行号]} note?={ReactNode} />`
-- `<CodeTabs title="文件名不带后缀" java={{code, note?, hl?}} python={…} js={…} />`
-  —— 切 tab 会联动全站偏好语言(顶栏也能切),**三个语言都必须写**。
 
-### lib/stepper.tsx(逐帧慢放)
-- `ArrayFrame = { cells: {v: ReactNode, state?: "lit"|"ok"|"bad"|"ghost"}[], ptrs?: {i:number,label:string}[], msg: ReactNode }`
-- `<ArrayStepper title="…" frames={ArrayFrame[]} cellW?={56} />`
-- 自由形态动画(树/图)自建组件,复用 `useStepper(total)` + `<StepControls stepper={s} step={s.step} total={n} />` + `.viz/.viz-stage/.viz-msg/.viz-ctl` 样式。
-- **「预测下一帧」模式**:`ArrayStepper` 自带,无需各章配置。学习者开启后,点「下一步」
-  先出三张候选快照(正确的下一帧 + 2 个自动派生的干扰项:过头一帧 / 指针动了数据没动 /
-  数据动了指针没动 / 指针多走一格),选完给针对性纠错(指出差在格子还是指针)并计分。
-  样式在 globals.css 第 14 段(`.pf-*`)。
-- `StepControls` 的可选参数:`onNext`(拦截前进)`nextDisabled` `playDisabled`
-  `extra`(额外控件)—— 自建动画若也想做预测题,可复用这几个口子。
+- `<CodeBlock lang="java|python|js" code={string} title? hl?={[lineNos]} note?={…} />`
+- `<CodeTabs title="filename without extension" java={{code, note?, hl?}} python={…} js={…} />`
+  — switching a tab also switches the site-wide preferred language (the toolbar
+  can too). **All three languages are required.**
+- `code` is `Loc<string>`. Comments inside the snippet are teaching content, so
+  write the snippet as `{ en, zh }`: **the two versions must be line-for-line
+  equivalent, differing only in the comments** (otherwise `hl` line numbers
+  drift between languages).
+
+### lib/stepper.tsx (frame-by-frame playback)
+
+- `ArrayFrame = { cells: {v: ReactNode, state?: "lit"|"ok"|"bad"|"ghost"}[],
+  ptrs?: {i: number, label: Loc<string>}[], msg: Loc<ReactNode> }`
+- `<ArrayStepper title={…} frames={ArrayFrame[]} cellW?={56} />`
+- Free-form animations (trees, graphs) get their own component in the chapter,
+  reusing `useStepper(total)` + `<StepControls stepper={s} step={s.step} total={n} />`
+  and the `.viz / .viz-stage / .viz-msg / .viz-ctl` styles.
+- **Predict-the-next-frame mode** ships with `ArrayStepper`; chapters configure
+  nothing. When the learner turns it on, pressing Next first offers three
+  candidate snapshots — the real next frame plus two distractors derived
+  automatically from the frame sequence (the off-by-one overshoot / pointers
+  moved but cells unchanged / cells changed but pointers unchanged / a pointer
+  one cell too far). Feedback names the axis that was wrong and a score sits in
+  the control bar. Styles: section 14 of globals.css (`.pf-*`).
+- `StepControls` accepts optional `onNext` (intercept the advance),
+  `nextDisabled`, `playDisabled` and `extra` (extra controls) — a hand-built
+  animation can reuse those hooks to offer prediction too.
 
 ### lib/quiz.tsx
-- `<Quiz ch="stack" items={QuizItem[]} />`;题型:
-  - `{type:"choice", q, opts:[…], correct:i, wrong:[undefined,…每个错误项的针对性纠错], why}`
-  - `{type:"multi", q, opts, correct:[i], missHint, extraHint, why}`
-  - `{type:"fill", q, placeholder?, answers:[字符串宽容匹配], hint, why}`
-  - **禁止通用文案**(「答案不正确」不合格),每个错误选项要解释错在哪。
+
+- `<Quiz ch="stack" items={QuizItem[]} />`. Item types:
+  - `{type: "choice", q, opts: [...], correct: i, wrong: [undefined, …per-option correction], why}`
+  - `{type: "multi", q, opts, correct: [i], missHint, extraHint, why}`
+  - `{type: "fill", q, placeholder?, answers: [strings, lenient match — include both
+    the English and Chinese spellings], hint, why}`
+  - **No generic feedback.** "Incorrect" is not acceptable; every wrong option
+    must explain what specifically is wrong with it.
 
 ### lib/problems.tsx
+
 - `<ProblemSet ch="stack" items={Problem[]} />`
-- `Problem = { lc:number, title, d:"easy"|"medium"|"hard", tags:[…], hint:一句话方向提示不剧透, key:一段话讲透最优解 }`
+- `Problem = { lc: number, title: Loc<string>, d: "easy"|"medium"|"hard",
+  tags: Loc<string>[], hint: one line pointing at the idea without spoiling it,
+  key: one paragraph that fully explains the optimal solution }`
 
-## 常用 CSS 类(globals.css 已提供)
+## Common CSS classes (provided by globals.css)
 
-布局:`.page .hero .sec .grid-2/.grid-3/.grid-4 .card(.hoverable) .card-kicker .card-title`
-文本:`.prose .dim .mono`;表格:`.table-wrap > table.t-table`
-徽章:`.chip[data-tone] .lc-badge[data-d] .big-o[data-o]`;按钮:`.btn .btn-primary .btn-sm .btn-ghost .seg>.seg-btn`
-可视化:`.viz .viz-title .viz-stage .viz-msg .viz-ctl`;
-元素:`.cell(.lit/.ok/.bad/.ghost) .cell-idx .nodec(.lit) .ptr .flow-edge`(SVG 流动虚线边)
-滑杆排版:`.bigo-slider`(在 home.css —— 章节别用,自己在 chapter.css 里写)。
+Layout: `.page .hero .sec .grid-2/.grid-3/.grid-4 .card(.hoverable) .card-kicker .card-title`
+Text: `.prose .dim .mono`; tables: `.table-wrap > table.t-table`
+Badges: `.chip[data-tone] .lc-badge[data-d] .big-o[data-o]`
+Buttons: `.btn .btn-primary .btn-sm .btn-ghost .seg > .seg-btn`
+Visualization: `.viz .viz-title .viz-stage .viz-scroll .viz-msg .viz-ctl`
+Elements: `.cell(.lit/.ok/.bad/.ghost) .cell-idx .nodec(.lit) .ptr .flow-edge`
+(animated dashed SVG edge)
+Sliders: `.bigo-slider` lives in home.css — chapters must not use it; write your
+own in `chapter.css`.
 
-## 内容标准(每章必须全部具备)
+Wrap any row of cells that can exceed the viewport in `.viz-scroll` so it scrolls
+horizontally instead of overflowing. Do not add `overflow: hidden` to a
+visualization container: labels such as `.cell-idx` and a stack's `top` marker
+sit outside the element box and would be clipped away.
 
-1. **§01 为什么需要它**:上一章结构的痛点故事引入 + 直觉类比 + 三张规则/特性卡。
-2. **§02 内存里的样子**:图解(SVG 或 div 网格),讲清与数组/指针的关系。
-3. **§03 核心操作**:每个操作「怎么做+为什么是这个复杂度」,复杂度表,配交互实验室。
-4. **§04 手写实现**:从零实现该结构(CodeTabs 三语言,逐行注释,能直接跑)。
-5. **§05 三语言对照**:内置类型/标准库 API 对照表 + 每语言的坑(note 里写)。
-6. **§06 套路与精讲**:本章 LeetCode 高频套路讲解;2-3 道精讲,每道 =
-   题意→暴力→为什么能优化→逐帧动画(ArrayStepper 或自建)→三语言题解(带高亮行)
-   →复杂度→面试追问。
-7. **§07 高频题单**:8-12 题,由易到难,tags 标套路。
-8. **§08 通关测验**:6-8 题,混合题型,每个错误选项针对性纠错。
-9. **KeyPoints**(4-6 条,有加粗重点)+ `<ChapterFooter />`。
-10. 穿插:`Callout tone="deep"` 工程现场(该结构在真实系统里的应用)、
-    `tone="warn"` 常见误区、`tone="story"` 历史/趣闻。
+## Content standard (every chapter needs all of it)
 
-语气:中文为主,术语中英双写;像给聪明的朋友讲课,不端着;
-每个数字/结论都要能回答「为什么」。
+1. **§01 why it exists**: the pain of the previous chapter's structure as a
+   story, an intuitive analogy, three rule/property cards.
+2. **§02 what it looks like in memory**: a diagram (SVG or a div grid) that makes
+   its relationship to arrays and pointers concrete.
+3. **§03 core operations**: for each one, how it works *and* why that is its
+   complexity; a complexity table; an interactive lab.
+4. **§04 implement it from scratch**: `CodeTabs` in all three languages, commented
+   line by line, actually runnable.
+5. **§05 the three languages side by side**: a table of built-in types and
+   standard-library APIs, plus the traps specific to each language (in `note`).
+6. **§06 patterns and walkthroughs**: this chapter's high-frequency LeetCode
+   patterns, then 2–3 full walkthroughs, each one: problem → brute force → why it
+   can be improved → frame-by-frame animation (`ArrayStepper` or hand-built) →
+   solutions in all three languages (with highlighted lines) → complexity →
+   the interview follow-up.
+7. **§07 problem set**: 8–12 problems, easy to hard, tagged by pattern.
+8. **§08 closing quiz**: 6–8 items, mixed types, targeted correction for every
+   wrong option.
+9. `KeyPoints` (4–6 items, with the key phrase in bold) + `<ChapterFooter />`.
+10. Sprinkled throughout: `Callout tone="deep"` for how the structure is used in
+    real systems, `tone="warn"` for common misconceptions, `tone="story"` for
+    history and trivia.
 
-## 章节 CSS 规则
+## Chapter CSS rules
 
-所有 CSS 都是全局的!`app/<ch>/chapter.css` 里的自定义类**必须带章节前缀**
-(如栈章用 `.stk-*`、堆章用 `.hp-*`),或整体套在 `[data-ch="<id>"]` 选择器下,
-避免污染其他章节。颜色一律用 `var(--acc) var(--acc-soft) var(--acc-border)
-var(--acc-ink) var(--acc-glow) var(--ok) var(--warn) var(--risk) var(--text-2)
-var(--border)` 等 token,深浅主题自动适配,禁止写死颜色。
+All CSS is global. Custom classes in `app/<ch>/chapter.css` **must carry a
+chapter prefix** (`.stk-*` for the stack, `.hp-*` for the heap, and so on) or be
+nested under `[data-ch="<id>"]`, so one chapter cannot leak into another.
 
-## 文案风格（重要，全站贯穿）
+Use the design tokens for every colour — `var(--acc) var(--acc-soft)
+var(--acc-border) var(--acc-ink) var(--acc-glow) var(--ok) var(--warn)
+var(--risk) var(--text-2) var(--border)` — so light and dark themes adapt on
+their own. Never hard-code a colour.
 
-**基调：教科书 / 技术文档式的清晰陈述。通俗 ≠ 口语化。**
-面向零基础讲得明白是目标，但语气必须专业、正式、简洁。
+## Copy style (important, applies site-wide)
 
-- **禁止**：网络用语与流行梗（「翻车」「离谱」「一把梭」「说白了」「香」「完全体」
-  「正确姿势」「甩锅」「手一抖」「玩完了」「没毛病」「血赚」「天花板」）、
-  游戏／动漫／饭圈用语（「大招」「名场面」「官配」「装备栏」「段位」）、
-  卖萌语气词（「啦」「呀」「嘛」「~」）、插科打诨式自问自答（「你猜怎么着」
-  「好问题」「其实吧」）、拿读者开玩笑（「你会哭」「用户怕是要报警」）；
-- **同样禁止** AI 腔：「值得注意的是」「综上所述」「让我们深入探讨」「赋能」；
-- **保留并鼓励**：面向零基础的通俗解释、恰当的生活类比（一摞盘子讲栈、
-  编号储物柜讲数组、餐厅点菜讲 API）—— 类比本身是好东西，问题只出在表达轻佻。
-  比喻要讲得平实；
-- 感叹号克制使用。正文强调靠加粗和措辞，不靠标点；
-- 卡片标题、章节标题不加装饰性 emoji；符号只用 ✓ ✕ → ★ 这类功能性记号；
-- 代码注释同样适用以上规则，不要用第一人称拟人（「我比栈顶暖」）；
-- 术语第一次出现时中文 + 英文双写（如「哈希表（hash table）」），之后可只用惯用形；
-- 句子可以短，但必须完整、准确。
+**Register: the clear statement of a textbook or a good piece of technical
+documentation. Accessible ≠ chatty.** Being understandable to a beginner is the
+goal, but the voice stays professional, plain and concise. This applies to both
+the English and the Chinese copy.
 
-## JSX 文案注意
+- **Not allowed**: internet slang and memes, gaming / anime / fandom vocabulary,
+  cutesy particles (in Chinese: 「啦」「呀」「嘛」「~」), comedic
+  self-questioning ("you know what? "、「你猜怎么着」「好问题」「其实吧」),
+  jokes at the reader's expense (「你会哭」).
+- **Equally not allowed**, the LLM register: "it's worth noting that", "in
+  summary", "let's dive deep into", "empower" — and in Chinese
+  「值得注意的是」「综上所述」「让我们深入探讨」「赋能」.
+- **Keep and encourage**: plain explanation aimed at beginners and well-chosen
+  everyday analogies (a stack of plates for a stack, numbered lockers for an
+  array, ordering at a restaurant for an API). The analogy itself is an asset —
+  the failure mode is only ever a flippant tone. Deliver them matter-of-factly.
+- Use exclamation marks sparingly. Emphasis comes from bold text and word
+  choice, not punctuation.
+- No decorative emoji in card titles or section titles. Symbols are functional
+  only: ✓ ✕ → ★.
+- The same rules apply to comments inside teaching code. No first-person
+  anthropomorphising ("I'm warmer than the top of the stack").
+- Sentences may be short, but they must be complete and accurate.
 
-- 正文里的引号直接用中文「」和"",不要转义英文引号;
-- 小于/大于号必须写 `&lt; &gt;`(如 sum &lt; target);
-- 代码字符串里的中文注释没问题;CodeTabs 的 code 用模板字符串,内部反引号要转义。
+## JSX notes
 
-## GitHub / 其他
+- In Chinese copy use the Chinese quotation marks 「」 and "" directly; do not
+  escape ASCII quotes.
+- `<` and `>` must be written `&lt;` and `&gt;` (e.g. `sum &lt; target`).
+- `CodeTabs` snippets are template literals — escape any backtick inside them.
+- Comments inside a snippet follow the language of the half they sit in: the
+  `en` snippet gets English comments, the `zh` snippet gets Chinese ones.
 
-- 仓库:https://github.com/renrenmimi/DataData(public,main 分支);提交/推送需用户明确要求。
-- 参考项目(外壳形式来源):../SYSDesigner ../AgentLab —— 只读参考,勿改。
+## GitHub and misc
+
+- Repo: https://github.com/renrenmimi/DataData (public, `main`).
+  Recent work goes through a feature branch → PR → merge. Commit and push only
+  when the user asks for it.
+- Reference projects (where the shell came from): `../SYSDesigner`,
+  `../AgentLab` — read-only, do not modify.

@@ -1,12 +1,17 @@
 "use client";
 
-// 第 3 章 · 链表 —— 十段式:
-// 直觉(数组插删之痛 → 只记「下一个在哪」)→ 内存里的样子(散落 + 引用)→
-// 核心操作(重点:先接后断 + O(1) 的前提)→ 手写实现(单链表 / 双向链表 / dummy)→
-// 三语言对照 → 反转·快慢指针·dummy 三大套路 + 三道精讲 → 题单 → 测验 → 要点。
+// Chapter 3 · Linked lists — ten sections:
+// intuition (the pain of array insert/delete → store only "where the next one is") →
+// what it looks like in memory (scattered nodes + references) →
+// core operations (key point: link before unlinking, and what O(1) really assumes) →
+// hand-written implementations (singly linked / doubly linked / dummy node) →
+// three-language comparison → the three patterns (reversal · fast and slow pointers ·
+// dummy node) + three walkthroughs → problem set → quiz → key points.
 //
-// 双语:所有面向学习者的文案都用 <T en zh> 或 { en, zh },英文为默认语言。
-// 代码窗的 code 写成 { en, zh } —— 两版逐行等价,只有注释不同,hl 行号才对得上。
+// Bilingual: every learner-facing string goes through <T en zh> or { en, zh },
+// with English as the default language.
+// The code prop of a code window is { en, zh } — the two versions must be line-for-line
+// equivalent and differ only in their comments, otherwise the hl line numbers drift.
 
 import Link from "next/link";
 import {
@@ -84,7 +89,7 @@ export default function LinkedListChapter() {
         chips={CHIPS}
       />
 
-      {/* ================= §01 直觉 ================= */}
+      {/* ================= §01 Intuition ================= */}
       <Section
         id="intuition"
         index="01"
@@ -268,7 +273,7 @@ export default function LinkedListChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §02 内存里的样子 ================= */}
+      {/* ================= §02 What it looks like in memory ================= */}
       <Section
         id="memory"
         index="02"
@@ -414,7 +419,7 @@ export default function LinkedListChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §03 核心操作 ================= */}
+      {/* ================= §03 Core operations ================= */}
       <Section
         id="ops"
         index="03"
@@ -686,7 +691,7 @@ export default function LinkedListChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §04 手写实现 ================= */}
+      {/* ================= §04 Building it from scratch ================= */}
       <Section
         id="impl"
         index="04"
@@ -1728,7 +1733,7 @@ var removeElements = function (head, val) {
         </Callout>
       </Section>
 
-      {/* ================= §05 三语言对照 ================= */}
+      {/* ================= §05 Three languages side by side ================= */}
       <Section
         id="langs"
         index="05"
@@ -2118,7 +2123,7 @@ function ListNode(val, next) {
         </Callout>
       </Section>
 
-      {/* ================= §06 套路与精讲 ================= */}
+      {/* ================= §06 Patterns and walkthroughs ================= */}
       <Section
         id="patterns"
         index="06"
@@ -2243,7 +2248,7 @@ function ListNode(val, next) {
           </div>
         </div>
 
-        {/* —— 精讲 A —— */}
+        {/* —— Walkthrough A —— */}
         <div className="sec-head" style={{ marginTop: 44 }}>
           <span className="sec-index">
             <T en="Walkthrough A" zh="精讲 A" />
@@ -2414,7 +2419,7 @@ function ListNode(val, next) {
           />
         </Callout>
 
-        {/* —— 精讲 B —— */}
+        {/* —— Walkthrough B —— */}
         <div className="sec-head" style={{ marginTop: 44 }}>
           <span className="sec-index">
             <T en="Walkthrough B" zh="精讲 B" />
@@ -2622,7 +2627,7 @@ function ListNode(val, next) {
           />
         </Callout>
 
-        {/* —— 精讲 C —— */}
+        {/* —— Walkthrough C —— */}
         <div className="sec-head" style={{ marginTop: 44 }}>
           <span className="sec-index">
             <T en="Walkthrough C" zh="精讲 C" />
@@ -2826,7 +2831,7 @@ function ListNode(val, next) {
         </Callout>
       </Section>
 
-      {/* ================= §07 题单 ================= */}
+      {/* ================= §07 Problem set ================= */}
       <Section
         id="problems"
         index="07"

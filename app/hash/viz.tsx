@@ -1,18 +1,20 @@
 "use client";
 
-// 第 6 章 · 哈希表的两个专属可视化:
-//  - HashLab:输入任意单词,看多项式哈希逐字符累积 → mod 桶数 → 小球落桶;
-//    预置 "Aa" / "BB" 这对同哈希单词,亲眼制造一次冲突。
-//  - CollisionLab:同一批会撞桶的单词,分别用「链地址法」和「线性探测」
-//    逐帧插入,对照两种冲突解决策略(含探测的聚集现象)。
+// Chapter 6 · The two visualizations specific to hash tables:
+//  - HashLab: type any word and watch the polynomial hash build up character by character →
+//    mod the bucket count → the ball drops into its bucket; the presets "Aa" / "BB" hash to the
+//    same value, so a collision can be produced first-hand.
+//  - CollisionLab: the same batch of colliding words is inserted frame by frame, once with
+//    separate chaining and once with linear probing, to compare the two collision-resolution
+//    strategies (probing also shows clustering).
 //
-// 双语:所有标题、旁白、按钮、图内文字都通过 <T> / useL() 切换。
+// Bilingual: every title, narration, button and figure label switches through <T> / useL().
 
 import { useState, type ReactNode } from "react";
 import { useStepper, StepControls } from "@/lib/stepper";
 import { useL, T } from "@/lib/i18n";
 
-const B = 8; // 桶数
+const B = 8; // Number of buckets
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -83,7 +85,7 @@ export function HashLab() {
     const { steps, h } = hashSteps(w);
     setChars(steps);
 
-    // 1) 逐字符累积
+    // 1) accumulate character by character
     for (let i = 0; i < steps.length; i++) {
       setCharIdx(i);
       const s = steps[i];
@@ -114,9 +116,9 @@ export function HashLab() {
       );
       await sleep(950);
     }
-    setCharIdx(steps.length); // 全部 done
+    setCharIdx(steps.length); // Everything is done
 
-    // 2) mod 桶数
+    // 2) take it modulo the bucket count
     const t = h % B;
     setAccText(
       <>
@@ -142,7 +144,7 @@ export function HashLab() {
     );
     await sleep(1200);
 
-    // 3) 落桶
+    // 3) drop into the bucket
     const occupants = buckets[t];
     const collided = occupants.length > 0;
     setHot(t);
@@ -305,8 +307,8 @@ export function HashLab() {
 
 /* ================= CollisionLab ================= */
 
-// 六个单词的「hash % 8」桶位(用 §02 的 31 进制哈希算出):
-// cat→6  dog→4  Aa→0  BB→0(撞 Aa) owl→4(撞 dog) emu→5
+// The "hash % 8" bucket of each of the six words (computed with the base-31 hash from §02):
+// cat→6  dog→4  Aa→0  BB→0 (hits Aa) owl→4 (hits dog) emu→5
 const KEYS: { w: string; b: number }[] = [
   { w: "cat", b: 6 },
   { w: "dog", b: 4 },
@@ -418,8 +420,8 @@ function buildChainFrames(): ChainFrame[] {
 
 interface ProbeFrame {
   slots: (string | null)[];
-  scan: number[]; // 探测路过(被占)的格子
-  placed: number; // 本帧最终放置位
+  scan: number[]; // Cells the probe passed over (already taken)
+  placed: number; // Where this frame finally puts it
   msg: ReactNode;
 }
 

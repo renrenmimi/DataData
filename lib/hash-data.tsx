@@ -1,9 +1,10 @@
-// 第 6 章 · 哈希表 —— 题单与测验数据(English default / 中文可切换)。
-// 题单围绕哈希三大信号(见过吗 / 配对 / 分组计数)+ 前缀和哈希 + 结构组合;
-// hint 只给方向不剧透,key 用一段话把最优解讲透。
+// Chapter 6 · Hash tables — problem set and quiz data (English default / Chinese toggle).
+// Problems center on the three hash-table signals (have I seen it? / pairing / group counting),
+// plus prefix sum with a hash table and composition with other structures;
+// hint points a direction without spoilers, key explains the optimal solution in one paragraph.
 //
-// 双语:title / tags / hint / key / q / opts / why 全部写成 { en, zh },
-// 题目标题的 en 用 LeetCode 官方英文名。
+// Bilingual: title / tags / hint / key / q / opts / why are all written as { en, zh },
+// and the en side of each problem title uses the official LeetCode English name.
 
 import type { Problem } from "@/lib/problems";
 import type { QuizItem } from "@/lib/quiz";

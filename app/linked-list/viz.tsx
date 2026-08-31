@@ -1,19 +1,21 @@
 "use client";
 
-// 第 3 章 · 链表的专属可视化:
-//  - ScatterMap:静态对比图 —— 同一批值「连片住」(数组)vs「散落住 + 引用相连」(链表)。
-//  - LinkedLab:交互实验室 —— 头插 / 按位插入 / 删除,指针改动分两步高亮;
-//    还带一个「先断后接」反面教材:亲眼看后半条链怎么丢的。
-//  - ReverseAnim(LC 206)/ CycleAnim(LC 141)/ MergeAnim(LC 21):
-//    三个逐帧 SVG 动画,复用 lib/stepper 的 useStepper + StepControls。
+// Chapter 3 · the visualizations that belong to the linked-list chapter:
+//  - ScatterMap: static comparison — the same values stored contiguously (array)
+//    vs. scattered and joined by references (linked list).
+//  - LinkedLab: interactive lab — insert at head / insert at index / delete, with
+//    pointer changes highlighted in two steps; also a counter-example that unlinks
+//    before linking, so you can watch the second half of the chain get lost.
+//  - ReverseAnim (LC 206) / CycleAnim (LC 141) / MergeAnim (LC 21):
+//    three frame-by-frame SVG animations built on useStepper + StepControls from lib/stepper.
 //
-// 双语:所有标题、旁白、按钮、SVG 文字、aria-label 都通过 <T> / useL() 切换。
+// Bilingual: every title, narration, button, SVG label and aria-label switches via <T> / useL().
 
 import { useRef, useState, type ReactNode } from "react";
 import { useStepper, StepControls } from "@/lib/stepper";
 import { useL, T } from "@/lib/i18n";
 
-/* ================= SVG 公共零件 ================= */
+/* ================= Shared SVG parts ================= */
 
 type Tone = "base" | "acc" | "ok" | "risk";
 type NodeState = "base" | "lit" | "ok" | "bad" | "ghost";
@@ -25,7 +27,8 @@ const TONE_COLOR: Record<Tone, string> = {
   risk: "var(--risk)",
 };
 
-/** 每个 SVG 各配一套四色箭头 marker(id 用 mk 前缀区分,避免全页冲突) */
+/** Each SVG gets its own set of four coloured arrow markers
+ *  (the mk prefix keeps the ids unique across the page) */
 function Defs({ mk }: { mk: string }) {
   return (
     <defs>
@@ -47,7 +50,8 @@ function Defs({ mk }: { mk: string }) {
   );
 }
 
-/** 带箭头的边:tone 决定颜色,flow 加流动虚线动画,dashed 表示「将被剪断」 */
+/** An arrowed edge: tone picks the colour, flow adds the moving-dash
+ *  animation, dashed marks an edge that is about to be cut */
 function Edge({
   d,
   mk,
@@ -99,7 +103,7 @@ const NODE_TEXT: Record<NodeState, string> = {
   ghost: "var(--text-3)",
 };
 
-/** 「值 | next」两格式节点盒(链表标准画法) */
+/** A two-slot "value | next" node box, the standard way to draw a linked-list node */
 function NodeBox({
   x,
   y,
@@ -111,7 +115,7 @@ function NodeBox({
   y: number;
   v: ReactNode;
   state?: NodeState;
-  /** next 槽里画什么:默认小圆点;"?" 表示悬空 */
+  /** What to draw in the next slot: a small dot by default; "?" means dangling */
   nextMark?: string;
 }) {
   return (
@@ -164,7 +168,7 @@ function NodeBox({
   );
 }
 
-/** 圆形节点(反转/判环动画用) */
+/** Circular node, used by the reversal and cycle-detection animations */
 function NodeDot({
   cx,
   cy,
@@ -200,7 +204,7 @@ function NodeDot({
   );
 }
 
-/** SVG 里的指针标签(prev / cur / slow …) */
+/** A pointer label inside the SVG (prev / cur / slow …) */
 function PtrLabel({
   x,
   y,
@@ -228,14 +232,15 @@ function PtrLabel({
   );
 }
 
-/* ================= ScatterMap:两种住法 ================= */
+/* ================= ScatterMap: two ways of laying values out ================= */
 
 export function ScatterMap() {
   const mk = "llscat";
   const L = useL();
-  // 链表节点的「随机」地址与位置 —— 故意打乱顺序,强调不连续
-  // 链条顺序是 nodes[0] → nodes[2] → nodes[1],所以值必须按 7 → 2 → 9 分配,
-  // 地址按 2096 → 3120 → 1432 —— 与下方旁白里的两串数字一一对应。
+  // "Random" addresses and positions for the linked-list nodes — deliberately out of
+  // order to stress that they are not contiguous. The chain runs nodes[0] → nodes[2] →
+  // nodes[1], so the values must be assigned as 7 → 2 → 9 and the addresses as
+  // 2096 → 3120 → 1432, matching the two number sequences in the narration below.
   const nodes = [
     { v: 7, addr: 2096, x: 60, y: 150 },
     { v: 9, addr: 1432, x: 420, y: 210 },
@@ -259,7 +264,7 @@ export function ScatterMap() {
         })}
       >
         <Defs mk={mk} />
-        {/* ---- 上半:数组,连片小区 ---- */}
+        {/* ---- Top half: an array, one contiguous block ---- */}
         <text x={20} y={30} fontSize={12} fill="var(--text-2)" fontWeight={600}>
           <T en="Array: one contiguous block" zh="数组:一整块连续内存" />
         </text>
@@ -300,14 +305,14 @@ export function ScatterMap() {
           <T en="← base + i × 4" zh="← 首地址 + i × 4" />
         </text>
 
-        {/* ---- 下半:链表,散落各处 ---- */}
+        {/* ---- Bottom half: a linked list, scattered around ---- */}
         <text x={20} y={136} fontSize={12} fill="var(--text-2)" fontWeight={600}>
           <T
             en="Linked list: any address, joined by next"
             zh="链表:地址任意,靠 next 引用相连"
           />
         </text>
-        {/* head 标签指向第一个节点 */}
+        {/* The head label points at the first node */}
         <text x={20} y={175} fontSize={11.5} fontWeight={700} fill="var(--acc)">
           head
         </text>
@@ -326,7 +331,7 @@ export function ScatterMap() {
             </text>
           </g>
         ))}
-        {/* 7 → 2:从 next 槽出发,弯着找到远处的家 */}
+        {/* 7 → 2: leave from the next slot and curve away to a distant address */}
         <Edge
           mk={mk}
           tone="acc"
@@ -380,7 +385,7 @@ export function ScatterMap() {
   );
 }
 
-/* ================= LinkedLab:插入 / 删除实验室 ================= */
+/* ================= LinkedLab: insert / delete lab ================= */
 
 type Scene =
   | { kind: "idle" }
@@ -388,7 +393,7 @@ type Scene =
   | { kind: "del"; step: 1 | 2; k: number }
   | { kind: "bad"; step: 1 | 2; k: number; v: number };
 
-const LAB_Y = 118; // 主链所在行
+const LAB_Y = 118; // The row the main chain sits on
 const labX = (i: number) => 74 + i * 108;
 
 export function LinkedLab() {
@@ -647,13 +652,13 @@ export function LinkedLab() {
     setBusy(false);
   };
 
-  /* ---- 渲染 ---- */
+  /* ---- Render ---- */
 
   const newX = (k: number) => (k === 0 ? labX(0) : labX(k - 1) + 54);
   const NEW_Y = 18;
 
   const s = scene;
-  // 被「丢失」的节点区间(反面教材 step2)
+  // Range of nodes that have been lost (step 2 of the counter-example)
   const lostFrom = s.kind === "bad" && s.step === 2 ? s.k : n;
 
   const nodeState = (i: number): NodeState => {
@@ -663,10 +668,10 @@ export function LinkedLab() {
     return "base";
   };
 
-  // 普通相邻边 i → i+1 是否照常画
+  // Whether the ordinary adjacent edge i → i+1 is still drawn
   const edgeVisible = (i: number) => {
     if (s.kind === "del" && s.step === 2 && (i === s.k - 1 || i === s.k)) return i !== s.k - 1;
-    if (s.kind === "bad" && i === s.k - 1) return false; // 先断:这条边直接没了
+    if (s.kind === "bad" && i === s.k - 1) return false; // Unlink first: this edge is simply gone
     return true;
   };
   const edgeDashed = (i: number) =>
@@ -694,11 +699,11 @@ export function LinkedLab() {
       >
         <Defs mk={mk} />
 
-        {/* head 标签 */}
+        {/* The head label */}
         <text x={12} y={LAB_Y + 27} fontSize={11.5} fontWeight={700} fill="var(--acc)">
           head
         </text>
-        {/* head 箭头:头插 step2 时指向新节点,删头 step1+ 时指向第 1 个节点 */}
+        {/* The head arrow: it points at the new node on insert step 2, and at node 1 from delete step 1 onwards */}
         {s.kind === "ins" && s.k === 0 && s.step === 2 ? (
           <>
             <Edge mk={mk} tone="ok" flow d={`M 46 ${LAB_Y + 14} Q 52 ${NEW_Y + 40} ${newX(0) - 8} ${NEW_Y + 26}`} />
@@ -713,12 +718,12 @@ export function LinkedLab() {
           <Edge mk={mk} tone="acc" d={`M 46 ${LAB_Y + 22} L ${labX(0) - 8} ${LAB_Y + 22}`} />
         )}
 
-        {/* 主链节点 */}
+        {/* Nodes of the main chain */}
         {values.map((v, i) => (
           <NodeBox key={i} x={labX(i)} y={LAB_Y} v={v} state={nodeState(i)} />
         ))}
 
-        {/* 相邻边 */}
+        {/* Edges between neighbours */}
         {values.map((_, i) => {
           if (i === n - 1 || !edgeVisible(i)) return null;
           const risky = lostFrom <= i;
@@ -732,7 +737,7 @@ export function LinkedLab() {
             />
           );
         })}
-        {/* 尾节点 → ∅ */}
+        {/* Tail node → ∅ */}
         <Edge
           mk={mk}
           tone={lostFrom <= n - 1 ? "risk" : "base"}
@@ -742,7 +747,7 @@ export function LinkedLab() {
           ∅
         </text>
 
-        {/* 删除的绕行边 */}
+        {/* The bypass edge of a deletion */}
         {s.kind === "del" && s.k > 0 && (
           <Edge
             mk={mk}
@@ -752,7 +757,7 @@ export function LinkedLab() {
           />
         )}
 
-        {/* 插入:漂浮的新节点 */}
+        {/* Insertion: the new node, still floating */}
         {(s.kind === "ins" || s.kind === "bad") && (
           <>
             <NodeBox
@@ -773,7 +778,7 @@ export function LinkedLab() {
             </text>
           </>
         )}
-        {/* 插入 step1:newNode.next → 后继 */}
+        {/* Insert step 1: newNode.next → the successor */}
         {s.kind === "ins" && (
           <Edge
             mk={mk}
@@ -786,7 +791,7 @@ export function LinkedLab() {
             }
           />
         )}
-        {/* 插入 step2:前驱 → newNode */}
+        {/* Insert step 2: the predecessor → newNode */}
         {s.kind === "ins" && s.step === 2 && s.k > 0 && (
           <Edge
             mk={mk}
@@ -795,7 +800,7 @@ export function LinkedLab() {
             d={`M ${labX(s.k - 1) + 54} ${LAB_Y + 14} Q ${labX(s.k - 1) + 60} ${NEW_Y + 58} ${newX(s.k) - 8} ${NEW_Y + 30}`}
           />
         )}
-        {/* 反面教材:前驱 → newNode(过早!) */}
+        {/* The counter-example: the predecessor → newNode, done too early */}
         {s.kind === "bad" && (
           <Edge
             mk={mk}
@@ -805,7 +810,7 @@ export function LinkedLab() {
           />
         )}
 
-        {/* 位置游标 */}
+        {/* Position cursor */}
         {s.kind === "idle" && (
           <text
             x={labX(p) + 32}
@@ -849,17 +854,19 @@ export function LinkedLab() {
   );
 }
 
-/* ================= ReverseAnim:LC 206 三指针反转 ================= */
+/* ================= ReverseAnim: LC 206 three-pointer reversal ================= */
 
-// 每帧:各节点箭头方向(right / left / lnull=指向左端∅)、指针位置、已反转集合
+// Per frame: the direction of every node's arrow (right / left / lnull = pointing
+// at the left ∅), the pointer positions, and the set of already-reversed nodes
 interface RevFrame {
-  // arrows[i]:节点 i 的出边指向哪 —— i+1(right)、i-1(left)、左端 ∅(lnull)、右端 ∅(rnull)
+  // arrows[i]: where node i's outgoing edge points — i+1 (right), i-1 (left),
+  // the left ∅ (lnull), or the right ∅ (rnull)
   arrows: ("right" | "left" | "lnull" | "rnull")[];
-  litArrow?: number; // 本帧刚改动的箭头(高亮)
-  prev: number; // -1 = 左端 ∅
-  cur: number; // 4 = 右端 ∅(越过末尾)
-  nxt?: number; // undefined = 不显示;4 = 右端 ∅
-  done: number[]; // 已反转完成的节点(绿色)
+  litArrow?: number; // The arrow this frame just changed (highlighted)
+  prev: number; // -1 = the ∅ at the left end
+  cur: number; // 4 = the ∅ at the right end (past the last node)
+  nxt?: number; // undefined = hidden; 4 = the ∅ at the right end
+  done: number[]; // Nodes already reversed (green)
   msg: ReactNode;
 }
 
@@ -1069,7 +1076,7 @@ export function ReverseAnim() {
   const L = useL();
   const st = useStepper(REV_FRAMES.length, 1600);
   const f = REV_FRAMES[st.step];
-  const X = (i: number) => 116 + i * 112; // 节点圆心
+  const X = (i: number) => 116 + i * 112; // Centre of the node
   const Y = 84;
   const LNULL = 38;
   const RNULL = X(3) + 84;
@@ -1100,14 +1107,14 @@ export function ReverseAnim() {
           })}
         >
           <Defs mk={mk} />
-          {/* 左右两端的 ∅ */}
+          {/* The ∅ at each end */}
           <text x={LNULL} y={Y + 5} textAnchor="middle" fontSize={15} fill="var(--text-3)">
             ∅
           </text>
           <text x={RNULL} y={Y + 5} textAnchor="middle" fontSize={15} fill="var(--text-3)">
             ∅
           </text>
-          {/* 边:right 走上弧,left 走下弧 */}
+          {/* Edges: right takes the upper arc, left the lower */}
           {f.arrows.map((dir, i) => {
             const lit = f.litArrow === i;
             const tone: Tone = lit ? "acc" : f.done.includes(i) ? "ok" : "base";
@@ -1122,7 +1129,7 @@ export function ReverseAnim() {
             if (!d) return null;
             return <Edge key={i} mk={mk} tone={tone} flow={lit} d={d} />;
           })}
-          {/* 节点 */}
+          {/* Nodes */}
           {[1, 2, 3, 4].map((v, i) => (
             <NodeDot
               key={i}
@@ -1132,7 +1139,7 @@ export function ReverseAnim() {
               state={f.cur === i ? "lit" : f.done.includes(i) ? "ok" : "base"}
             />
           ))}
-          {/* 指针标签(同位置的错开叠放) */}
+          {/* Pointer labels (stacked when they share a position) */}
           {ptrs.map((pt) => {
             const same = ptrs.filter((o) => o.at === pt.at);
             const order = same.findIndex((o) => o.label === pt.label);
@@ -1156,7 +1163,7 @@ export function ReverseAnim() {
   );
 }
 
-/* ================= CycleAnim:LC 141 快慢指针判环 ================= */
+/* ================= CycleAnim: LC 141 cycle detection with fast and slow pointers ================= */
 
 interface CycFrame {
   slow: number;
@@ -1304,11 +1311,11 @@ export function CycleAnim() {
           })}
         >
           <Defs mk={mk} />
-          {/* 直线边 1→2→3→4→5 */}
+          {/* The straight edges 1→2→3→4→5 */}
           {[0, 1, 2, 3].map((i) => (
             <Edge key={i} mk={mk} d={`M ${X(i) + 23} ${Y} L ${X(i + 1) - 25} ${Y}`} />
           ))}
-          {/* 回环边 5 → 3 */}
+          {/* The back edge 5 → 3 */}
           <Edge
             mk={mk}
             tone="acc"
@@ -1318,7 +1325,7 @@ export function CycleAnim() {
           <text x={(X(4) + X(2)) / 2} y={Y + 86} textAnchor="middle" fontSize={10.5} fill="var(--acc)">
             <T en="5.next points back to 3" zh="5.next 指回 3 —— 环!" />
           </text>
-          {/* 节点 */}
+          {/* Nodes */}
           {[1, 2, 3, 4, 5].map((v, i) => (
             <NodeDot
               key={i}
@@ -1328,7 +1335,7 @@ export function CycleAnim() {
               state={f.meet && f.slow === i ? "ok" : f.slow === i || f.fast === i ? "lit" : "base"}
             />
           ))}
-          {/* 慢指针 / 快指针 */}
+          {/* Slow pointer / fast pointer */}
           <text x={X(f.slow) - (f.slow === f.fast ? 20 : 0)} y={Y - 32} textAnchor="middle" fontSize={11} fontWeight={700} fill="var(--ok)">
             slow
           </text>
@@ -1350,10 +1357,10 @@ export function CycleAnim() {
   );
 }
 
-/* ================= MergeAnim:LC 21 dummy 合并 ================= */
+/* ================= MergeAnim: LC 21 merge with a dummy node ================= */
 
 interface MrgFrame {
-  i: number; // l1 已消费到的下标(即下一个候选)
+  i: number; // How far l1 has been consumed (i.e. the next candidate)
   j: number;
   res: { v: number; src: "a" | "b" }[];
   msg: ReactNode;
@@ -1517,7 +1524,7 @@ export function MergeAnim() {
   const st = useStepper(MRG_FRAMES.length, 1700);
   const f = MRG_FRAMES[st.step];
   const rowX = (k: number) => 150 + k * 92;
-  const resX = (k: number) => 20 + k * 90; // resX(0) 是 dummy,之后每格 90
+  const resX = (k: number) => 20 + k * 90; // resX(0) is the dummy; every slot after it is 90 apart
   const Y1 = 22;
   const Y2 = 82;
   const YR = 152;
@@ -1541,7 +1548,7 @@ export function MergeAnim() {
           })}
         >
           <Defs mk={mk} />
-          {/* l1 行 */}
+          {/* The l1 row */}
           <text x={14} y={Y1 + 27} fontSize={11.5} fontWeight={700} fill="var(--text-2)">
             l1
           </text>
@@ -1561,7 +1568,7 @@ export function MergeAnim() {
           )}
           {f.i < L1.length && <PtrLabel x={rowX(f.i) + 32} y={Y1 + 60} label="l1" />}
 
-          {/* l2 行 */}
+          {/* The l2 row */}
           <text x={14} y={Y2 + 27} fontSize={11.5} fontWeight={700} fill="var(--text-2)">
             l2
           </text>
@@ -1581,7 +1588,7 @@ export function MergeAnim() {
           )}
           {f.j < L2.length && <PtrLabel x={rowX(f.j) + 32} y={Y2 + 60} label="l2" />}
 
-          {/* 结果行:dummy + 已摘下的节点 */}
+          {/* The result row: the dummy plus the nodes taken so far */}
           <g>
             <rect
               x={20}
@@ -1601,7 +1608,7 @@ export function MergeAnim() {
           {f.res.map((r, k) => (
             <NodeBox key={k} x={resX(k + 1)} y={YR} v={r.v} state={k === f.res.length - 1 ? "ok" : "base"} />
           ))}
-          {/* 结果行的边(dummy → 第一个 → …) */}
+          {/* Edges of the result row (dummy → first → …) */}
           {f.res.map((_, k) => (
             <Edge
               key={k}

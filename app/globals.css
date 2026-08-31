@@ -1,21 +1,21 @@
 /* ============================================================
-   DataData · 看得见的数据结构 —— 设计系统
+   DataData · Data structures you can see — design system
    ------------------------------------------------------------
-   1. 设计 token(深色默认 / 浅色)
-   2. 章节主题色系统:[data-ch] 用 --hue 驱动整章配色
-   3. 基础与排版
-   4. 极光背景
-   5. 工作台外壳(侧栏 / 工具条 / 内容区)
-   6. 命令面板
-   7. 页面原语:hero / 章节段 / 卡片 / 提示框 / 表格 / 徽章
-   8. 代码窗口(三语言 Tabs + 语法高亮 token)
-   9. Quiz / 题单
-   10. 可视化通用(舞台 / 单元格 / 节点 / 指针 / 控制条)
-   11. 要点卡 / 章节页脚
-   12. 动效与响应式
+   1. Design tokens (dark by default / light)
+   2. Per-chapter theming: [data-ch] drives the whole palette through --hue
+   3. Base and typography
+   4. Aurora background
+   5. Workbench shell (sidebar / toolbar / content area)
+   6. Command palette
+   7. Page primitives: hero / section / card / callout / table / badge
+   8. Code window (three-language tabs + syntax highlight tokens)
+   9. Quiz / problem set
+   10. Shared visualization parts (stage / cell / node / pointer / controls)
+   11. Key-points card / chapter footer
+   12. Motion and responsive rules
    ============================================================ */
 
-/* ---------- 1. 设计 token ---------- */
+/* ---------- 1. Design tokens ---------- */
 
 :root,
 [data-theme="dark"] {
@@ -37,7 +37,7 @@
     0 16px 48px rgba(0, 0, 0, 0.42);
   --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.3);
 
-  /* 章节色的明度/彩度参数(深色下更亮更荧光) */
+  /* Lightness and chroma of the chapter colour (brighter, more neon in dark) */
   --acc-l: 76%;
   --acc-c: 0.15;
   --acc-strong-l: 68%;
@@ -52,14 +52,14 @@
   --info: #7ab5f5;
   --info-bg: rgba(122, 181, 245, 0.1);
 
-  /* 代码窗口(两种主题都保持深色终端感) */
+  /* Code window: both themes keep the dark-terminal feel */
   --code-bg: #0a0d16;
   --code-bar: #0e1220;
   --code-text: #dde3f2;
   --code-ln: rgba(220, 226, 244, 0.22);
   --code-hl: rgba(255, 255, 255, 0.05);
 
-  /* 语法高亮 */
+  /* Syntax highlighting */
   --tk-kw: #c792ea;
   --tk-str: #a8d98a;
   --tk-num: #f2a76f;
@@ -125,12 +125,12 @@
   --grid-o: 0.5;
 }
 
-/* ---------- 2. 章节主题色 ----------
-   每个章节页的 <main data-ch> 或任何容器设置 --hue,
-   下面的派生色让整章的按钮/徽章/发光/图形全部换色。 */
+/* ---------- 2. Per-chapter colour ----------
+   Any container — normally a chapter's <main data-ch> — sets --hue, and the
+   derived values below recolour every button, badge, glow and graphic. */
 
 :root {
-  --hue: 292; /* 默认品牌紫 */
+  --hue: 292; /* default brand purple */
   --hue2: 210;
 }
 
@@ -151,7 +151,7 @@
   --acc-ink: oklch(from var(--acc) calc(l - 0.06) c h);
 }
 
-/* 章节色相注册表(与 lib/curriculum.ts 的 hue 一致) */
+/* Chapter hue registry (kept in sync with the hues in lib/curriculum.ts) */
 [data-ch="home"]        { --hue: 292; --hue2: 200; }
 [data-ch="array"]       { --hue: 196; --hue2: 250; }
 [data-ch="string"]      { --hue: 82;  --hue2: 140; }
@@ -168,7 +168,7 @@
 [data-ch="advanced"]    { --hue: 22;  --hue2: 55; }
 [data-ch="atlas"]       { --hue: 292; --hue2: 160; }
 
-/* ---------- 3. 基础与排版 ---------- */
+/* ---------- 3. Base and typography ---------- */
 
 * {
   box-sizing: border-box;
@@ -272,7 +272,7 @@ button {
   color: var(--text-2);
 }
 
-/* ---------- 4. 极光背景 ---------- */
+/* ---------- 4. Aurora background ---------- */
 
 .aurora {
   position: fixed;
@@ -335,14 +335,14 @@ button {
   to   { transform: translate3d(8vmax, -6vmax, 0) scale(1.1); }
 }
 
-/* ---------- 5. 工作台外壳 ---------- */
+/* ---------- 5. Workbench shell ---------- */
 
 .shell {
   display: flex;
   min-height: 100dvh;
 }
 
-/* — 侧栏 — */
+/* — Sidebar — */
 
 .sidebar {
   position: sticky;
@@ -523,7 +523,7 @@ html[data-sidebar="collapsed"] .sidebar {
   transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* — 主区 — */
+/* — Main column — */
 
 .shell-main {
   flex: 1;
@@ -608,7 +608,7 @@ html[data-sidebar="collapsed"] .sidebar {
   display: none;
 }
 
-/* ---------- 6. 命令面板 ---------- */
+/* ---------- 6. Command palette ---------- */
 
 .cmdk-overlay {
   position: fixed;
@@ -685,14 +685,14 @@ html[data-sidebar="collapsed"] .sidebar {
   font-size: 13.5px;
 }
 
-/* ---------- 7. 页面原语 ---------- */
+/* ---------- 7. Page primitives ---------- */
 
 .page {
   max-width: 1020px;
   margin: 0 auto;
 }
 
-/* — 章节 hero — */
+/* — Chapter hero — */
 
 .hero {
   position: relative;
@@ -760,7 +760,7 @@ html[data-sidebar="collapsed"] .sidebar {
   font-weight: 600;
 }
 
-/* 巨型章节编号水印 */
+/* Oversized chapter-number watermark */
 .hero-watermark {
   position: absolute;
   top: -12px;
@@ -777,7 +777,7 @@ html[data-sidebar="collapsed"] .sidebar {
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  /* 左下(靠近正文一侧)淡出,消除与 essence 的视觉打架 */
+  /* Fade out towards the bottom left, so it stops competing with the essence text */
   -webkit-mask-image: linear-gradient(215deg, #000 34%, transparent 70%);
   mask-image: linear-gradient(215deg, #000 34%, transparent 70%);
   pointer-events: none;
@@ -785,7 +785,7 @@ html[data-sidebar="collapsed"] .sidebar {
   z-index: -1;
 }
 
-/* hero 内导航 chips */
+/* In-hero navigation chips */
 .hero-nav {
   display: flex;
   flex-wrap: wrap;
@@ -820,7 +820,7 @@ html[data-sidebar="collapsed"] .sidebar {
   box-shadow: 0 4px 16px var(--acc-glow);
 }
 
-/* — 章节段 — */
+/* — Chapter section — */
 
 .sec {
   margin: 64px 0;
@@ -898,7 +898,7 @@ li code {
   white-space: nowrap;
 }
 
-/* 窄屏:长行内代码允许折行,避免撑破卡片/正文 */
+/* Narrow screens: let long inline code wrap so it cannot burst a card or the prose */
 @media (max-width: 640px) {
   .prose code,
   .callout code,
@@ -911,7 +911,7 @@ li code {
   }
 }
 
-/* — 卡片与网格 — */
+/* — Cards and grids — */
 
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
@@ -968,7 +968,7 @@ li code {
   margin-top: 8px;
 }
 
-/* — 提示框 — */
+/* — Callouts — */
 
 .callout {
   display: grid;
@@ -1013,7 +1013,7 @@ li code {
   );
 }
 
-/* — 表格 — */
+/* — Tables — */
 
 .table-wrap {
   border-radius: 16px;
@@ -1065,7 +1065,7 @@ li code {
   color: var(--text);
 }
 
-/* — 徽章与 chips — */
+/* — Badges and chips — */
 
 .chip {
   display: inline-flex;
@@ -1119,7 +1119,7 @@ li code {
 .lc-badge[data-d="medium"] { color: var(--warn); background: var(--warn-bg); border: 1px solid color-mix(in oklab, var(--warn) 35%, transparent); }
 .lc-badge[data-d="hard"]   { color: var(--risk); background: var(--risk-bg); border: 1px solid color-mix(in oklab, var(--risk) 35%, transparent); }
 
-/* — 按钮 — */
+/* — Buttons — */
 
 .btn {
   display: inline-flex;
@@ -1195,7 +1195,7 @@ li code {
   border-radius: 10px;
 }
 
-/* 分段控制器 */
+/* Segmented control */
 .seg {
   display: inline-flex;
   padding: 3px;
@@ -1228,7 +1228,7 @@ li code {
   box-shadow: inset 0 0 0 1px var(--acc-border);
 }
 
-/* ---------- 8. 代码窗口 ---------- */
+/* ---------- 8. Code window ---------- */
 
 .codewin {
   border-radius: 16px;
@@ -1347,7 +1347,7 @@ li code {
 
 .codewin-note b { color: rgba(240, 244, 255, 0.9); }
 
-/* 语法 token */
+/* Syntax tokens */
 .tk-kw   { color: var(--tk-kw); }
 .tk-str  { color: var(--tk-str); }
 .tk-num  { color: var(--tk-num); }
@@ -1356,7 +1356,7 @@ li code {
 .tk-type { color: var(--tk-type); }
 .tk-op   { color: var(--tk-op); }
 
-/* ---------- 9. Quiz / 题单 ---------- */
+/* ---------- 9. Quiz / problem set ---------- */
 
 .quiz {
   display: flex;
@@ -1558,7 +1558,7 @@ li code {
   -webkit-text-fill-color: transparent;
 }
 
-/* — 题单 — */
+/* — Problem set — */
 
 .plist {
   display: flex;
@@ -1685,7 +1685,7 @@ li code {
   margin-top: 12px;
 }
 
-/* ---------- 10. 可视化通用 ---------- */
+/* ---------- 10. Shared visualization parts ---------- */
 
 .viz {
   border-radius: 20px;
@@ -1701,8 +1701,9 @@ li code {
   padding: 22px;
   margin: 20px 0;
   position: relative;
-  /* 不用 overflow:hidden —— 圆角背景由 border-radius 裁;
-     节点标签 / top 标注 / tooltip 等可外溢,不被切掉 */
+  /* No overflow:hidden — border-radius already clips the rounded background,
+     and node labels, a stack's top marker and tooltips must be free to
+     overhang instead of being cut off */
 }
 
 .viz-title {
@@ -1716,7 +1717,9 @@ li code {
   margin-bottom: 16px;
 }
 
-/* 标题文字块占满可用宽度,把并排的 seg 切换挤到下一行(窄屏防止标题被压成竖排) */
+/* The title takes the available width and pushes an adjacent seg control onto
+   the next line, so a narrow screen cannot squeeze the title into one
+   character per line */
 .viz-title > .seg {
   flex: 0 0 auto;
 }
@@ -1738,9 +1741,11 @@ li code {
   padding: 10px 0;
 }
 
-/* 横向可滚舞台:内容窄则居中,内容宽于视口则从左起可横滑(修复窄屏逐帧行溢出)。
-   overflow-x:auto 会把 overflow-y 也算成 auto,故用底部 padding 容纳 cell-idx 下标
-   (bottom:-22px)与指针标签,避免它们被裁。 */
+/* Horizontally scrollable stage: narrow content is centred, content wider than
+   the viewport scrolls from the left (this is what stops a frame row from
+   overflowing on a phone). Note that overflow-x:auto makes overflow-y compute
+   to auto as well, so the bottom padding — not visible overflow — is what keeps
+   the .cell-idx labels (bottom: -22px) and pointer labels from being clipped. */
 .viz-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -1775,7 +1780,7 @@ li code {
 
 .viz-msg b { color: var(--acc-ink); }
 
-/* 数组单元格 / 通用节点 */
+/* Array cell / generic node */
 .cell {
   width: 52px;
   height: 52px;
@@ -1827,7 +1832,7 @@ li code {
   font-family: var(--font-mono);
 }
 
-/* 圆形节点(链表/树/图) */
+/* Round node (linked list / tree / graph) */
 .nodec {
   width: 48px;
   height: 48px;
@@ -1849,7 +1854,7 @@ li code {
   box-shadow: 0 0 16px var(--acc-glow);
 }
 
-/* 指针标签(i / j / slow / fast) */
+/* Pointer label (i / j / slow / fast) */
 .ptr {
   font-family: var(--font-mono);
   font-size: 11px;
@@ -1866,7 +1871,7 @@ li code {
   font-size: 8px;
 }
 
-/* SVG 里的动画描边(流动的边) */
+/* Animated stroke inside SVG (a flowing edge) */
 .flow-edge {
   stroke-dasharray: 6 6;
   animation: dash-flow 0.9s linear infinite;
@@ -1876,7 +1881,7 @@ li code {
   to { stroke-dashoffset: -12; }
 }
 
-/* ---------- 11. 要点卡 / 章节页脚 ---------- */
+/* ---------- 11. Key-points card / chapter footer ---------- */
 
 .kp {
   border-radius: 20px;
@@ -1989,7 +1994,7 @@ li code {
   margin: 0 6px;
 }
 
-/* ---------- 12. 动效与响应式 ---------- */
+/* ---------- 12. Motion and responsive rules ---------- */
 
 .reveal {
   opacity: 0;
@@ -2043,13 +2048,14 @@ li code {
 }
 
 @media (max-width: 760px) {
-  /* 窄屏:面包屑只留章节名,语言切换收纳进内容页顶栏空间 */
+  /* Narrow screens: the breadcrumb keeps only the chapter name */
   .tb-crumb > span:first-child,
   .tb-crumb .sep {
     display: none;
   }
 
-  /* 窄屏优先保留「界面语言」,收起「偏好代码语言」(代码窗口自带 tab 可切) */
+  /* Narrow screens keep the UI-language switch and drop the preferred-code-language
+     one, since every code window has its own tabs */
   .toolbar .seg.tb-codelang {
     display: none;
   }
@@ -2123,10 +2129,10 @@ li code {
 }
 
 /* ============================================================
-   13. UI 2.0 精修增补(细节密度层)
+   13. UI 2.0 refinements (the detail-density layer)
    ============================================================ */
 
-/* — 代码窗:顶栏发丝渐变线 + 行号分隔 + 行 hover — */
+/* — Code window: hairline gradient under the bar, gutter rule, row hover — */
 .codewin-bar {
   position: relative;
 }
@@ -2156,7 +2162,7 @@ li code {
   background: var(--code-hl);
 }
 
-/* — 可视化舞台:点阵底纹(伪元素,不影响内容) — */
+/* — Visualization stage: dotted texture (a pseudo-element, never in the way) — */
 .viz-stage {
   position: relative;
 }
@@ -2185,7 +2191,7 @@ li code {
   z-index: 1;
 }
 
-/* — 控制条:玻璃化 — */
+/* — Control bar: glass finish — */
 .viz-ctl {
   margin-top: 16px;
   padding: 11px 14px;
@@ -2197,7 +2203,7 @@ li code {
   -webkit-backdrop-filter: blur(10px);
 }
 
-/* — 题单:左缘难度色条 — */
+/* — Problem set: difficulty colour bar on the left edge — */
 .prob {
   position: relative;
 }
@@ -2226,7 +2232,7 @@ li code {
   opacity: 1;
 }
 
-/* — 表格:表头字距 + 行 hover 左缘光条 — */
+/* — Tables: header letter-spacing, lit left edge on row hover — */
 .t-table th {
   letter-spacing: 0.08em;
 }
@@ -2234,7 +2240,7 @@ li code {
   box-shadow: inset 2px 0 0 var(--acc);
 }
 
-/* — 侧栏:当前项左缘竖光条 — */
+/* — Sidebar: vertical lit bar on the current item — */
 .side-link.active::before {
   content: "";
   position: absolute;
@@ -2248,7 +2254,7 @@ li code {
   box-shadow: 0 0 8px oklch(var(--acc-l) var(--acc-c) var(--hue) / 0.6);
 }
 
-/* — Hero:眉线入场动画 + 渐变标题缓慢流动 — */
+/* — Hero: the eyebrow rule draws itself in, the gradient title drifts slowly — */
 .hero-eyebrow::before {
   animation: eyebrow-line 0.9s var(--ease-spring) both;
 }
@@ -2276,16 +2282,16 @@ li code {
   }
 }
 
-/* — 段落编号呼吸微光 — */
+/* — Section number: a soft glow — */
 .sec-index {
   text-shadow: 0 0 16px var(--acc-glow);
 }
 
 /* ============================================================
-   14. 预测下一帧(ArrayStepper 的 predict 模式)
+   14. Predict the next frame (ArrayStepper's predict mode)
    ============================================================ */
 
-/* 控制条里的开关 */
+/* The toggle in the control bar */
 .pf-toggle.on {
   border-color: var(--acc-border);
   background: var(--acc-soft);
@@ -2303,7 +2309,7 @@ li code {
   padding: 3px 10px;
 }
 
-/* 面板 */
+/* Panel */
 .pf-panel {
   margin-top: 14px;
   padding: 16px 18px;
@@ -2350,7 +2356,7 @@ li code {
   flex: 0 0 auto;
 }
 
-/* 选项:自适应铺开,窄屏自动堆叠 */
+/* Options: they lay themselves out and stack on a narrow screen */
 .pf-opts {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
@@ -2430,7 +2436,7 @@ li code {
   color: #fff;
 }
 
-/* 迷你快照 */
+/* Mini snapshot */
 .pf-board {
   display: flex;
   flex-direction: column;
@@ -2440,7 +2446,8 @@ li code {
 
 .pf-row {
   display: grid;
-  /* 列宽已含间距(cellW),格子自身取 cellW-3 形成视觉间隙,这里不再叠加 gap */
+  /* The column width already includes the spacing (cellW); each cell takes
+     cellW-3 to create the visible gap, so no gap is added on top */
   gap: 0;
 }
 
@@ -2463,13 +2470,13 @@ li code {
   transition: none;
 }
 
-/* .cell.lit 默认会上浮 4px,迷你棋盘里不需要 */
+/* .cell.lit normally lifts 4px; a mini board does not want that */
 .pf-board .cell.lit {
   transform: none;
   box-shadow: 0 0 0 1px var(--acc), 0 0 10px var(--acc-glow);
 }
 
-/* 反馈 */
+/* Feedback */
 .pf-feedback {
   display: flex;
   align-items: center;

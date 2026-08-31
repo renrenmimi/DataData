@@ -1,7 +1,8 @@
-// 第 7 章 · 二叉树 —— 题单与测验数据(English default / 中文可切换)。
-// 题单沿「一棵树的答案 = 根怎么办 + 左子树的答案 + 右子树的答案」展开:
-// 自底向上、自顶向下、BFS 分层、构造与祖先问题,压轴 124 展示「返回值 ≠ 答案」。
-// 每道题的 key 都先说清「递归函数返回什么」,再说「合并这一步为什么成立」。
+// Chapter 7 · Binary trees — problem set and quiz data (English default / Chinese toggle).
+// Problems follow the theme "the answer for a tree = what the root does + the answer for the left
+// subtree + the answer for the right subtree": bottom-up, top-down, BFS by level, construction and
+// ancestor problems, closing with LC 124 to show that the return value ≠ the answer.
+// Every key first states what the recursive function returns, then why the combining step is valid.
 
 import type { Problem } from "@/lib/problems";
 import type { QuizItem } from "@/lib/quiz";

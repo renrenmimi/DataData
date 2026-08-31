@@ -1,11 +1,13 @@
 "use client";
 
-// 第 10 章 · 前缀树(Trie / 字典树)
-// 结构:为什么需要它 → 内存结构 → 操作与复杂度 → 手写实现 → 三语言对照 →
-// 套路与三道精讲(LC 208 / 211 / 212)→ 高频题单 → 通关测验 → 要点。
+// Chapter 10 · Prefix tree (Trie)
+// Structure: why it exists → memory layout → operations and complexity → from-scratch
+// implementation → three-language comparison → patterns and three walkthroughs
+// (LC 208 / 211 / 212) → problem set → quiz → key points.
 //
-// 双语:所有面向学习者的文案都用 <T en zh> 或 { en, zh },英文为默认语言。
-// 代码窗的 code 写成 { en, zh } —— 两版逐行等价,只有注释不同,hl 行号才对得上。
+// Bilingual: every learner-facing string uses <T en zh> or { en, zh }, English is the default.
+// The code windows take code as { en, zh } — the two versions are line-for-line equivalent
+// and differ only in their comments, which is what keeps the hl line numbers aligned.
 
 import {
   Hero,
@@ -29,7 +31,7 @@ import {
 } from "./viz";
 import "./chapter.css";
 
-/* ================= 精讲 A · LC 208 逐帧数据(app / apple) ================= */
+/* ================= Walkthrough A · LC 208 frame data (app / apple) ================= */
 
 const A208_NODES: TStepNode[] = [
   { id: 0, ch: "", x: 120, y: 44 },
@@ -188,7 +190,7 @@ const A208_FRAMES: TStepFrame[] = [
   },
 ];
 
-/* ================= 精讲 B · LC 211 逐帧数据(bad / dad / mad,搜 ".ad") ============ */
+/* ================= Walkthrough B · LC 211 frame data (bad / dad / mad, search ".ad") ============ */
 
 const A211_NODES: TStepNode[] = [
   { id: 0, ch: "", x: 320, y: 42 },
@@ -288,7 +290,7 @@ const A211_FRAMES: TStepFrame[] = [
   },
 ];
 
-/* ================= 页面 ================= */
+/* ================= Page ================= */
 
 const CHIPS = [
   { id: "intuition", n: "01", label: { en: "Why it exists", zh: "为什么需要它" } },
@@ -341,7 +343,7 @@ export default function TrieChapter() {
         chips={CHIPS}
       />
 
-      {/* ================= §01 为什么 ================= */}
+      {/* ================= §01 Why it exists ================= */}
       <Section
         id="intuition"
         index="01"
@@ -601,7 +603,7 @@ export default function TrieChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §02 结构 ================= */}
+      {/* ================= §02 Node structure ================= */}
       <Section
         id="structure"
         index="02"
@@ -822,7 +824,7 @@ export default function TrieChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §03 操作与复杂度 ================= */}
+      {/* ================= §03 Operations and cost ================= */}
       <Section
         id="ops"
         index="03"
@@ -1290,7 +1292,7 @@ export default function TrieChapter() {
         </p>
       </Section>
 
-      {/* ================= §04 手写实现 ================= */}
+      {/* ================= §04 Build one ================= */}
       <Section
         id="build"
         index="04"
@@ -1640,7 +1642,7 @@ class Trie {
         </Callout>
       </Section>
 
-      {/* ================= §05 三语言对照 ================= */}
+      {/* ================= §05 Three languages ================= */}
       <Section
         id="langs"
         index="05"
@@ -1840,7 +1842,7 @@ class Trie {
         </Callout>
       </Section>
 
-      {/* ================= §06 套路与精讲 ================= */}
+      {/* ================= §06 Patterns ================= */}
       <Section
         id="patterns"
         index="06"
@@ -1884,7 +1886,7 @@ class Trie {
           />
         </div>
 
-        {/* —— 精讲 A —— */}
+        {/* — Walkthrough A — */}
         <div className="sec-head" style={{ marginTop: 40 }}>
           <span className="sec-index">
             <T en="Deep dive A" zh="精讲 A" />
@@ -1982,7 +1984,7 @@ class Trie {
           />
         </Callout>
 
-        {/* —— 精讲 B —— */}
+        {/* — Walkthrough B — */}
         <div className="sec-head" style={{ marginTop: 44 }}>
           <span className="sec-index">
             <T en="Deep dive B" zh="精讲 B" />
@@ -2279,7 +2281,7 @@ class WordDictionary {
           }}
         />
 
-        {/* —— 精讲 C —— */}
+        {/* — Walkthrough C — */}
         <div className="sec-head" style={{ marginTop: 44 }}>
           <span className="sec-index">
             <T en="Deep dive C" zh="精讲 C" />
@@ -2754,7 +2756,7 @@ var findWords = function (board, words) {
         </Callout>
       </Section>
 
-      {/* ================= §07 题单 ================= */}
+      {/* ================= §07 Problem set ================= */}
       <Section
         id="problems"
         index="07"
@@ -2775,7 +2777,7 @@ var findWords = function (board, words) {
         <ProblemSet ch="trie" items={PROBLEMS} />
       </Section>
 
-      {/* ================= §08 测验 ================= */}
+      {/* ================= §08 Quiz ================= */}
       <Section
         id="quiz"
         index="08"

@@ -1,7 +1,8 @@
-/* 第 13 章 · 组合与进阶 —— 本章专属样式。
-   规则:全部类名带 .adv- 前缀;颜色只用设计系统 token,深浅主题自动适配。 */
+/* Chapter 13 · Composites and beyond — styles for this chapter only.
+   Rules: every class carries the .adv- prefix; colours come from design tokens
+   only, so light and dark themes adapt on their own. */
 
-/* ---------- 通用:滑杆(章节内自备,不用 home 的 .bigo-slider) ---------- */
+/* ---------- Shared: slider (local to this chapter; home's .bigo-slider is off limits) ---------- */
 
 .adv-slider {
   display: flex;
@@ -22,7 +23,7 @@
   accent-color: var(--acc);
 }
 
-/* ---------- §02 逐步排除法 ---------- */
+/* ---------- §02 Ruling the alternatives out one by one ---------- */
 
 .adv-elim {
   display: flex;
@@ -86,9 +87,9 @@
   margin-bottom: 2px;
 }
 
-/* ---------- §02 LRU 实验室 ---------- */
+/* ---------- §02 LRU lab ---------- */
 
-/* 英文行比中文长,给哈希表面板留出更宽的基础宽度 */
+/* English runs longer than Chinese, so the hash-table panel gets a wider base */
 .adv-lru-hash {
   border: 1px dashed var(--border-strong);
   border-radius: 14px;
@@ -221,7 +222,7 @@
   line-height: 1.6;
 }
 
-/* ---------- §03 LFU 频次分桶图解 ---------- */
+/* ---------- §03 LFU frequency buckets ---------- */
 
 .adv-buckets {
   display: flex;
@@ -231,7 +232,8 @@
   margin: 18px 0;
 }
 
-/* 三个桶等宽平铺;英文说明比中文长,基础宽度放大,窄屏再换行 */
+/* Three equal-width buckets; English captions run longer, so the base width is
+   larger and narrow screens wrap */
 .adv-bucket {
   border: 1px solid var(--border);
   border-radius: 14px;
@@ -293,7 +295,7 @@
   line-height: 1.5;
 }
 
-/* ---------- §07 布隆过滤器实验室 ---------- */
+/* ---------- §07 Bloom filter lab ---------- */
 
 .adv-bits {
   display: flex;
