@@ -7,6 +7,9 @@ shown as a memory diagram first, then animated step by step, then written out in
 languages side by side — because the hard part is rarely the syntax, it is not being able
 to see what the machine is doing.
 
+Every page reads in **English or 中文** — one toggle in the toolbar switches the whole
+course, code comments included.
+
 Sister sites: [AlgoAlgo](https://algo-algo.vercel.app) (algorithms) and
 [APIer](https://apier-eta.vercel.app) (HTTP, REST and GraphQL).
 
@@ -34,12 +37,17 @@ Sister sites: [AlgoAlgo](https://algo-algo.vercel.app) (algorithms) and
 | 09 | Heap | Sift up/down, priority queues, top-K, two-heap median |
 | 10 | Trie | Prefix trees, array vs. map children, autocomplete |
 | 11 | Union-Find | Union by rank, path compression, the α(n) bound |
-| 12 | Advanced | Composite structures — LRU, LFU, and friends |
+| 12 | Graph | Adjacency list vs. matrix, BFS/DFS, topological sort, Dijkstra |
+| 13 | Advanced | Composite structures — LRU, LFU, segment tree, Fenwick tree, skip list, Bloom filter |
 | ✦ | Atlas | Signal-to-structure map: read a problem, pick the structure |
 
 Each chapter follows the same rhythm: an intuition first, then an interactive
 visualization, then code in Java / Python / JavaScript, then the common mistakes, then
 a quiz. Progress is stored locally in the browser.
+
+Any frame-by-frame animation can also be run in **predict mode**: instead of playing the
+next frame, it offers three candidate snapshots and asks you to pick the right one, then
+says which axis you got wrong — the cells or the pointers. Watching becomes recall.
 
 ## Running locally
 
