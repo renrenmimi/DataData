@@ -9,8 +9,13 @@
 //
 // Bilingual: title / tags / hint / key all accept Loc<…>. Use the official
 // LeetCode English titles.
+//
+// The row holds two sibling controls: the completion checkbox and the button
+// that expands the problem. They must not be nested: a checkbox inside a
+// clickable row would have its Enter/Space presses taken over by the row, so
+// keyboard users could never record a problem as done.
 
-import { useState, type ReactNode } from "react";
+import { useId, useState, type ReactNode } from "react";
 import { useProgress } from "@/lib/progress";
 import { useL, T, type Loc } from "@/lib/i18n";
 import type { ChapterId } from "@/lib/curriculum";
@@ -38,6 +43,7 @@ export function ProblemSet({
   const L = useL();
   const { isDone, toggleProblem, ready } = useProgress();
   const [open, setOpen] = useState<number | null>(null);
+  const listId = useId();
 
   return (
     <div className="plist">
@@ -45,58 +51,60 @@ export function ProblemSet({
         const pid = `${ch}/${p.lc}`;
         const done = ready && isDone(pid);
         const expanded = open === p.lc;
+        const bodyId = `${listId}-${p.lc}`;
         return (
           <div
             key={p.lc}
             className={`prob${done ? " done" : ""}${expanded ? " open" : ""}`}
             data-d={p.d}
           >
-            <div
-              className="prob-head"
-              onClick={() => setOpen(expanded ? null : p.lc)}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  setOpen(expanded ? null : p.lc);
-                }
-              }}
-              aria-expanded={expanded}
-            >
+            <div className="prob-head">
               <button
                 type="button"
+                role="checkbox"
                 className="prob-check"
-                aria-label={
-                  done
-                    ? L({ en: "Mark as not done", zh: "标记为未完成" })
-                    : L({ en: "Mark as done", zh: "标记为已完成" })
-                }
-                onClick={(e) => {
-                  e.stopPropagation();
-                  toggleProblem(pid);
-                }}
+                aria-checked={done}
+                aria-label={L({
+                  en: `Mark LC ${p.lc} as done`,
+                  zh: `将 LC ${p.lc} 标记为已完成`,
+                })}
+                onClick={() => toggleProblem(pid)}
               >
                 ✓
               </button>
-              <span className="prob-id">LC {p.lc}</span>
-              <span className="prob-title">{L(p.title)}</span>
-              <span className="prob-tags">
-                {p.tags.map((t, i) => (
-                  <span key={i} className="prob-tag">
-                    {L(t)}
-                  </span>
-                ))}
-              </span>
-              <span className="lc-badge" data-d={p.d}>
-                {D_LABEL[p.d]}
-              </span>
-              <span className="prob-caret" aria-hidden>
-                ▼
-              </span>
+              {/* Named by number, title and difficulty, joined with spaces;
+                  the tags would only lengthen what a screen reader says */}
+              <button
+                type="button"
+                className="prob-toggle"
+                aria-expanded={expanded}
+                aria-controls={expanded ? bodyId : undefined}
+                aria-labelledby={`${bodyId}-n ${bodyId}-t ${bodyId}-d`}
+                onClick={() => setOpen(expanded ? null : p.lc)}
+              >
+                <span className="prob-id" id={`${bodyId}-n`}>
+                  LC {p.lc}
+                </span>
+                <span className="prob-title" id={`${bodyId}-t`}>
+                  {L(p.title)}
+                </span>
+                <span className="prob-tags">
+                  {p.tags.map((t, i) => (
+                    <span key={i} className="prob-tag">
+                      {L(t)}
+                    </span>
+                  ))}
+                </span>
+                <span className="lc-badge" data-d={p.d} id={`${bodyId}-d`}>
+                  {D_LABEL[p.d]}
+                </span>
+                <span className="prob-caret" aria-hidden>
+                  ▼
+                </span>
+              </button>
             </div>
             {expanded && (
-              <div className="prob-body">
+              <div id={bodyId} className="prob-body">
                 <div className="prob-hint-label">
                   <T
                     en="Hint · think about it for 30 seconds first"
