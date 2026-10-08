@@ -21,6 +21,7 @@ import {
 import { Quiz, type QuizItem } from "@/lib/quiz";
 import { CodeTabs } from "@/lib/code";
 import { HeroMorph, BigOLab, RefLab } from "./home-viz";
+import { PageTitle } from "./page-title";
 
 /* ---------- Complexity cheat-sheet data ---------- */
 
@@ -445,6 +446,7 @@ export default function Home() {
 
   return (
     <main className="page" data-ch="home">
+      <PageTitle page={null} />
       {/* Hero */}
       <header className="home-hero">
         <div>

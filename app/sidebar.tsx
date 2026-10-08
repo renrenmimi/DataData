@@ -120,7 +120,7 @@ export default function Sidebar() {
           aria-label={L({ en: "Chapters", zh: "章节" })}
         >
           {CHAPTERS.map((c) => {
-            const active = c.id === current.id;
+            const active = c.id === current?.id;
             const state = ready ? chapterState(c.id) : "new";
             const title = L(c.title);
             const sub = subLabel(title, L(c.en));

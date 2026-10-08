@@ -9,6 +9,7 @@ import {
 } from "@/app/theme-provider";
 import { ProgressProvider } from "@/lib/progress";
 import { LangProvider, langScript } from "@/lib/i18n";
+import { SITE_TITLE } from "@/lib/curriculum";
 import Sidebar from "@/app/sidebar";
 import Toolbar from "@/app/toolbar";
 import CommandPalette from "@/app/command-palette";
@@ -39,8 +40,10 @@ const jetbrains = localFont({
 });
 
 export const metadata: Metadata = {
+  // Resolves the canonical and Open Graph URLs set by each chapter layout
+  metadataBase: new URL("https://data-data.vercel.app"),
   title: {
-    default: "DataData · Data structures you can see",
+    default: SITE_TITLE.en,
     template: "%s · DataData",
   },
   description:
