@@ -230,7 +230,7 @@ const MSG_MUTATE_SHARED = (
     zh={
       <>
         执行 <b>b.val += 10</b>:改的是<b>盒子里的东西</b>。因为 a、b
-        指向同一个盒子,<b>a 也“跟着变”了</b> —— 这不是灵异事件,是引用的本义。
+        指向同一个盒子,<b>a 也“跟着变”了</b> —— 这并不奇怪,这正是引用的含义。
       </>
     }
   />
@@ -385,6 +385,14 @@ const CURVES = [
 
 const OPS_PER_SEC = 1e8; // A rough assumption: an ordinary machine does ~10⁸ basic operations a second
 
+// 2^(10⁶) overflows a double, so write it from its base-10 logarithm:
+// 10⁶·log₁₀2 ≈ 301029.996, i.e. about 9.9×10^301029
+const POW2_MILLION = (() => {
+  const exp = 1e6 * Math.log10(2);
+  const whole = Math.floor(exp);
+  return `${Math.pow(10, exp - whole).toFixed(1)}×10^${whole}`;
+})();
+
 function fmtOps(v: number): string {
   if (v >= 1e12) return v.toExponential(1).replace("e+", "×10^");
   if (v >= 1e4) return Math.round(v).toLocaleString("en-US");
@@ -395,7 +403,7 @@ function fmtOps(v: number): string {
 function fmtTime(ops: number, lang: Lang): string {
   const en = lang === "en";
   const s = ops / OPS_PER_SEC;
-  if (s < 1e-6) return en ? "less than a microsecond" : "眨眼都嫌慢";
+  if (s < 1e-6) return en ? "less than a microsecond" : "不到 1 微秒";
   if (s < 1e-3)
     return `${(s * 1e6).toFixed(1)} ${en ? "microseconds" : "微秒"}`;
   if (s < 1) return `${(s * 1e3).toFixed(1)} ${en ? "milliseconds" : "毫秒"}`;
@@ -437,7 +445,9 @@ export function BigOLab() {
     const steps = 120;
     for (let i = 0; i <= steps; i++) {
       const x = (i / steps) * n;
-      const v = Math.min(f(Math.max(x, 0.001)), 1e18);
+      // No cap: on the log scale even 2⁶⁴ ≈ 1.8×10¹⁹ fits, and capping made
+      // the 2ⁿ curve go flat near the right edge
+      const v = f(Math.max(x, 0.001));
       pts.push(`${i === 0 ? "M" : "L"}${px(x).toFixed(1)},${py(v).toFixed(1)}`);
     }
     return pts.join(" ");
@@ -454,7 +464,7 @@ export function BigOLab() {
       <div className="viz-title">
         <T
           en="Big-O growth lab: drag n and watch the curves separate"
-          zh="Big-O 增长实验室 —— 拖动 n,看差距怎么被撕开"
+          zh="Big-O 增长实验室 —— 拖动 n,看差距如何拉大"
         />
       </div>
 
@@ -464,6 +474,7 @@ export function BigOLab() {
             key={c.id}
             type="button"
             className={`bigo-key${on[c.id] ? " on" : ""}`}
+            aria-pressed={on[c.id]}
             style={{ "--c": c.color } as React.CSSProperties}
             onClick={() => setOn((p) => ({ ...p, [c.id]: !p[c.id] }))}
           >
@@ -549,12 +560,12 @@ export function BigOLab() {
                       {c.label}
                     </span>
                   </td>
-                  <td className="mono">{fmtOps(Math.min(c.f(n), 1e18))}</td>
+                  <td className="mono">{fmtOps(c.f(n))}</td>
                   <td className="mono">
                     {c.id === "2n"
                       ? L({
-                          en: "10^301006 — too large to print",
-                          zh: "10^301006 —— 写不下",
+                          en: `≈ ${POW2_MILLION} — too large to print`,
+                          zh: `约 ${POW2_MILLION} —— 无法完整写出`,
                         })
                       : fmtOps(big)}
                   </td>
@@ -575,7 +586,7 @@ export function BigOLab() {
       <p className="viz-msg">
         <T
           en="* Estimated at 10⁸ basic operations per second. This is why an interviewer keeps asking about the complexity of your solution."
-          zh="* 按每秒 10⁸ 次基本操作粗算 —— 这就是为什么面试官盯着你的复杂度不放。"
+          zh="* 按每秒 10⁸ 次基本操作粗算 —— 这也是面试官反复追问复杂度的原因。"
         />
       </p>
     </div>
