@@ -185,7 +185,7 @@ export function LRUAnatomy() {
           zh={
             <>
               哈希表存的不是值,而是<b>链表节点的引用</b>:查找交给哈希(不用遍历链表),
-              顺序交给链表(不用扫描哈希)—— 两个结构各自只干自己 O(1) 的活。
+              顺序交给链表(不用扫描哈希)—— 两个结构各自只负责自己那部分 O(1) 的工作。
             </>
           }
         />
@@ -277,7 +277,7 @@ export function LRULab() {
             }
             zh={
               <>
-                put({k},{v}):容量满!tail.prev 一步定位到最旧的 <b>{victim.key}</b>
+                put({k},{v}):容量已满,tail.prev 一步定位到最旧的 <b>{victim.key}</b>
                 —— O(1) 摘除,同时删掉哈希表里的 {victim.key} 条目(两边必须同步)。
               </>
             }
@@ -583,7 +583,7 @@ export function LFUBuckets() {
             <>
               每个桶是一条<b>按时间排序的链表</b>(桶内就是一个小 LRU);再配两张哈希表
               (key → 值和频次、freq → 桶)和一个 minFreq 变量 —— 访问 = 从 freq 桶搬进
-              freq+1 桶,淘汰 = 掐掉 minFreq 桶里最老的。每一步都是 O(1)。
+              freq+1 桶,淘汰 = 移除 minFreq 桶里最老的。每一步都是 O(1)。
             </>
           }
         />
@@ -844,7 +844,7 @@ export function SegLab() {
         }
         zh={
           <>
-            完成!只重算了从叶到根的 <b>4 个节点</b>(log₂8 + 1),其余 11
+            完成。只重算了从叶到根的 <b>4 个节点</b>(log₂8 + 1),其余 11
             个节点原封不动 —— 这就是 update 的 <b>O(log n)</b>。
           </>
         }
@@ -983,14 +983,15 @@ export function SegLab() {
       <div className="viz-title">
         <T
           en="Segment tree lab — 8 leaves, update mode and query mode"
-          zh="线段树实验室 —— 8 个叶子,改值 vs 查询两种玩法"
+          zh="线段树实验室 —— 8 个叶子,改值与查询两种模式"
         />
       </div>
       <div className="viz-stage" style={{ flexDirection: "column", gap: 4 }}>
         <svg
           viewBox="0 0 660 336"
           style={{ width: "100%", maxWidth: 680 }}
-          role="img"
+          // A group, not an image: the leaves are buttons in update mode
+          role="group"
           aria-label={L({
             en: "Segment tree with eight leaves",
             zh: "八叶子线段树",
@@ -1042,11 +1043,23 @@ export function SegLab() {
             return (
               <g
                 key={node}
+                className={isLeaf ? "adv-seg-leaf" : undefined}
                 onClick={isLeaf ? () => bump(node - 8) : undefined}
+                onKeyDown={
+                  isLeaf
+                    ? (e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault(); // Space would otherwise scroll the page
+                          void bump(node - 8);
+                        }
+                      }
+                    : undefined
+                }
                 style={
                   isLeaf && mode === "update" && !busy ? { cursor: "pointer" } : undefined
                 }
-                role={isLeaf ? "button" : undefined}
+                role={isLeaf && mode === "update" ? "button" : undefined}
+                tabIndex={isLeaf && mode === "update" ? 0 : undefined}
                 aria-label={
                   isLeaf
                     ? L({
@@ -1125,6 +1138,7 @@ export function SegLab() {
           <button
             type="button"
             className={`seg-btn${mode === "update" ? " on" : ""}`}
+            aria-pressed={mode === "update"}
             onClick={() => switchMode("update")}
           >
             <T en="Update" zh="改值模式" />
@@ -1132,6 +1146,7 @@ export function SegLab() {
           <button
             type="button"
             className={`seg-btn${mode === "query" ? " on" : ""}`}
+            aria-pressed={mode === "query"}
             onClick={() => switchMode("query")}
           >
             <T en="Query" zh="查询模式" />
@@ -1180,7 +1195,7 @@ export function SegLab() {
           </>
         )}
         <span className="mono dim" style={{ marginLeft: "auto", fontSize: 12 }}>
-          <T en={<>n=8 · height log₂8+1 = 4</>} zh={<>n=8 · 树高 log₂8+1 = 4</>} />
+          <T en={<>n=8 · log₂8+1 = 4 levels</>} zh={<>n=8 · 共 log₂8+1 = 4 层</>} />
         </span>
       </div>
     </div>
@@ -1333,7 +1348,7 @@ const SKIP_FRAMES: SkipFrame[] = [
         }
         zh={
           <>
-            L0 上 19 的右邻是 23 = 23,<b>找到!</b>全程只做了 4 次比较;
+            L0 上 19 的右邻是 23 = 23,<b>找到了。</b>全程只做了 4 次比较;
             普通有序链表要从 3 开始一格格比。n 越大差距越大:
             <b>O(log n) vs O(n)</b>。
           </>
@@ -1537,6 +1552,7 @@ export function BloomLab() {
   const [litBits, setLitBits] = useState<number[]>([]);
   const [badBit, setBadBit] = useState<number | null>(null);
   const [text, setText] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<ReactNode>(
     <T
@@ -1692,13 +1708,15 @@ export function BloomLab() {
           zh={
             <>
               3 个位全是 1 → 布隆说「可能在」。可 &quot;{word}&quot; 根本<b>没插入过</b> ——
-              <b>假阳性!</b>它的 3 个位恰好被 {inserted.join("、") || "别的词"} 点亮了。
+              <b>假阳性。</b>它的 3 个位恰好被 {inserted.join("、") || "别的词"} 点亮了。
             </>
           }
         />,
       );
     }
     setBusy(false);
+    // Ready for the next word: typing replaces the one just checked
+    if (document.activeElement === inputRef.current) inputRef.current?.select();
   };
 
   const findFalsePositive = () => {
@@ -1789,13 +1807,18 @@ export function BloomLab() {
             <T en={<>Insert &quot;{w}&quot;</>} zh={<>插入 &quot;{w}&quot;</>} />
           </button>
         ))}
+        {/* readOnly rather than disabled while animating: a disabled input
+            drops keyboard focus to <body> */}
         <input
+          ref={inputRef}
           className="adv-input"
           placeholder={L({ en: "Type a word…", zh: "自己输一个词…" })}
           value={text}
-          disabled={busy}
+          readOnly={busy}
           onChange={(e) => setText(e.target.value)}
           onKeyDown={(e) => {
+            // Enter that confirms an IME composition is not a submit
+            if (e.nativeEvent.isComposing || e.keyCode === 229) return;
             if (e.key === "Enter") void query(text);
           }}
           aria-label={L({ en: "Custom word", zh: "自定义单词" })}
