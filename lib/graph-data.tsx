@@ -85,7 +85,7 @@ export const PROBLEMS: Problem[] = [
           Start a DFS from every unvisited land cell. The DFS returns the number
           of cells it sank: 1 plus the sum of the four recursive calls. Out of
           bounds or water returns 0. The main loop keeps the maximum returned
-          value. Time is O(rows x cols), because each cell is visited once.
+          value. Time is O(rows × cols), because each cell is visited once.
           Letting DFS return a count is a common extra step in grid problems.
         </>
       ),
@@ -93,8 +93,8 @@ export const PROBLEMS: Problem[] = [
         <>
           对每个未访问的陆地启动 DFS,DFS 返回它淹没的格子数(1 +
           四个方向递归之和),越界或遇水返回 0。主循环用 max 记录最大返回值。
-          时间 O(行 x 列),每格访问一次。
-          「让 DFS 带返回值统计规模」是网格题的常见加料。
+          时间 O(行 × 列),每格访问一次。
+          「让 DFS 带返回值统计规模」是网格题常见的扩展。
         </>
       ),
     },
@@ -391,8 +391,8 @@ export const PROBLEMS: Problem[] = [
         <>
           最多中转 K 站 = 最多走 K + 1 条边,所以做{" "}
           <b>K + 1 轮 Bellman-Ford 松弛</b>。每一轮都基于
-          <b>上一轮 dist 的快照</b>去更新所有边(关键!用临时数组,
-          否则一轮内连续松弛会「串味」,走的边数超过限制)。
+          <b>上一轮 dist 的快照</b>去更新所有边(关键:用临时数组,
+          否则一轮内的连续松弛会相互影响,使走过的边数超过限制)。
           也可用带「已用步数」的 BFS 分层扩展。普通 Dijkstra
           在这里不成立:它可能通过一条已经太长的路径把某个城市便宜地定案。
           这题正好点出「最短路算法要看约束选型」。
@@ -681,8 +681,8 @@ export const QUIZ: QuizItem[] = [
         zh: "两点互指(A→B 且 B→A)确实是环,但那只是环的一种形状。题目问的是「是否存在环」,要用系统性的方法(拓扑排序,或 DFS 三状态标记)判断,不能只看局部。",
       },
       {
-        en: "Union-find detects a cycle in an undirected graph. In a directed graph the edges A to C and B to C give C two predecessors, and union-find would report a cycle that is not there, because it throws the direction away.",
-        zh: "并查集判环适用于无向图。有向图里 A→C、B→C 会让 C 有两个前驱,并查集会误判成环,因为方向信息被丢掉了。",
+        en: "Union-find detects a cycle in an undirected graph. A directed diamond A to B, A to C, B to D, C to D has no directed cycle, but when union-find reaches C to D it finds C and D already share a root and reports a cycle, because it throws the direction away.",
+        zh: "并查集判环适用于无向图。有向图里 A→B、A→C、B→D、C→D 这样的菱形并没有有向环,但并查集处理到 C→D 时发现 C、D 已经同根,就会误报成环 —— 方向信息被丢掉了。",
       },
       {
         en: "In a directed graph, meeting a visited vertex may simply mean two paths joined again (a diamond shape), which is not a cycle. Directed cycle detection needs to know whether that vertex is still on the current recursion stack, which a plain visited flag cannot tell you.",
@@ -711,7 +711,7 @@ export const QUIZ: QuizItem[] = [
         </>
       ),
     },
-    placeholder: { en: "Algorithm name…", zh: "填算法缩写…" },
+    placeholder: { en: "Algorithm name…", zh: "填算法名称…" },
     answers: [
       "BFS",
       "bfs",
@@ -721,6 +721,8 @@ export const QUIZ: QuizItem[] = [
       "breadth-firstsearch",
       "广度优先",
       "广度优先搜索",
+      "广度优先遍历",
+      "bfs算法",
     ],
     hint: {
       en: "Look back at §03. One of the two traversals spreads outward one layer at a time, and the layer number is exactly the smallest number of steps needed.",

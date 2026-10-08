@@ -19,7 +19,7 @@
 
 import { useId, useState, type ReactNode } from "react";
 import { useStepper, StepControls } from "@/lib/stepper";
-import { T } from "@/lib/i18n";
+import { T, useL } from "@/lib/i18n";
 
 /* ================= Generic: SVG graph renderer ================= */
 
@@ -76,6 +76,7 @@ function GraphSvg({
   active?: [number, number] | null;
   onPick?: (id: number) => void;
 }) {
+  const L = useL();
   const mid = useId().replace(/[:]/g, "");
   const byId = new Map(nodes.map((n) => [n.id, n]));
   const isActive = (e: GSEdge) =>
@@ -88,7 +89,13 @@ function GraphSvg({
       viewBox={`0 0 ${w} ${h}`}
       className="gr-svg"
       style={{ maxWidth: w }}
-      aria-hidden
+      // A static figure is decoration for screen readers; with pickable
+      // vertices it is a labelled group of buttons
+      aria-hidden={onPick ? undefined : true}
+      role={onPick ? "group" : undefined}
+      aria-label={
+        onPick ? L({ en: "Graph: choose a vertex", zh: "图:选择一个顶点" }) : undefined
+      }
     >
       <defs>
         <marker
@@ -171,6 +178,24 @@ function GraphSvg({
             className={`gr-nd${st ? ` ${st}` : ""}${onPick ? " pick" : ""}`}
             style={{ transform: `translate(${n.x}px, ${n.y}px)` }}
             onClick={onPick ? () => onPick(n.id) : undefined}
+            onKeyDown={
+              onPick
+                ? (e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault(); // Space would otherwise scroll the page
+                      onPick(n.id);
+                    }
+                  }
+                : undefined
+            }
+            role={onPick ? "button" : undefined}
+            tabIndex={onPick ? 0 : undefined}
+            aria-pressed={onPick ? st === "lit" : undefined}
+            aria-label={
+              onPick
+                ? L({ en: `Vertex ${n.label ?? n.id}`, zh: `顶点 ${n.label ?? n.id}` })
+                : undefined
+            }
           >
             <circle r={R} />
             <text dy={5} textAnchor="middle">
@@ -469,8 +494,8 @@ export function ReprLab() {
           />
           <div className="gr-repr-hint">
             <T
-              en={<>click a vertex · current = {sel}</>}
-              zh={<>点顶点切换 · 当前 = {sel}</>}
+              en={<>click a vertex (or Tab to it and press Enter) · current = {sel}</>}
+              zh={<>点击顶点切换(也可用 Tab 选中后按 Enter)· 当前 = {sel}</>}
             />
           </div>
         </div>
@@ -518,14 +543,14 @@ export function ReprLab() {
             <T
               en={
                 <>
-                  A V x V table. Asking &ldquo;is there an edge between i and
+                  A V × V table. Asking &ldquo;is there an edge between i and
                   j?&rdquo; is <b>O(1)</b>, but the table occupies <b>O(V²)</b>{" "}
                   however few edges the graph has.
                 </>
               }
               zh={
                 <>
-                  V x V 的表格:查「i、j 之间有没有边」是 <b>O(1)</b>,
+                  V × V 的表格:查「i、j 之间有没有边」是 <b>O(1)</b>,
                   但不管图多稀疏,都硬占 <b>O(V²)</b> 空间。
                 </>
               }
@@ -1052,6 +1077,7 @@ export function GraphLab() {
           <button
             type="button"
             className={`seg-btn${mode === "bfs" ? " on" : ""}`}
+            aria-pressed={mode === "bfs"}
             onClick={() => setMode("bfs")}
           >
             <T en="BFS · breadth-first" zh="BFS 广度优先" />
@@ -1059,6 +1085,7 @@ export function GraphLab() {
           <button
             type="button"
             className={`seg-btn${mode === "dfs" ? " on" : ""}`}
+            aria-pressed={mode === "dfs"}
             onClick={() => setMode("dfs")}
           >
             <T en="DFS · depth-first" zh="DFS 深度优先" />
@@ -1217,15 +1244,15 @@ function buildGridFrames(): GridFrame[] {
       en={
         <>
           The whole grid has been scanned: <b>{count}</b> islands. Each cell is
-          entered at most once, so the time is <b>O(rows x cols)</b>. The space
+          entered at most once, so the time is <b>O(rows × cols)</b>. The space
           is the recursion depth, which in the worst case (every cell is land) is
-          also O(rows x cols).
+          also O(rows × cols).
         </>
       }
       zh={
         <>
           全图扫描完毕,共 <b>{count}</b> 座岛。每个格子最多被进入一次 → 时间{" "}
-          <b>O(行 x 列)</b>。空间是递归栈深度,最坏(全是陆地)也是 O(行 x 列)。
+          <b>O(行 × 列)</b>。空间是递归栈深度,最坏(全是陆地)也是 O(行 × 列)。
         </>
       }
     />,
