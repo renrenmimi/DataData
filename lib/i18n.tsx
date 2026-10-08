@@ -33,19 +33,33 @@ export const langScript = `(function(){var d=document.documentElement;var l="en"
 type Ctx = { lang: Lang; setLang: (l: Lang) => void };
 const LangContext = createContext<Ctx>({ lang: "en", setLang: () => {} });
 
+/** Mirrors the language onto <html>, as langScript does before the first paint. */
+function applyLang(l: Lang) {
+  const d = document.documentElement;
+  d.dataset.lang = l;
+  d.lang = l === "zh" ? "zh-CN" : "en";
+}
+
 export function LangProvider({ children }: { children: ReactNode }) {
   const [lang, set] = useState<Lang>("en");
 
+  // Read the stored choice, not <html data-lang>: if React gives up hydrating
+  // the root, it renders it again on the client and drops the attributes
+  // langScript wrote, so they are written back here.
   useEffect(() => {
-    const d = document.documentElement.dataset.lang;
-    if (d === "zh" || d === "en") set(d);
+    let l: Lang = "en";
+    try {
+      if (window.localStorage.getItem(KEY) === "zh") l = "zh";
+    } catch {
+      /* private mode */
+    }
+    applyLang(l);
+    set(l);
   }, []);
 
   const setLang = useCallback((l: Lang) => {
     set(l);
-    const d = document.documentElement;
-    d.dataset.lang = l;
-    d.lang = l === "zh" ? "zh-CN" : "en";
+    applyLang(l);
     try {
       window.localStorage.setItem(KEY, l);
     } catch {
