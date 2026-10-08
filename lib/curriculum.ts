@@ -334,12 +334,50 @@ export const CHAPTERS: Chapter[] = [
   },
 ];
 
-export function chapterByPath(path: string): Chapter {
+/** The prologue's tab title; the root layout renders the English one. */
+export const SITE_TITLE = {
+  en: "DataData · Data structures you can see",
+  zh: "DataData · 看得见的数据结构",
+};
+
+/** What the breadcrumb shows for a path outside the course (✦ hides the number). */
+export const PAGE_NOT_FOUND: Pick<Chapter, "num" | "title"> = {
+  num: "✦",
+  title: { en: "Page not found", zh: "页面不存在" },
+};
+
+/** The chapter a path belongs to, or null for a path outside the course (a 404). */
+export function chapterByPath(path: string): Chapter | null {
   if (path === "/") return CHAPTERS[0];
   const hit = CHAPTERS.find(
     (c) => c.href !== "/" && (path === c.href || path.startsWith(c.href + "/")),
   );
-  return hit ?? CHAPTERS[0];
+  return hit ?? null;
+}
+
+const en = (v: Loc<string>) => (typeof v === "string" ? v : v.en);
+
+/**
+ * Metadata for a chapter route, used by app/<chapter>/layout.tsx. The title is
+ * the English chapter title (the root template appends " · DataData"); a
+ * Chinese reader's tab is retitled on the client by app/page-title.tsx.
+ */
+export function chapterMetadata(id: ChapterId) {
+  const c = CHAPTERS.find((x) => x.id === id)!;
+  const title = en(c.title);
+  const description = en(c.essence);
+  return {
+    title,
+    description,
+    alternates: { canonical: c.href },
+    openGraph: {
+      title: `${title} · DataData`,
+      description,
+      url: c.href,
+      siteName: "DataData",
+      type: "article" as const,
+    },
+  };
 }
 
 export function prevNext(id: ChapterId): { prev?: Chapter; next?: Chapter } {
