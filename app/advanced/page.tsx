@@ -25,7 +25,8 @@ import { CodeTabs, CodeBlock } from "@/lib/code";
 import { ArrayStepper, type ArrayFrame } from "@/lib/stepper";
 import { ProblemSet } from "@/lib/problems";
 import { Quiz } from "@/lib/quiz";
-import { PROBLEMS, QUIZ } from "@/lib/advanced-data";
+import { PROBLEMS } from "@/lib/advanced-problems";
+import { QUIZ } from "@/lib/advanced-quiz";
 import { T } from "@/lib/i18n";
 import {
   LRUAnatomy,

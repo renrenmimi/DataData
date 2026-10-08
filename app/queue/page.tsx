@@ -27,7 +27,8 @@ import { CodeTabs } from "@/lib/code";
 import { ArrayStepper, type ArrayFrame } from "@/lib/stepper";
 import { ProblemSet } from "@/lib/problems";
 import { Quiz } from "@/lib/quiz";
-import { PROBLEMS, QUIZ } from "@/lib/queue-data";
+import { PROBLEMS } from "@/lib/queue-problems";
+import { QUIZ } from "@/lib/queue-quiz";
 import { T } from "@/lib/i18n";
 import { QueueMemFig, RingLab, TwoStackPour } from "./viz";
 

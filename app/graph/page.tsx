@@ -23,7 +23,8 @@ import {
 import { CodeTabs } from "@/lib/code";
 import { ProblemSet } from "@/lib/problems";
 import { Quiz } from "@/lib/quiz";
-import { PROBLEMS, QUIZ } from "@/lib/graph-data";
+import { PROBLEMS } from "@/lib/graph-problems";
+import { QUIZ } from "@/lib/graph-quiz";
 import { T } from "@/lib/i18n";
 import {
   TermGraph,

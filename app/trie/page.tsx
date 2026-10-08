@@ -20,7 +20,8 @@ import {
 import { CodeTabs } from "@/lib/code";
 import { ProblemSet } from "@/lib/problems";
 import { Quiz } from "@/lib/quiz";
-import { PROBLEMS, QUIZ } from "@/lib/trie-data";
+import { PROBLEMS } from "@/lib/trie-problems";
+import { QUIZ } from "@/lib/trie-quiz";
 import { T } from "@/lib/i18n";
 import {
   TrieLab,

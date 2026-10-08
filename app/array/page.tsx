@@ -21,7 +21,8 @@ import { CodeTabs } from "@/lib/code";
 import { ArrayStepper, type ArrayFrame } from "@/lib/stepper";
 import { ProblemSet } from "@/lib/problems";
 import { Quiz } from "@/lib/quiz";
-import { PROBLEMS, QUIZ } from "@/lib/array-data";
+import { PROBLEMS } from "@/lib/array-problems";
+import { QUIZ } from "@/lib/array-quiz";
 import { T } from "@/lib/i18n";
 import { IndexLab, ShiftLab, GrowLab, MatrixLab } from "./viz";
 
