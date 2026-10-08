@@ -411,7 +411,7 @@ const CHIPS: { id: string; n: string; label: Loc<string> }[] = [
     label: { en: "Patterns and walkthroughs", zh: "套路与精讲" },
   },
   { id: "problems", n: "07", label: { en: "Problem set", zh: "高频题单" } },
-  { id: "quiz", n: "08", label: { en: "Quiz", zh: "通关测验" } },
+  { id: "quiz", n: "08", label: { en: "Quiz", zh: "本章测验" } },
 ];
 
 export default function BSTChapter() {
@@ -485,8 +485,8 @@ export default function BSTChapter() {
             }
             zh={
               <p>
-                先回顾两位老朋友各自的长板。<strong>有序数组</strong>查找极快:
-                二分每次砍一半,O(log n);但插入一个新值得先腾位置 ——
+                先回顾两种已学结构各自的长处。<strong>有序数组</strong>查找极快:
+                二分每次排除一半,O(log n);但插入一个新值得先腾位置 ——
                 右边所有元素集体后移,O(n)。<strong>链表</strong>正相反:
                 只要已经站在位置上,接一个节点只改两根指针,O(1);
                 可想找某个值,只能从头一路问过去,O(n)。
@@ -614,7 +614,7 @@ export default function BSTChapter() {
               <T en="RULE · the only rule" zh="RULE · 唯一的规矩" />
             </div>
             <div className="card-title">
-              <T en="⚖️ left < node < right" zh="⚖️ 左 < 根 < 右" />
+              <T en="left < node < right" zh="左 < 根 < 右" />
             </div>
             <T
               en={
@@ -711,7 +711,7 @@ export default function BSTChapter() {
             zh={
               <p>
                 印刷版字典有序但改不动:要加一个词,只能重排再版。
-                哈希表正相反:存取极快,但倒出来的顺序没有意义。
+                哈希表正相反:存取极快,但遍历得到的顺序没有意义。
                 BST 是一部活页字典:随时插新页,而且任何时刻按顺序翻阅
                 (中序遍历)都是排好序的。需求里同时出现
                 <b>数据会变</b>和<b>要有顺序</b>时,答案基本就是树结构。
@@ -793,7 +793,7 @@ export default function BSTChapter() {
                   想按顺序拿到 BST 里的数据,中序遍历即可,
                   <strong>不需要额外排序</strong>;想验证一棵树是不是 BST,
                   看它的中序序列是否严格递增;想找「第 k 小」,中序数到第 k 个。
-                  一条性质,养活本章一半的题。
+                  本章一半的题目都建立在这一条性质上。
                 </p>
                 <p>
                   再看查找。在下面的实验室里输入一个数字点「查找」,
@@ -963,8 +963,10 @@ export default function BSTChapter() {
                   h, the height of the tree, is a <strong>variable</strong>. As
                   in chapter 7, height is the number of <b>edges</b> on the
                   longest root-to-leaf path, so a tree with only a root has
-                  height 0. When the tree is balanced, h = ⌊log₂n⌋, since each
-                  level can hold twice as many nodes as the one above it. When
+                  height 0. When the tree is perfectly balanced (complete), h =
+                  ⌊log₂n⌋, since each level can hold twice as many nodes as the
+                  one above it; balanced trees in general, such as AVL and
+                  red-black trees, keep h in O(log n). When
                   sorted input makes the tree degenerate into a chain, h = n − 1.
                   Saying O(log n) without a condition is wrong. The complete
                   answer is: <b>O(h); that is log n when the tree is balanced and
@@ -1247,8 +1249,8 @@ export default function BSTChapter() {
           zh: "手写实现:60 行,一棵完整的 BST",
         }}
         desc={{
-          en: "insert / search / delete / inorder — all three delete cases included, and it runs",
-          zh: "insert / search / delete / inorder —— delete 三情况完整实现,能直接跑",
+          en: "insert / search / delete / inorder — a complete implementation, all three delete cases included",
+          zh: "insert / search / delete / inorder —— 完整实现,含 delete 的全部三种情况",
         }}
       >
         <div className="prose">
@@ -1279,7 +1281,9 @@ export default function BSTChapter() {
           title="bst"
           java={{
             code: {
-              en: `class TreeNode {                        // the node from the binary tree chapter
+              en: `import java.util.*;
+
+class TreeNode {                        // the node from the binary tree chapter
     int val;
     TreeNode left, right;
     TreeNode(int v) { val = v; }
@@ -1341,7 +1345,9 @@ class BST {
         inorder(node.right, out);
     }
 }`,
-              zh: `class TreeNode {                        // 二叉树章的老朋友
+              zh: `import java.util.*;
+
+class TreeNode {                        // 二叉树章中的节点
     int val;
     TreeNode left, right;
     TreeNode(int v) { val = v; }
@@ -1404,7 +1410,7 @@ class BST {
     }
 }`,
             },
-            hl: [46, 47, 48, 49, 50, 51],
+            hl: [48, 49, 50, 51, 52, 53],
             note: {
               en: (
                 <>
@@ -1491,7 +1497,7 @@ class BST:
             walk(node.right)
         walk(self.root)
         return out`,
-              zh: `class TreeNode:                        # 二叉树章的老朋友
+              zh: `class TreeNode:                        # 二叉树章中的节点
     def __init__(self, val=0):
         self.val = val
         self.left = None
@@ -1652,7 +1658,7 @@ class BST {
     return out;
   }
 }`,
-              zh: `class TreeNode {                       // 二叉树章的老朋友
+              zh: `class TreeNode {                       // 二叉树章中的节点
   constructor(val = 0) {
     this.val = val;
     this.left = null;
@@ -1979,7 +1985,8 @@ class BST {
                   , and the height stays in O(log n). The tree is allowed to be
                   somewhat uneven, and in exchange each update needs only a small
                   fixed number of rotations: at most 2 for an insert and at most
-                  3 for a delete. An AVL insert also needs at most one rotation,
+                  3 for a delete. An AVL insert needs at most one single or double
+                  rotation (at most two single rotations),
                   but an AVL <b>delete</b> may have to rebalance at every level
                   on the way back to the root.{" "}
                   <strong>Not perfectly balanced, just balanced enough</strong> —
@@ -2010,7 +2017,7 @@ class BST {
                   所以<strong>最长路径 ≤ 最短路径 × 2</strong>,
                   高度被锁死在 O(log n) 量级。它允许树有点歪,
                   换来的是每次更新只需常数次旋转:插入最多 2 次,删除最多 3 次。
-                  AVL 的插入同样最多一次旋转,但 AVL 的<b>删除</b>
+                  AVL 的插入最多需要一次单旋或一次双旋(即最多 2 次单旋),但 AVL 的<b>删除</b>
                   可能一路回溯到根、每层都要调整。
                   <strong>不追求完美平衡,只追求足够平衡</strong> ——
                   这是典型的工程取舍,也是它进入各家标准库的原因。
@@ -2077,7 +2084,7 @@ class BST {
               <p>
                 要不要用树,只由一个问题决定:<strong>需不需要顺序?</strong>
                 只做单点查找(这个 key 在不在、对应值是什么),哈希表更快 ——
-                均摊 O(1) 对树的 O(log n)。
+                平均 O(1) 对树的 O(log n)。
                 只有当需求里出现<strong>范围查询、找某个值上下最近的 key、
                 按 key 顺序遍历</strong>时,才该选平衡 BST ——
                 这几件事哈希表都做不到,除非把全部数据取出来重新排序。
@@ -2192,7 +2199,7 @@ class BST {
                     zh={
                       <>
                         <code>Map</code> 只保留插入顺序;
-                        刷题用「数组 + 二分」顶替,或者自己手写一棵树
+                        做题时用「数组 + 二分」顶替,或者自己手写一棵树
                       </>
                     }
                   />
@@ -2327,7 +2334,7 @@ bisect.insort(arr, 25)          # 插入 O(n) —— list 底层还是数组`,
                   查得快,但插入仍是 O(n) —— list 是动态数组(第 1 章的老账)。
                   <code>SortedList</code> 写入快得多,是因为它把值分散在许多小块里,
                   插入只搬动其中一小块;但它<b>不是</b>平衡树,
-                  插入在理论上也不是 O(log n),只是在刷题和一般业务负载下够快、够省事。
+                  插入在理论上也不是 O(log n),只是在做题和一般业务负载下够快、够省事。
                 </>
               ),
             },
@@ -2361,7 +2368,7 @@ const m = new Map();
 m.set(30, "c"); m.set(10, "a");
 [...m.keys()];              // [30, 10] —— 不会自动排序
 
-// 刷题常用替身:用二分维护一个有序数组
+// 做题时常用的替代:用二分维护一个有序数组
 const arr = [10, 20, 30];
 function lowerBound(a, x) {       // 第一个 >= x 的下标
   let lo = 0, hi = a.length;
@@ -2390,7 +2397,7 @@ arr.splice(lowerBound(arr, 25), 0, 25);  // 有序插入,搬移 O(n)
               zh: (
                 <>
                   <b>易错点:</b>普通对象的键遍历顺序有一套自己的规则
-                  (整数型键升序、字符串键按插入顺序),千万别拿它当有序容器 ——
+                  (整数型键升序、字符串键按插入顺序),不要拿它当有序容器 ——
                   需要有序就显式排序,或者用二分维护。
                 </>
               ),
@@ -2525,7 +2532,7 @@ arr.splice(lowerBound(arr, 25), 0, 25);  // 有序插入,搬移 O(n)
             zh={
               <p>
                 <b>题意:</b>判断一棵二叉树是否为合法 BST。
-                <b>大坑:</b>几乎每个人的第一版都是「检查每个节点比左孩子大、
+                <b>常见错误:</b>几乎每个人的第一版都是「检查每个节点比左孩子大、
                 比右孩子小」——<strong>这是错的</strong>。
                 规矩管的是整棵子树,不是父子两个人。看这个专门击穿它的反例:
               </p>
@@ -2587,7 +2594,7 @@ arr.splice(lowerBound(arr, 25), 0, 25);  // 有序插入,搬移 O(n)
                 <>
                   <b>细节:</b>界用 <code>long</code>,因为节点值可能取到{" "}
                   <code>Integer.MIN_VALUE</code> / <code>MAX_VALUE</code>,
-                  用 int 当边界会把合法的树判错 —— 面试写出这一步是实打实的加分项。
+                  用 int 当边界会把合法的树判错 —— 面试时写出这一步,回答会更扎实。
                 </>
               ),
             },
@@ -2744,7 +2751,7 @@ arr.splice(lowerBound(arr, 25), 0, 25);  // 有序插入,搬移 O(n)
               <p>
                 <b>题意:</b>返回 BST 中第 k 小的元素。<b>暴力:</b>
                 任意遍历收集所有值、排序取第 k 个 —— O(n log n),完全没用上 BST。
-                <b>为什么用中序:</b>排序的活儿在建树时就已经做完了 ——
+                <b>为什么用中序:</b>排序在建树时就已经完成了 ——
                 中序遍历<strong>就是</strong>按升序逐个吐数,
                 我们只需要一边遍历一边数数,数到 k 立刻停:
               </p>
@@ -2766,39 +2773,45 @@ arr.splice(lowerBound(arr, 25), 0, 25);  // 有序插入,搬移 O(n)
           java={{
             code: {
               en: `class Solution {
-    private int count = 0, ans = 0;
-
     public int kthSmallest(TreeNode root, int k) {
-        dfs(root, k);
-        return ans;
-    }
-
-    private void dfs(TreeNode node, int k) {
-        if (node == null || count >= k) return; // done counting, stop everywhere
-        dfs(node.left, k);                      // count everything smaller first
-        count++;                                // now count this node
-        if (count == k) { ans = node.val; return; }
-        dfs(node.right, k);                     // then the larger values
+        // iterative in-order with an explicit stack: return as soon as k is reached
+        Deque<TreeNode> stack = new ArrayDeque<>();
+        TreeNode cur = root;
+        int count = 0;
+        while (cur != null || !stack.isEmpty()) {
+            while (cur != null) {           // push the whole left spine
+                stack.push(cur);
+                cur = cur.left;
+            }
+            cur = stack.pop();              // popping = visiting in ascending order
+            count++;                        // count this node
+            if (count == k) return cur.val; // the k-th one is the answer
+            cur = cur.right;                // turn to the right subtree
+        }
+        return -1;                          // unreachable for a valid k
     }
 }`,
               zh: `class Solution {
-    private int count = 0, ans = 0;
-
     public int kthSmallest(TreeNode root, int k) {
-        dfs(root, k);
-        return ans;
-    }
-
-    private void dfs(TreeNode node, int k) {
-        if (node == null || count >= k) return; // 数够了,全线撤退
-        dfs(node.left, k);                      // 先数完所有更小的
-        count++;                                // 轮到自己报数
-        if (count == k) { ans = node.val; return; }
-        dfs(node.right, k);                     // 再去数更大的
+        // 迭代中序:显式栈,数到 k 个直接 return,天然提前终止
+        Deque<TreeNode> stack = new ArrayDeque<>();
+        TreeNode cur = root;
+        int count = 0;
+        while (cur != null || !stack.isEmpty()) {
+            while (cur != null) {           // 左脊全部入栈
+                stack.push(cur);
+                cur = cur.left;
+            }
+            cur = stack.pop();              // 弹出 = 按升序访问
+            count++;                        // 计数这个节点
+            if (count == k) return cur.val; // 第 k 个就是答案
+            cur = cur.right;                // 转向右子树
+        }
+        return -1;                          // k 合法时走不到这里
     }
 }`,
             },
-            hl: [10, 11, 12, 13],
+            hl: [12, 13, 14],
           }}
           python={{
             code: {
@@ -2829,7 +2842,7 @@ arr.splice(lowerBound(arr, 25), 0, 25);  // 有序插入,搬移 O(n)
                 stack.append(cur)
                 cur = cur.left
             cur = stack.pop()        # 弹出 = 按升序访问
-            count += 1               # 轮到自己报数
+            count += 1               # 计数这个节点
             if count == k:
                 return cur.val       # 第 k 个就是答案
             cur = cur.right          # 转向右子树
@@ -2839,17 +2852,17 @@ arr.splice(lowerBound(arr, 25), 0, 25);  // 有序插入,搬移 O(n)
             note: {
               en: (
                 <>
-                  <b>Why iterative here:</b> stopping a recursion early means
-                  carrying a flag back up through every frame, while the
-                  iterative version just returns. This stack template is also the
-                  answer to LC 173, the BST iterator.
+                  <b>Why an explicit stack:</b> the loop returns the moment the
+                  k-th node is popped, and it has no recursion depth limit, which
+                  matters in Python (the default limit is 1000). The same stack
+                  template is the answer to LC 173, the BST iterator.
                 </>
               ),
               zh: (
                 <>
-                  <b>为什么用迭代:</b>递归提前终止要靠标记层层返回,
-                  迭代版一个 <code>return</code> 干净利落 ——
-                  这段栈模板同时就是 LC 173(BST 迭代器)的答案。
+                  <b>为什么用显式栈:</b>弹出第 k 个节点时循环立即返回,
+                  而且不受递归深度限制,这一点在 Python 里尤其重要(默认上限 1000)。
+                  同一段栈模板也是 LC 173(BST 迭代器)的答案。
                 </>
               ),
             },
@@ -2857,31 +2870,39 @@ arr.splice(lowerBound(arr, 25), 0, 25);  // 有序插入,搬移 O(n)
           js={{
             code: {
               en: `var kthSmallest = function (root, k) {
-  let count = 0, ans = -1;
-  const dfs = (node) => {
-    if (!node || count >= k) return;  // done counting, stop everywhere
-    dfs(node.left);                   // count everything smaller first
-    count++;                          // now count this node
-    if (count === k) { ans = node.val; return; }
-    dfs(node.right);                  // then the larger values
-  };
-  dfs(root);
-  return ans;
+  // iterative in-order with an explicit stack: return as soon as k is reached
+  const stack = [];
+  let cur = root, count = 0;
+  while (cur || stack.length) {
+    while (cur) {                    // push the whole left spine
+      stack.push(cur);
+      cur = cur.left;
+    }
+    cur = stack.pop();               // popping = visiting in ascending order
+    count++;                         // count this node
+    if (count === k) return cur.val; // the k-th one is the answer
+    cur = cur.right;                 // turn to the right subtree
+  }
+  return -1;                         // unreachable for a valid k
 };`,
               zh: `var kthSmallest = function (root, k) {
-  let count = 0, ans = -1;
-  const dfs = (node) => {
-    if (!node || count >= k) return;  // 数够了,全线撤退
-    dfs(node.left);                   // 先数完所有更小的
-    count++;                          // 轮到自己报数
-    if (count === k) { ans = node.val; return; }
-    dfs(node.right);                  // 再去数更大的
-  };
-  dfs(root);
-  return ans;
+  // 迭代中序:显式栈,数到 k 个直接 return,天然提前终止
+  const stack = [];
+  let cur = root, count = 0;
+  while (cur || stack.length) {
+    while (cur) {                    // 左脊全部入栈
+      stack.push(cur);
+      cur = cur.left;
+    }
+    cur = stack.pop();               // 弹出 = 按升序访问
+    count++;                         // 计数这个节点
+    if (count === k) return cur.val; // 第 k 个就是答案
+    cur = cur.right;                 // 转向右子树
+  }
+  return -1;                         // k 合法时走不到这里
 };`,
             },
-            hl: [4, 5, 6, 7],
+            hl: [10, 11, 12],
           }}
         />
         <Callout
@@ -3149,7 +3170,7 @@ arr.splice(lowerBound(arr, 25), 0, 25);  // 有序插入,搬移 O(n)
                 链表找中点要 O(n),于是有两个思路:每次用快慢指针找中点
                 (总 O(n log n));或者反过来用「中序位置法」——
                 先数出长度,再按中序顺序边递归边消费链表节点,依然 O(n)。
-                能把这层讲清楚,这组题就通关了。
+                能把这一层讲清楚,这组题就都能解决了。
               </p>
             }
           />
@@ -3178,14 +3199,14 @@ arr.splice(lowerBound(arr, 25), 0, 25);  // 有序插入,搬移 O(n)
       <Section
         id="quiz"
         index="08"
-        title={{ en: "Chapter quiz", zh: "通关测验" }}
+        title={{ en: "Chapter quiz", zh: "本章测验" }}
         desc={{
           en: "Get all 7 right to light up this chapter",
-          zh: "7 题全对,点亮本章绿灯",
+          zh: "7 题全部答对,即完成本章",
         }}
         badge={
           <span className="chip">
-            <T en="✎ Quiz" zh="✎ 通关测验" />
+            <T en="✎ Chapter quiz" zh="✎ 本章测验" />
           </span>
         }
       >
@@ -3205,7 +3226,7 @@ arr.splice(lowerBound(arr, 25), 0, 25);  // 有序插入,搬移 O(n)
             ),
             zh: (
               <>
-                一条规矩定乾坤:<b>左 &lt; 根 &lt; 右,且对整棵子树成立</b> ——
+                一切都源于一条规则:<b>左 &lt; 根 &lt; 右,且对整棵子树成立</b> ——
                 验证或利用它时,永远记得「祖先的约束会传下来」(LC 98 的上下界)。
               </>
             ),
@@ -3229,7 +3250,8 @@ arr.splice(lowerBound(arr, 25), 0, 25);  // 有序插入,搬移 O(n)
             en: (
               <>
                 Search, insert, and delete are all <b>O(h)</b>, with the height h
-                counted in edges: h = ⌊log₂n⌋ while the tree is balanced, and
+                counted in edges: h = ⌊log₂n⌋ for a perfectly balanced (complete) tree,
+                O(log n) for balanced trees in general, and
                 h = n − 1 after sorted input degenerates it. State the complexity
                 with h, or state the condition.
               </>
@@ -3237,7 +3259,7 @@ arr.splice(lowerBound(arr, 25), 0, 25);  // 有序插入,搬移 O(n)
             zh: (
               <>
                 查找 / 插入 / 删除都是 <b>O(h)</b>(树高按边数计):
-                平衡时 h = ⌊log₂n⌋,有序插入退化时 h = n − 1 ——
+                完全平衡时 h = ⌊log₂n⌋,一般的平衡树 h = O(log n),有序插入退化时 h = n − 1 ——
                 说复杂度带上 h,或者把条件说清楚。
               </>
             ),

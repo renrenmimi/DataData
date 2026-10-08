@@ -16,7 +16,7 @@
 // root-only tree has height 0 and an empty tree is −1, so the lower bound on the height
 // of a tree with n nodes is ⌊log₂n⌋.
 
-import { useMemo, useState, type ReactNode } from "react";
+import { useMemo, useRef, useState, type ReactNode } from "react";
 import { useStepper, StepControls } from "@/lib/stepper";
 import { useL, T, type Loc } from "@/lib/i18n";
 
@@ -101,6 +101,11 @@ export function BSTLab() {
   const [born, setBorn] = useState<number | null>(null);
   const [busy, setBusy] = useState(false);
   const [input, setInput] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+  // After an operation: typing replaces the number just used
+  const selectInput = () => {
+    if (document.activeElement === inputRef.current) inputRef.current?.select();
+  };
   const [msg, setMsg] = useState<ReactNode>(
     <T
       en="Type a whole number between 0 and 99, then insert or search it. Watch it start at the root and take one comparison per level."
@@ -150,7 +155,7 @@ export function BSTLab() {
       setMsg(
         <T
           en={<>This lab holds at most {CAP} nodes. Press &quot;Reset sample tree&quot; to start again.</>}
-          zh={<>实验室最多容纳 {CAP} 个节点 —— 点「重置示例树」再玩。</>}
+          zh={<>实验室最多容纳 {CAP} 个节点 —— 点「重置示例树」后再试。</>}
         />,
       );
       setBusy(false);
@@ -241,6 +246,7 @@ export function BSTLab() {
       ),
     );
     setBusy(false);
+    selectInput();
   };
 
   const doSearch = async () => {
@@ -447,14 +453,19 @@ export function BSTLab() {
         {msg}
       </div>
       <div className="viz-ctl">
+        {/* readOnly rather than disabled while animating: a disabled input
+            drops keyboard focus to <body> */}
         <input
+          ref={inputRef}
           className="bst-input"
           value={input}
           inputMode="numeric"
           placeholder="0–99"
-          disabled={busy}
+          readOnly={busy}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => {
+            // Enter that confirms an IME composition is not a submit
+            if (e.nativeEvent.isComposing || e.keyCode === 229) return;
             if (e.key === "Enter") doInsert();
           }}
           aria-label={L({
