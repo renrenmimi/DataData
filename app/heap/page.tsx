@@ -131,7 +131,7 @@ const F215: ArrayFrame[] = [
       ),
       zh: (
         <>
-          踢掉 2、修复堆序之后,堆里是 {"{3, 5}"},门槛升到 <b>3</b>。
+          淘汰 2、修复堆序之后,堆里是 {"{3, 5}"},门槛升到 <b>3</b>。
           门槛只会越来越高 —— 这正是我们想要的:每替换一次,幸存者就更强一点。
         </>
       ),
@@ -462,7 +462,7 @@ const CHIPS = [
     label: { en: "Patterns and Top-K", zh: "套路与精讲" },
   },
   { id: "problems", n: "07", label: { en: "Problem set", zh: "高频题单" } },
-  { id: "quiz", n: "08", label: { en: "Quiz", zh: "通关测验" } },
+  { id: "quiz", n: "08", label: { en: "Quiz", zh: "本章测验" } },
 ];
 
 export default function HeapChapter() {
@@ -639,7 +639,7 @@ export default function HeapChapter() {
               <T en="PROPERTY 02" zh="特性 02" />
             </div>
             <div className="card-title">
-              <T en="⚡ Insert and remove in O(log n)" zh="⚡ 进出都 O(log n)" />
+              <T en="Insert and remove in O(log n)" zh="进出都 O(log n)" />
             </div>
             <T
               en={
@@ -779,7 +779,7 @@ export default function HeapChapter() {
               <T en="RULE 2 · ORDER" zh="规矩 ② · 管顺序" />
             </div>
             <div className="card-title">
-              <T en="⚖️ Parent ≤ child (min-heap)" zh="⚖️ 父 ≤ 子(小根堆)" />
+              <T en="Parent ≤ child (min-heap)" zh="父 ≤ 子(小根堆)" />
             </div>
             <T
               en={
@@ -1017,7 +1017,7 @@ export default function HeapChapter() {
         }}
         badge={
           <span className="chip" data-tone="idea">
-            <T en="Try it" zh="动手玩" />
+            <T en="Try it" zh="动手试一试" />
           </span>
         }
       >
@@ -1397,8 +1397,8 @@ export default function HeapChapter() {
         id="impl"
         index="04"
         title={{
-          en: "Write a MinHeap: about 40 lines, nothing missing",
-          zh: "手写一个 MinHeap:40 行,五脏俱全",
+          en: "Write a MinHeap: about 50 lines, nothing missing",
+          zh: "手写一个 MinHeap:约 50 行,五脏俱全",
         }}
         desc={{
           en: "push, pop, peek, siftUp, siftDown, heapify — commented line by line and ready to run",
@@ -1581,6 +1581,9 @@ export default function HeapChapter() {
     def __init__(self):
         self.a = []                      # a plain list is the backing array
 
+    def __len__(self):                   # how many elements: len(h), O(1)
+        return len(self.a)
+
     def peek(self):                      # read the minimum, O(1)
         return self.a[0]                 # the root is always at index 0
 
@@ -1628,6 +1631,9 @@ export default function HeapChapter() {
     def __init__(self):
         self.a = []                      # 直接用 list 当底层数组
 
+    def __len__(self):                   # 元素个数:len(h),O(1)
+        return len(self.a)
+
     def peek(self):                      # 读最小值,O(1)
         return self.a[0]                 # 堆顶永远在下标 0
 
@@ -1672,7 +1678,7 @@ export default function HeapChapter() {
             h._sift_down(i)
         return h`,
             },
-            hl: [20, 21, 22, 23, 24, 25, 26, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39],
+            hl: [23, 24, 25, 26, 27, 28, 29, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42],
             note: {
               en: (
                 <>
@@ -1696,8 +1702,13 @@ export default function HeapChapter() {
           js={{
             code: {
               en: `class MinHeap {
-  constructor() {
+  constructor(less = (x, y) => x < y) { // how to compare; numbers by default
     this.a = [];                        // backing array
+    this.less = less;                   // less(x, y): should x sit above y?
+  }
+
+  size() {                              // how many elements, O(1)
+    return this.a.length;
   }
 
   peek() {                              // read the minimum, O(1)
@@ -1722,7 +1733,7 @@ export default function HeapChapter() {
   #siftUp(i) {                          // compare with the parent, swap if smaller
     while (i > 0) {
       const p = (i - 1) >> 1;           // index of the parent (>>1 divides by 2)
-      if (this.a[i] >= this.a[p]) break;// not smaller than the parent: stop
+      if (!this.less(this.a[i], this.a[p])) break; // not smaller: stop
       [this.a[i], this.a[p]] = [this.a[p], this.a[i]];
       i = p;
     }
@@ -1732,24 +1743,29 @@ export default function HeapChapter() {
     const n = this.a.length;
     while (true) {
       let l = 2 * i + 1, r = 2 * i + 2, m = i;
-      if (l < n && this.a[l] < this.a[m]) m = l;  // is the left child smaller?
-      if (r < n && this.a[r] < this.a[m]) m = r;  // is the right child smaller?
+      if (l < n && this.less(this.a[l], this.a[m])) m = l; // left smaller?
+      if (r < n && this.less(this.a[r], this.a[m])) m = r; // right smaller?
       if (m === i) break;               // smaller than both, or no child
       [this.a[i], this.a[m]] = [this.a[m], this.a[i]];
       i = m;
     }
   }
 
-  static heapify(data) {                // build in O(n)
-    const h = new MinHeap();
+  static heapify(data, less) {          // build in O(n)
+    const h = new MinHeap(less);
     h.a = [...data];
     for (let i = (h.a.length >> 1) - 1; i >= 0; i--) h.#siftDown(i);
     return h;
   }
 }`,
               zh: `class MinHeap {
-  constructor() {
+  constructor(less = (x, y) => x < y) { // 比较规则,默认按数值比
     this.a = [];                        // 底层数组
+    this.less = less;                   // less(x, y):x 该不该排在 y 上面
+  }
+
+  size() {                              // 元素个数,O(1)
+    return this.a.length;
   }
 
   peek() {                              // 读最小值,O(1)
@@ -1774,7 +1790,7 @@ export default function HeapChapter() {
   #siftUp(i) {                          // 和父结点比,更小就往上换
     while (i > 0) {
       const p = (i - 1) >> 1;           // 父结点下标(>>1 就是整除 2)
-      if (this.a[i] >= this.a[p]) break;// 不比父结点小,停
+      if (!this.less(this.a[i], this.a[p])) break; // 不比父结点小,停
       [this.a[i], this.a[p]] = [this.a[p], this.a[i]];
       i = p;
     }
@@ -1784,32 +1800,34 @@ export default function HeapChapter() {
     const n = this.a.length;
     while (true) {
       let l = 2 * i + 1, r = 2 * i + 2, m = i;
-      if (l < n && this.a[l] < this.a[m]) m = l;  // 左孩子更小?
-      if (r < n && this.a[r] < this.a[m]) m = r;  // 右孩子更小?
+      if (l < n && this.less(this.a[l], this.a[m])) m = l; // 左孩子更小?
+      if (r < n && this.less(this.a[r], this.a[m])) m = r; // 右孩子更小?
       if (m === i) break;               // 比两个孩子都小,或者没有孩子
       [this.a[i], this.a[m]] = [this.a[m], this.a[i]];
       i = m;
     }
   }
 
-  static heapify(data) {                // O(n) 建堆
-    const h = new MinHeap();
+  static heapify(data, less) {          // O(n) 建堆
+    const h = new MinHeap(less);
     h.a = [...data];
     for (let i = (h.a.length >> 1) - 1; i >= 0; i--) h.#siftDown(i);
     return h;
   }
 }`,
             },
-            hl: [25, 26, 27, 28, 29, 30, 31, 32, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44],
+            hl: [30, 31, 32, 33, 34, 35, 36, 37, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49],
             note: {
               en: (
                 <>
                   <b>Why you should know this by heart:</b> JavaScript has{" "}
                   <b>no</b> built-in heap or priority queue (§05 has the
                   details). In an interview or a timed contest you often have to
-                  write one on the spot, so practise these 40 lines until you can
-                  reproduce them without thinking. Top-K and Dijkstra both need
-                  them.
+                  write one on the spot, so practise this class until you can
+                  reproduce it without thinking. Top-K and Dijkstra both need
+                  it. The optional <code>less</code> function lets the same
+                  class order objects, for example by count or by node value;
+                  the walkthroughs in §06 rely on it.
                 </>
               ),
               zh: (
@@ -1817,7 +1835,9 @@ export default function HeapChapter() {
                   <b>为什么这段值得背下来:</b>JavaScript <b>没有</b>
                   内置的堆或优先队列(§05 详述)。
                   面试和笔试里经常要当场手写一个,
-                  把这 40 行练到不用想就能写出来,Top-K 和 Dijkstra 才有把握。
+                  把这个类练到不用想就能写出来,Top-K 和 Dijkstra 才有把握。
+                  可选参数 <code>less</code> 让同一个类也能比较对象,
+                  例如按频次或按结点值排序;§06 的精讲就用到了它。
                 </>
               ),
             },
@@ -1833,10 +1853,10 @@ export default function HeapChapter() {
                 Close the code and answer three questions. 1. Why does{" "}
                 <code>pop</code> move the <b>last</b> element to the root instead
                 of one of the children? (Because only removing the last slot
-                keeps the tree complete.) 2. When does{" "}
-                <code>if (m === i) break</code> in <code>siftDown</code> trigger?
-                (When the current node is already ≤ both children, or it has no
-                child at all.) 3. How many places must change to turn this
+                keeps the tree complete.) 2. When does <code>siftDown</code>{" "}
+                stop because <code>m</code> equals <code>i</code>? (When the
+                current node is already ≤ both children, or it has no child at
+                all.) 3. How many places must change to turn this
                 min-heap into a max-heap? (Two: the direction of the two
                 comparisons.)
               </p>
@@ -1846,8 +1866,8 @@ export default function HeapChapter() {
                 合上代码回答三个问题:① <code>pop</code> 为什么把
                 <b>最后一个</b>元素搬到堆顶,而不是拿某个孩子补?
                 (因为只有删掉末尾才不破坏完全二叉树的形状)
-                ② <code>siftDown</code> 里的{" "}
-                <code>if (m === i) break</code> 什么时候触发?
+                ② <code>siftDown</code> 什么时候因为 <code>m</code> 等于{" "}
+                <code>i</code> 而停止?
                 (当前结点已经 ≤ 两个孩子,或者它根本没有孩子)
                 ③ 把这个小根堆改成大根堆,最少要改几处?
                 (两处 —— 两个比较的方向)
@@ -1896,7 +1916,7 @@ export default function HeapChapter() {
                 一组直接操作普通 list 的函数;
                 <strong>JavaScript 没有内置的堆</strong>,
                 这也是上一节要你把手写堆记熟的原因。
-                有两个共同的坑要记住:
+                有两个共同的陷阱要记住:
                 <strong>Java 和 Python 默认都是小根堆</strong>,想要大根堆得动手;
                 <strong>遍历堆不会得到有序结果</strong>,
                 想按顺序读只能一个个取出来。
@@ -1964,12 +1984,12 @@ PriorityQueue<Integer> h = new PriorityQueue<>(List.of(5, 1, 3));`,
               ),
               zh: (
                 <>
-                  <b>两个坑。</b>① 遍历(<code>for (int x : pq)</code> 或{" "}
+                  <b>两个陷阱。</b>① 遍历(<code>for (int x : pq)</code> 或{" "}
                   <code>toString()</code>)走的是底层数组,
                   <b>顺序没有意义</b>;想按升序读只能反复 <code>poll()</code>。
                   ② 比较器别写成 <code>x[0] - y[0]</code>:
                   两个 int 相减在一大一负时可能溢出,符号就反了 ——
-                  老老实实用 <code>Integer.compare</code>。
+                  应当使用 <code>Integer.compare</code>。
                 </>
               ),
             },
@@ -1979,14 +1999,15 @@ PriorityQueue<Integer> h = new PriorityQueue<>(List.of(5, 1, 3));`,
               en: `import heapq
 
 # Python: heapq is a set of functions over a plain list, not a class.
-# It is a min-heap only.
+# Through Python 3.13 (what most judges run) it is a min-heap only.
 nums = [5, 1, 3]
 heapq.heapify(nums)          # build in place, O(n) -> [1, 5, 3]
 heapq.heappush(nums, 2)      # insert, O(log n)
 heapq.heappop(nums)          # 1 - remove the minimum, O(log n)
 nums[0]                      # peek: read the minimum, O(1)
 
-# There is no max-heap. The usual trick is to store negated values.
+# A max-heap before 3.14: store negated values.
+# (3.14 adds heapify_max, heappush_max and heappop_max.)
 maxq = []
 heapq.heappush(maxq, -5)     # negate on the way in
 top = -heapq.heappop(maxq)   # negate again on the way out -> 5
@@ -1997,18 +2018,22 @@ heapq.nsmallest(2, nums)     # the 2 smallest
 
 # Compound elements: pack a tuple. Item 1 is compared first,
 # and item 2 only breaks a tie.
-heapq.heappush(pq, (freq, word))`,
+pq = []
+heapq.heappush(pq, (3, "pear"))   # (count, word)
+heapq.heappush(pq, (3, "apple"))  # equal counts: the word decides
+heapq.heappop(pq)                 # (3, 'apple')`,
               zh: `import heapq
 
 # Python:heapq 是一组操作普通 list 的函数,不是类。
-# 它只有小根堆。
+# 到 Python 3.13 为止(多数评测环境仍是这个版本)它只有小根堆。
 nums = [5, 1, 3]
 heapq.heapify(nums)          # 原地建堆,O(n) -> [1, 5, 3]
 heapq.heappush(nums, 2)      # 插入,O(log n)
 heapq.heappop(nums)          # 1 —— 取走最小值,O(log n)
 nums[0]                      # peek:读最小值,O(1)
 
-# 没有大根堆。惯用技巧是存负数。
+# 3.14 之前要大根堆,惯用技巧是存负数。
+# (3.14 新增了 heapify_max、heappush_max、heappop_max。)
 maxq = []
 heapq.heappush(maxq, -5)     # 进去时取负
 top = -heapq.heappop(maxq)   # 出来时再取负还原 -> 5
@@ -2019,7 +2044,10 @@ heapq.nsmallest(2, nums)     # 最小的 2 个
 
 # 复合元素:打包成元组,先比第 1 项,
 # 第 1 项相等时才用第 2 项决胜负。
-heapq.heappush(pq, (freq, word))`,
+pq = []
+heapq.heappush(pq, (3, "pear"))   # (频次, 单词)
+heapq.heappush(pq, (3, "apple"))  # 频次相等,由单词决定先后
+heapq.heappop(pq)                 # (3, 'apple')`,
             },
             note: {
               en: (
@@ -2049,7 +2077,7 @@ heapq.heappush(pq, (freq, word))`,
             code: {
               en: `// JavaScript has no built-in heap or priority queue. Two options:
 
-// 1. Write one yourself (the 40 lines from §04)
+// 1. Write one yourself (the MinHeap class from §04)
 const h = new MinHeap();
 h.push(5);
 h.push(1);
@@ -2066,11 +2094,11 @@ pq.enqueue(1);
 pq.front();         // read the smallest element
 pq.dequeue();       // remove the smallest element
 
-// custom priority: a smaller priority leaves first
-const q = new MinPriorityQueue({ priority: (x) => x.dist });`,
+// custom priority (v5 and later): pass a function that reads it
+const q = new MinPriorityQueue((x) => x.dist);  // smallest dist first`,
               zh: `// JavaScript 没有内置的堆或优先队列。两条路:
 
-// ① 自己手写(§04 那 40 行)
+// ① 自己手写(§04 的 MinHeap 类)
 const h = new MinHeap();
 h.push(5);
 h.push(1);
@@ -2087,8 +2115,8 @@ pq.enqueue(1);
 pq.front();         // 读最小的元素
 pq.dequeue();       // 取走最小的元素
 
-// 自定义优先级:priority 越小越先出
-const q = new MinPriorityQueue({ priority: (x) => x.dist });`,
+// 自定义优先级(v5 及以后):传入读取优先级的函数
+const q = new MinPriorityQueue((x) => x.dist);  // dist 最小的先出`,
             },
             note: {
               en: (
@@ -2101,21 +2129,22 @@ const q = new MinPriorityQueue({ priority: (x) => x.dist });`,
                   major versions: older releases take{" "}
                   <code>{"{ priority: fn }"}</code> and return a{" "}
                   <code>{"{ element, priority }"}</code> wrapper, newer ones take
-                  a comparator and return the element itself. Since you cannot be
-                  sure which version the judge has, writing your own heap is the
-                  safer choice.
+                  the function directly and return the element itself. Since you
+                  cannot be sure which version the judge has, writing your own
+                  heap is the safer choice, and the walkthroughs in §06 do so.
                 </>
               ),
               zh: (
                 <>
-                  <b>两个提醒。</b>① 千万别用 <code>arr.sort()</code> 冒充堆:
+                  <b>两个提醒。</b>① 不要用 <code>arr.sort()</code> 代替堆:
                   每次插入后重排是单次 O(n log n),而不是 O(log n),
                   数据一大就会超时。② <code>@datastructures-js/priority-queue</code>{" "}
                   的 API 在大版本之间变过:旧版本收{" "}
                   <code>{"{ priority: fn }"}</code>、返回{" "}
                   <code>{"{ element, priority }"}</code> 包装对象,
-                  新版本收比较器、直接返回元素本身。
-                  既然无法确定评测机装的是哪个版本,自己手写堆更保险。
+                  新版本直接收函数、直接返回元素本身。
+                  既然无法确定评测机装的是哪个版本,自己手写堆更保险,
+                  §06 的精讲也都这样做。
                 </>
               ),
             },
@@ -2300,7 +2329,7 @@ const q = new MinPriorityQueue({ priority: (x) => x.dist });`,
         index="06"
         title={{
           en: "Patterns: Top-K and the heap that points the other way",
-          zh: "套路与精讲:Top-K 与那把「反过来的锁」",
+          zh: "套路与精讲:Top-K 与方向相反的堆",
         }}
         desc={{
           en: "When a problem says k-th largest, top k, or merge k sorted lists, think heap. Three worked examples, frame by frame",
@@ -2380,7 +2409,7 @@ const q = new MinPriorityQueue({ priority: (x) => x.dist });`,
                 标准解法是<b>一个最多装 k 个元素的小根堆</b>。
                 想通这一点,大部分 Top-K 题就变成同一道题了。
                 道理是这样的:你要留住「迄今最大的 k 个」,
-                每当有更强的新值进来,就必须<b>踢掉已有 k 个里最弱的那个</b>。
+                每当有更强的新值进来,就必须<b>淘汰已有 k 个里最弱的那个</b>。
                 这 k 个里最弱的就是它们的<b>最小值</b>,
                 而随时 O(1) 读出最小值正是<b>小根堆</b>的本事。
                 于是堆顶成了<b>入围门槛</b>:新值只有<b>比堆顶大</b>才进得来,
@@ -2397,7 +2426,7 @@ const q = new MinPriorityQueue({ priority: (x) => x.dist });`,
         {/* — Walkthrough A — */}
         <div className="sec-head" style={{ marginTop: 40 }}>
           <span className="sec-index">
-            <T en="EXAMPLE A" zh="精讲 A" />
+            <T en="Walkthrough A" zh="精讲 A" />
           </span>
           <h3 className="sec-title" style={{ fontSize: 20 }}>
             <T
@@ -2474,7 +2503,7 @@ class Solution {
         for (int x : nums) {
             heap.offer(x);              // 新值先进来
             if (heap.size() > k)        // 超过容量 k
-                heap.poll();            // 踢掉门槛(堆顶)
+                heap.poll();            // 淘汰门槛(堆顶)
         }
         return heap.peek();             // 堆顶就是第 k 大
     }
@@ -2505,7 +2534,7 @@ class Solution:
         for x in nums:
             heapq.heappush(heap, x)
             if len(heap) > k:
-                heapq.heappop(heap)     # 踢掉门槛(最小的那个)
+                heapq.heappop(heap)     # 淘汰门槛(最小的那个)
         return heap[0]                  # 堆顶就是第 k 大
 
     # 等价的一行写法,内部同样是容量 k 的堆:
@@ -2529,7 +2558,7 @@ var findKthLargest = function (nums, k) {
   const heap = new MinHeap();
   for (const x of nums) {
     heap.push(x);
-    if (heap.size() > k) heap.pop();    // 踢掉门槛
+    if (heap.size() > k) heap.pop();    // 淘汰门槛
   }
   return heap.peek();                   // 堆顶就是第 k 大
 };`,
@@ -2576,7 +2605,7 @@ var findKthLargest = function (nums, k) {
         {/* — Walkthrough B — */}
         <div className="sec-head" style={{ marginTop: 44 }}>
           <span className="sec-index">
-            <T en="EXAMPLE B" zh="精讲 B" />
+            <T en="Walkthrough B" zh="精讲 B" />
           </span>
           <h3 className="sec-title" style={{ fontSize: 20 }}>
             <T en="LC 347 · Top K Frequent Elements" zh="LC 347 · 前 K 个高频元素" />
@@ -2610,9 +2639,9 @@ var findKthLargest = function (nums, k) {
                 <b>暴力:</b>统计频率后按频率排序,取前 k 个,O(n log n)。
                 <b>正解:</b>这是你的第一道<strong>组合两种结构</strong>的题:
                 一种结构不够,就串两种 ——
-                先用<strong>哈希表 O(n) 数出每个值的频次</strong>(第 6 章的活),
+                先用<strong>哈希表 O(n) 数出每个值的频次</strong>(第 6 章的内容),
                 再把这些频次喂给<strong>容量 k 的小根堆</strong>做 Top-K
-                (本章的活)。注意堆是<strong>按频次</strong>排序的,
+                (本章的内容)。注意堆是<strong>按频次</strong>排序的,
                 所以门槛是仍在堆里的最低频次。
               </p>
             }
@@ -2667,10 +2696,10 @@ class Solution {
             new PriorityQueue<>((a, b) -> Integer.compare(a[1], b[1]));
         for (var e : cnt.entrySet()) {
             heap.offer(new int[]{e.getKey(), e.getValue()});
-            if (heap.size() > k) heap.poll();  // 踢掉频次最低的
+            if (heap.size() > k) heap.poll();  // 淘汰频次最低的
         }
 
-        // ③ 把答案倒出来
+        // ③ 取出答案
         int[] ans = new int[k];
         for (int i = 0; i < k; i++) ans[i] = heap.poll()[0];
         return ans;
@@ -2708,8 +2737,8 @@ class Solution:
         for num, freq in cnt.items():
             heapq.heappush(heap, (freq, num))
             if len(heap) > k:
-                heapq.heappop(heap)         # 踢掉频次最低的
-        return [num for freq, num in heap]  # ③ 把答案倒出来
+                heapq.heappop(heap)         # 淘汰频次最低的
+        return [num for freq, num in heap]  # ③ 取出答案
 
     # Counter 自带捷径:
     # return [x for x, _ in cnt.most_common(k)]`,
@@ -2723,17 +2752,16 @@ class Solution:
   const cnt = new Map();
   for (const x of nums) cnt.set(x, (cnt.get(x) ?? 0) + 1);
 
-  // 2. min-heap of size k, priority = the count
-  const { MinPriorityQueue } = require('@datastructures-js/priority-queue');
-  const pq = new MinPriorityQueue({ priority: (o) => o.freq });
-  for (const [num, freq] of cnt) {
-    pq.enqueue({ num, freq });
-    if (pq.size() > k) pq.dequeue();      // drop the lowest count
+  // 2. the MinHeap from §04, ordered by count; entries are [value, count]
+  const heap = new MinHeap((p, q) => p[1] < q[1]);
+  for (const entry of cnt) {
+    heap.push(entry);
+    if (heap.size() > k) heap.pop();      // drop the lowest count
   }
 
   // 3. read the answer out
   const ans = [];
-  while (!pq.isEmpty()) ans.push(pq.dequeue().element.num);
+  while (heap.size()) ans.push(heap.pop()[0]);
   return ans;
 };`,
               zh: `var topKFrequent = function (nums, k) {
@@ -2741,41 +2769,40 @@ class Solution:
   const cnt = new Map();
   for (const x of nums) cnt.set(x, (cnt.get(x) ?? 0) + 1);
 
-  // ② 容量 k 的小根堆,priority = 频次
-  const { MinPriorityQueue } = require('@datastructures-js/priority-queue');
-  const pq = new MinPriorityQueue({ priority: (o) => o.freq });
-  for (const [num, freq] of cnt) {
-    pq.enqueue({ num, freq });
-    if (pq.size() > k) pq.dequeue();      // 踢掉频次最低的
+  // ② 用 §04 的 MinHeap,按频次排序;元素是 [值, 频次]
+  const heap = new MinHeap((p, q) => p[1] < q[1]);
+  for (const entry of cnt) {
+    heap.push(entry);
+    if (heap.size() > k) heap.pop();      // 淘汰频次最低的
   }
 
-  // ③ 把答案倒出来
+  // ③ 取出答案
   const ans = [];
-  while (!pq.isEmpty()) ans.push(pq.dequeue().element.num);
+  while (heap.size()) ans.push(heap.pop()[0]);
   return ans;
 };`,
             },
-            hl: [6, 7, 8, 9, 10, 11, 12],
+            hl: [6, 7, 8, 9, 10, 11],
             note: {
               en: (
                 <>
-                  <b>If the package is not available:</b> for small inputs you can
-                  write{" "}
+                  <b>A shortcut for small inputs:</b>{" "}
                   <code>
                     [...cnt].sort((a,b)=&gt;b[1]-a[1]).slice(0,k).map(p=&gt;p[0])
-                  </code>
-                  , but that is O(n log n) rather than the heap&apos;s O(n log k).
-                  Bucket sort reaches O(n) and is a good answer to the follow-up.
+                  </code>{" "}
+                  also works, but that is O(n log n) rather than the heap&apos;s
+                  O(n log k). Bucket sort reaches O(n) and is a good answer to the
+                  follow-up.
                 </>
               ),
               zh: (
                 <>
-                  <b>没有第三方包时:</b>数据不大可以写{" "}
+                  <b>数据不大时的简便写法:</b>{" "}
                   <code>
                     [...cnt].sort((a,b)=&gt;b[1]-a[1]).slice(0,k).map(p=&gt;p[0])
-                  </code>
-                  ,但那是 O(n log n),不是堆的 O(n log k)。
-                  桶排序能做到 O(n),是追问时的加分答案。
+                  </code>{" "}
+                  也能通过,但那是 O(n log n),不是堆的 O(n log k)。
+                  桶排序能做到 O(n),是回答追问的好方案。
                 </>
               ),
             },
@@ -2815,7 +2842,7 @@ class Solution:
         {/* — Walkthrough C — */}
         <div className="sec-head" style={{ marginTop: 44 }}>
           <span className="sec-index">
-            <T en="EXAMPLE C" zh="精讲 C" />
+            <T en="Walkthrough C" zh="精讲 C" />
           </span>
           <h3 className="sec-title" style={{ fontSize: 20 }}>
             <T en="LC 23 · Merge k Sorted Lists" zh="LC 23 · 合并 K 个升序链表" />
@@ -2974,7 +3001,7 @@ class Solution:
               ),
               zh: (
                 <>
-                  <b>核心坑:</b>两个元组的 <code>val</code> 相等时,
+                  <b>陷阱:</b>两个元组的 <code>val</code> 相等时,
                   Python 会接着比下一项。如果那一项就是 <code>node</code>,
                   而 <code>ListNode</code> 没有定义 <code>&lt;</code>,
                   就会抛 <code>TypeError</code>。
@@ -2988,41 +3015,39 @@ class Solution:
           js={{
             code: {
               en: `var mergeKLists = function (lists) {
-  // priority = the node value; without the package, change the §04
-  // MinHeap so that it compares .val instead of the value itself
-  const { MinPriorityQueue } = require('@datastructures-js/priority-queue');
-  const pq = new MinPriorityQueue({ priority: (node) => node.val });
-  for (const head of lists) if (head) pq.enqueue(head);  // k heads go in
+  // the MinHeap from §04, comparing nodes by .val;
+  // it holds only the current head of each list
+  const heap = new MinHeap((a, b) => a.val < b.val);
+  for (const head of lists) if (head) heap.push(head);  // k heads go in
 
   const dummy = new ListNode(0);
   let tail = dummy;
-  while (!pq.isEmpty()) {
-    const node = pq.dequeue().element;   // smallest of all lists
+  while (heap.size()) {
+    const node = heap.pop();             // smallest of all lists
     tail.next = node;
     tail = node;
-    if (node.next) pq.enqueue(node.next);// push its next node
+    if (node.next) heap.push(node.next); // push its next node
   }
   return dummy.next;
 };`,
               zh: `var mergeKLists = function (lists) {
-  // priority = 结点值;没有这个包时,把 §04 的 MinHeap
-  // 改成比较 .val 而不是元素本身
-  const { MinPriorityQueue } = require('@datastructures-js/priority-queue');
-  const pq = new MinPriorityQueue({ priority: (node) => node.val });
-  for (const head of lists) if (head) pq.enqueue(head);  // k 个头入堆
+  // 用 §04 的 MinHeap,按结点的 .val 比较;
+  // 堆里只装每条链当前的头结点
+  const heap = new MinHeap((a, b) => a.val < b.val);
+  for (const head of lists) if (head) heap.push(head);  // k 个头入堆
 
   const dummy = new ListNode(0);
   let tail = dummy;
-  while (!pq.isEmpty()) {
-    const node = pq.dequeue().element;   // 所有链里最小的
+  while (heap.size()) {
+    const node = heap.pop();             // 所有链里最小的
     tail.next = node;
     tail = node;
-    if (node.next) pq.enqueue(node.next);// 把后继压进堆
+    if (node.next) heap.push(node.next); // 把后继压进堆
   }
   return dummy.next;
 };`,
             },
-            hl: [10, 11, 12, 13, 14, 15],
+            hl: [9, 10, 11, 12, 13, 14],
           }}
         />
         <Callout
@@ -3041,10 +3066,13 @@ class Solution:
                 the rest of that list and nothing has to be copied. The classic
                 follow-up is{" "}
                 <b>&quot;can you solve it without a heap?&quot;</b> Yes, by{" "}
-                <b>merging pairs of lists</b>: repeatedly apply &quot;merge two
-                sorted lists&quot; (LC 21). k lists take log k rounds, each round
+                <b>divide and conquer</b>: pair the lists up and merge each pair
+                with &quot;merge two sorted lists&quot; (LC 21), so every round
+                halves the number of lists. k lists take log k rounds, each round
                 scans O(N) nodes in total, so it is also O(N log k) and it does
-                not need the heap&apos;s O(k) space.
+                not need the heap&apos;s O(k) space. (Merging the lists one after
+                another into a single growing result is slower, O(Nk), as the
+                linked list chapter notes.)
               </p>
             }
             zh={
@@ -3053,11 +3081,13 @@ class Solution:
                 每次堆操作 O(log k) —— 堆里最多只有 k 个结点。
                 所以时间是 <b>O(N log k)</b>,额外空间 <b>O(k)</b>。
                 注意这里和链表章的呼应:堆里存的是<b>结点</b>,
-                靠 <code>next</code> 就能拿到每条链的剩余部分,不必把值抠出来。
-                经典追问是<b>「不用堆行不行?」</b>行,用<b>两两归并</b>:
-                反复调用「合并两个有序链表」(LC 21),k 条链 log k 轮合完,
+                靠 <code>next</code> 就能拿到每条链的剩余部分,不必复制任何值。
+                经典追问是<b>「不用堆行不行?」</b>行,用<b>分治归并</b>:
+                每轮把链表两两配对,用「合并两个有序链表」(LC 21)合并每一对,
+                链表数随之减半。k 条链 log k 轮合完,
                 每轮总共扫 O(N) 个结点,同样是 O(N log k),
-                而且不需要堆的 O(k) 空间。
+                而且不需要堆的 O(k) 空间。(如果把各条链依次并入同一个结果,
+                则要 O(Nk),链表章提到的正是这种做法。)
               </p>
             }
           />
@@ -3086,14 +3116,14 @@ class Solution:
       <Section
         id="quiz"
         index="08"
-        title={{ en: "Quiz", zh: "通关测验" }}
+        title={{ en: "Chapter quiz", zh: "本章测验" }}
         desc={{
           en: "Answer all 7 correctly to complete the chapter",
-          zh: "7 题全对,点亮本章绿灯",
+          zh: "7 题全部答对,即完成本章",
         }}
         badge={
           <span className="chip">
-            <T en="✎ Quiz" zh="✎ 通关测验" />
+            <T en="✎ Chapter quiz" zh="✎ 本章测验" />
           </span>
         }
       >
@@ -3187,8 +3217,9 @@ class Solution:
                 <code>PriorityQueue</code> is a min-heap by default and takes a{" "}
                 <code>Comparator</code> such as <code>reverseOrder()</code> to
                 flip it, and iterating it is unordered; Python{" "}
-                <code>heapq</code> is a min-heap only, so a max-heap means{" "}
-                <b>storing negated values</b>; JavaScript has{" "}
+                <code>heapq</code> is a min-heap only up to 3.13, so a max-heap
+                means <b>storing negated values</b> (3.14 adds{" "}
+                <code>heappush_max</code> and friends); JavaScript has{" "}
                 <b>nothing built in</b>, so write your own or use a package.
               </>
             ),
@@ -3197,8 +3228,9 @@ class Solution:
                 <b>优先队列</b>是接口,<b>二叉堆</b>是常见实现。工程上:
                 Java 的 <code>PriorityQueue</code> 默认小根堆,
                 传 <code>Comparator</code>(如 <code>reverseOrder()</code>)可以反向,
-                而且遍历无序;Python 的 <code>heapq</code> 只有小根堆,
-                大根堆靠<b>存负数</b>;JavaScript <b>没有内置实现</b>,
+                而且遍历无序;Python 的 <code>heapq</code> 到 3.13 为止只有小根堆,
+                大根堆靠<b>存负数</b>(3.14 新增了 <code>heappush_max</code>{" "}
+                等函数);JavaScript <b>没有内置实现</b>,
                 只能手写或用第三方包。
               </>
             ),

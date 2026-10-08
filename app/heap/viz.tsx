@@ -13,7 +13,7 @@
 // n nodes has height ⌊log₂n⌋ and one sift up / sift down performs at most that many
 // swaps — §03 of the page uses the same definition.
 
-import { useState, type ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import { useL, T } from "@/lib/i18n";
 
 /* ================= Helpers ================= */
@@ -44,6 +44,7 @@ export function HeapLab() {
   const [okIdx, setOkIdx] = useState<number | null>(null);
   const [busy, setBusy] = useState(false);
   const [input, setInput] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
   const [lastSwaps, setLastSwaps] = useState<number | null>(null);
   const [msg, setMsg] = useState<ReactNode>(
     <T
@@ -183,6 +184,8 @@ export function HeapLab() {
       />,
     );
     setBusy(false);
+    // Ready for the next value: typing replaces the one just pushed
+    if (document.activeElement === inputRef.current) inputRef.current?.select();
   };
 
   const doPop = async () => {
@@ -268,8 +271,8 @@ export function HeapLab() {
         setMsg(
           l < a.length ? (
             <T
-              en="It is smaller than both of its children, so it is in place."
-              zh="它比两个孩子都小,到位了。"
+              en="It is no larger than either child, so it is in place."
+              zh="它不大于任何一个孩子,到位了。"
             />
           ) : (
             <T
@@ -500,14 +503,19 @@ export function HeapLab() {
         {msg}
       </div>
       <div className="viz-ctl">
+        {/* readOnly rather than disabled while animating: a disabled input
+            drops keyboard focus to <body> */}
         <input
+          ref={inputRef}
           className="hp-input"
           value={input}
           inputMode="numeric"
           placeholder="0–99"
-          disabled={busy}
+          readOnly={busy}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => {
+            // Enter that confirms an IME composition is not a submit
+            if (e.nativeEvent.isComposing || e.keyCode === 229) return;
             if (e.key === "Enter") doPush();
           }}
           aria-label={L({
