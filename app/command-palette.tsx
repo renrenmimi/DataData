@@ -4,6 +4,11 @@
 // Enter to jump. The search corpus holds both languages, so a keyword in
 // either one matches.
 // The global keyboard listener lives here; Esc closes, ↑↓ moves the selection.
+//
+// It is a modal dialog built on the combobox pattern: focus stays in the
+// search box (Tab cannot leave the dialog), the results are a listbox whose
+// active option is announced through aria-activedescendant, the page behind
+// does not scroll, and closing returns focus to whatever opened it.
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -17,6 +22,7 @@ export default function CommandPalette() {
   const [query, setQuery] = useState("");
   const [sel, setSel] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
+  const opener = useRef<HTMLElement | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -33,12 +39,20 @@ export default function CommandPalette() {
   }, [setCmdkOpen]);
 
   useEffect(() => {
-    if (cmdkOpen) {
-      setQuery("");
-      setSel(0);
-      // Focus only after the overlay has rendered
-      requestAnimationFrame(() => inputRef.current?.focus());
-    }
+    if (!cmdkOpen) return;
+    opener.current = document.activeElement as HTMLElement | null;
+    setQuery("");
+    setSel(0);
+    // Focus only after the overlay has rendered
+    requestAnimationFrame(() => inputRef.current?.focus());
+    const html = document.documentElement;
+    const previousOverflow = html.style.overflow;
+    html.style.overflow = "hidden";
+    return () => {
+      html.style.overflow = previousOverflow;
+      // Back to the button (or field) that opened the palette
+      opener.current?.focus?.();
+    };
   }, [cmdkOpen]);
 
   const hits = useMemo(() => {
@@ -64,11 +78,24 @@ export default function CommandPalette() {
       <div
         className="cmdk"
         role="dialog"
+        aria-modal="true"
         aria-label={L({ en: "Quick jump", zh: "快速跳转" })}
+        onKeyDown={(e) => {
+          // Focus lives in the search box; Tab must not escape the dialog
+          if (e.key === "Tab") {
+            e.preventDefault();
+            inputRef.current?.focus();
+          }
+        }}
       >
         <input
           ref={inputRef}
           className="cmdk-input"
+          role="combobox"
+          aria-expanded="true"
+          aria-controls="cmdk-list"
+          aria-autocomplete="list"
+          aria-activedescendant={hits[sel] ? `cmdk-opt-${hits[sel].id}` : undefined}
           placeholder={L({
             en: "Search chapters, data structures, tags…",
             zh: "搜索章节、数据结构、标签…",
@@ -90,7 +117,12 @@ export default function CommandPalette() {
             }
           }}
         />
-        <div className="cmdk-list">
+        <div
+          className="cmdk-list"
+          id="cmdk-list"
+          role="listbox"
+          aria-label={L({ en: "Chapters", zh: "章节" })}
+        >
           {hits.length === 0 && (
             <div className="cmdk-empty">
               {L({
@@ -105,7 +137,11 @@ export default function CommandPalette() {
             return (
               <button
                 key={c.id}
+                id={`cmdk-opt-${c.id}`}
                 type="button"
+                role="option"
+                aria-selected={i === sel}
+                tabIndex={-1}
                 className={`cmdk-item${i === sel ? " sel" : ""}`}
                 style={{ "--ch-hue": c.hue } as React.CSSProperties}
                 onMouseEnter={() => setSel(i)}
