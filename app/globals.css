@@ -186,14 +186,24 @@ body {
 }
 
 :root {
-  --font-display: var(--font-syne), var(--font-noto-sc), "PingFang SC",
-    "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
-  --font-ui: var(--font-grotesk), var(--font-noto-sc), -apple-system,
-    BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
-    sans-serif;
+  --font-display: var(--font-syne), "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", sans-serif;
+  --font-ui: var(--font-grotesk), -apple-system, BlinkMacSystemFont,
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
   --font-mono: var(--font-jb), ui-monospace, SFMono-Regular, "SF Mono", Menlo,
     Consolas, monospace;
   --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+/* Chinese pages add Noto Sans SC (app/fonts/noto-sans-sc.css), which gives
+   headings a real 900 weight where system PingFang stops at 600. English pages
+   never name it, so they download none of its slices. */
+html[data-lang="zh"] {
+  --font-display: var(--font-syne), "Noto Sans SC", "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --font-ui: var(--font-grotesk), "Noto Sans SC", -apple-system,
+    BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+    sans-serif;
 }
 
 body {

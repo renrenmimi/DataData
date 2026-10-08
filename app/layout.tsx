@@ -1,10 +1,6 @@
 import type { Metadata, Viewport } from "next";
-import {
-  Syne,
-  Space_Grotesk,
-  JetBrains_Mono,
-  Noto_Sans_SC,
-} from "next/font/google";
+import localFont from "next/font/local";
+import "./fonts/noto-sans-sc.css";
 import "./globals.css";
 import {
   ThemeProvider,
@@ -18,33 +14,27 @@ import Toolbar from "@/app/toolbar";
 import CommandPalette from "@/app/command-palette";
 
 // Three typefaces: Syne (oversized display, strongly geometric), Space Grotesk
-// (UI and headings), JetBrains Mono (code and numbers). Chinese falls back to
-// PingFang SC; the stacks are assembled in globals.css.
-const syne = Syne({
-  subsets: ["latin"],
-  weight: ["600", "700", "800"],
+// (UI and headings), JetBrains Mono (code and numbers). Chinese pages add Noto
+// Sans SC (imported above as plain @font-face rules, sliced by unicode-range);
+// the stacks are assembled in globals.css. All four are self-hosted from
+// app/fonts, so a build never downloads fonts (see app/fonts/README.md). Each
+// Latin file is Google Fonts' latin subset of the variable font.
+const syne = localFont({
+  src: "./fonts/syne-latin.woff2",
+  weight: "600 800",
   variable: "--font-syne",
   display: "swap",
 });
-const grotesk = Space_Grotesk({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+const grotesk = localFont({
+  src: "./fonts/space-grotesk-latin.woff2",
+  weight: "400 700",
   variable: "--font-grotesk",
   display: "swap",
 });
-const jetbrains = JetBrains_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500", "700"],
+const jetbrains = localFont({
+  src: "./fonts/jetbrains-mono-latin.woff2",
+  weight: "400 700",
   variable: "--font-jb",
-  display: "swap",
-});
-// Chinese sans-serif: gives headings a real 900 weight (system PingFang stops
-// at 600). CJK glyphs are sharded by unicode-range, so the browser downloads
-// only the characters the page actually uses.
-const notoSC = Noto_Sans_SC({
-  subsets: ["latin"],
-  weight: ["400", "500", "700", "900"],
-  variable: "--font-noto-sc",
   display: "swap",
 });
 
@@ -72,7 +62,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${syne.variable} ${grotesk.variable} ${jetbrains.variable} ${notoSC.variable}`}
+      className={`${syne.variable} ${grotesk.variable} ${jetbrains.variable}`}
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
