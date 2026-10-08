@@ -92,7 +92,10 @@ export default function RootLayout({
                   <Sidebar />
                   <div className="shell-main">
                     <Toolbar />
-                    <div className="shell-content">{children}</div>
+                    {/* Target of the sidebar's "Skip to content" link */}
+                    <div className="shell-content" id="main-content" tabIndex={-1}>
+                      {children}
+                    </div>
                   </div>
                 </div>
                 <CommandPalette />

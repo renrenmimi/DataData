@@ -590,6 +590,44 @@ html[data-sidebar="collapsed"] .sidebar {
   opacity: 0.5;
 }
 
+/* Very narrow phones: keep the chapter number, hide the title visually
+   (screen readers still read it) */
+@media (max-width: 400px) {
+  .tb-crumb-title {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+/* "Skip to content": off screen until it receives keyboard focus */
+.skip-link {
+  position: fixed;
+  left: 12px;
+  top: -60px;
+  z-index: 100;
+  padding: 9px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--acc-border);
+  background: var(--panel-solid);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  top: 12px;
+}
+
+/* The skip link focuses the content area; it needs no ring of its own */
+.shell-content:focus {
+  outline: none;
+}
+
 .tb-kbd {
   font-family: var(--font-mono);
   font-size: 10.5px;

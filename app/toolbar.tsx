@@ -6,10 +6,15 @@
 // (Java/Python/JS) are two separate things, each with its own .seg segmented
 // control; narrow screens keep only the interface language.
 
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { chapterByPath } from "@/lib/curriculum";
 import { useL, useLang, type Lang } from "@/lib/i18n";
 import { useShell, useTheme, type CodeLang } from "./theme-provider";
+import { useNarrowLayout } from "./sidebar";
+
+// The browser bar colour follows the in-app theme (values match --bg)
+const THEME_COLOR = { dark: "#07080f", light: "#f1f0f6" } as const;
 
 const CODE_LANGS: { id: CodeLang; label: string }[] = [
   { id: "java", label: "Java" },
@@ -29,19 +34,37 @@ export default function Toolbar() {
   const { lang, setLang } = useLang();
   const { theme, toggleTheme } = useTheme();
   const {
+    sidebarOpen,
     setSidebarOpen,
+    sidebarCollapsed,
     toggleSidebarCollapsed,
     setCmdkOpen,
     codeLang,
     setCodeLang,
   } = useShell();
+  const narrow = useNarrowLayout();
+
+  // Show the shortcut the reader's keyboard actually has
+  const [isMac, setIsMac] = useState(true);
+  useEffect(() => {
+    setIsMac(/Mac|iPhone|iPad/.test(navigator.platform));
+  }, []);
+
+  useEffect(() => {
+    document
+      .querySelector('meta[name="theme-color"]')
+      ?.setAttribute("content", THEME_COLOR[theme]);
+  }, [theme]);
 
   return (
     <header className="toolbar">
       <button
         type="button"
+        id="sidebar-toggle"
         className="tb-btn"
         aria-label={L({ en: "Toggle sidebar", zh: "切换侧栏" })}
+        aria-controls="sidebar"
+        aria-expanded={narrow ? sidebarOpen : !sidebarCollapsed}
         onClick={() => {
           if (window.innerWidth <= 960) setSidebarOpen((v) => !v);
           else toggleSidebarCollapsed();
@@ -60,9 +83,14 @@ export default function Toolbar() {
       <div className="tb-crumb">
         <span>DataData</span>
         <span className="sep">/</span>
+        {/* Below 400px only the chapter number shows; the title stays in
+            the accessibility tree */}
         <b>
-          {ch.num !== "✦" ? `${ch.num} · ` : ""}
-          {L(ch.title)}
+          {ch.num !== "✦" && <span className="tb-crumb-num">{ch.num}</span>}
+          <span className={ch.num !== "✦" ? "tb-crumb-title" : undefined}>
+            {ch.num !== "✦" ? " · " : ""}
+            {L(ch.title)}
+          </span>
         </b>
       </div>
 
@@ -94,6 +122,7 @@ export default function Toolbar() {
             key={l.id}
             type="button"
             className={`seg-btn${codeLang === l.id ? " on" : ""}`}
+            aria-pressed={codeLang === l.id}
             onClick={() => setCodeLang(l.id)}
           >
             {l.label}
@@ -107,14 +136,19 @@ export default function Toolbar() {
         onClick={() => setCmdkOpen(true)}
         aria-label={L({ en: "Open command palette", zh: "打开命令面板" })}
       >
-        {L({ en: "Jump", zh: "跳转" })} <span className="tb-kbd">⌘K</span>
+        {L({ en: "Jump", zh: "跳转" })}{" "}
+        <span className="tb-kbd">{isMac ? "⌘K" : "Ctrl K"}</span>
       </button>
 
       <button
         type="button"
         className="tb-btn"
         onClick={toggleTheme}
-        aria-label={L({ en: "Toggle theme", zh: "切换主题" })}
+        aria-label={
+          theme === "dark"
+            ? L({ en: "Switch to the light theme", zh: "切换到浅色主题" })
+            : L({ en: "Switch to the dark theme", zh: "切换到深色主题" })
+        }
       >
         {theme === "dark" ? "☾" : "☀"}
       </button>
