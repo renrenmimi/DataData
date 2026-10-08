@@ -1095,7 +1095,7 @@ function buildDfsFrames(order: Exclude<Order, "level">): TravFrame[] {
         }
         zh={
           <>
-            完成!{label.zh}的序列是 [{out.join(", ")}]。
+            完成。{label.zh}的序列是 [{out.join(", ")}]。
             调用栈最深只到过 3 层 —— 恰好是树高加一。
           </>
         }
@@ -1309,6 +1309,7 @@ export function TraverseLab() {
               key={o}
               type="button"
               className={`seg-btn${order === o ? " on" : ""}`}
+              aria-pressed={order === o}
               onClick={() => setOrder(o)}
             >
               {L(ORDER_TAB[o])}
@@ -1582,7 +1583,7 @@ const I_FRAMES: IFrame[] = [
         zh={
           <>
             第一步:交换根 4 的两个孩子。动的是<b>整棵子树</b> ——
-            实际写入的只有两根引用。子树内部先不管,那是递归的活。
+            实际写入的只有两根引用。子树内部先不管,那是递归要做的事。
           </>
         }
       />

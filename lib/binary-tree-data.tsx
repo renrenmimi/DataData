@@ -230,9 +230,12 @@ export const PROBLEMS: Problem[] = [
           The naive version calls a separate height function at every node, so
           heights are computed again and again: O(n²) in the worst case.{" "}
           <b>The fix:</b> compute the height and check the balance condition in
-          the same postorder pass. <b>What the function returns:</b> the real
-          height of the subtree, or <code>-1</code> to mean &ldquo;something
-          below is already unbalanced&rdquo;. <b>Combination:</b> if either
+          the same postorder pass. <b>What the function returns:</b> the height
+          of the subtree counted in nodes (an empty tree is 0, a leaf is 1), or{" "}
+          <code>-1</code> to mean &ldquo;something below is already
+          unbalanced&rdquo;. Counting nodes here, rather than edges as the rest
+          of this chapter does (where an empty tree is −1), is what leaves −1
+          free for the signal. <b>Combination:</b> if either
           child returned -1, return -1 immediately; otherwise, if{" "}
           <code>|left - right| &gt; 1</code>, return -1; otherwise return{" "}
           <code>1 + max(left, right)</code>. One pass, O(n) time, O(h) stack
@@ -244,7 +247,8 @@ export const PROBLEMS: Problem[] = [
         <>
           朴素做法在每个节点都单独调一次求高度的函数,高度被反复重算,最坏 O(n²)。
           <b>改法:</b>在同一次后序遍历里既算高度、又判平衡。<b>返回值的含义:</b>
-          子树的真实高度,或者用 <code>−1</code> 表示「下面已经失衡了」。
+          按节点数计的子树高度(空树为 0、叶子为 1),或者用 <code>−1</code> 表示「下面已经失衡了」。
+          这里改按节点数计高度(本章其他地方按边数计,空树为 −1),正是为了把 −1 空出来当信号。
           <b>合并这一步:</b>任何一个孩子返回 −1 就立刻返回 −1;否则若{" "}
           <code>|左 − 右| &gt; 1</code> 返回 −1;否则返回{" "}
           <code>1 + max(左, 右)</code>。一趟走完,时间 O(n),栈空间 O(h)。
