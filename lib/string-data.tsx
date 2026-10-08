@@ -18,7 +18,7 @@ export const PROBLEMS: Problem[] = [
     ],
     hint: {
       en: "The input is a character array, not a string, so you can write to it. Put one pointer at each end and decide what each step does.",
-      zh: "题目给的是字符数组(可变!),不是字符串。两端各站一个指针,想想每一步该干什么。",
+      zh: "题目给的是字符数组(可变),不是字符串。两端各站一个指针,想想每一步该干什么。",
     },
     key: {
       en: (
@@ -255,7 +255,7 @@ export const PROBLEMS: Problem[] = [
       en: "Find the Index of the First Occurrence in a String",
       zh: "找出字符串中第一个匹配项的下标",
     },
-    d: "medium",
+    d: "easy",
     tags: [
       { en: "KMP", zh: "KMP" },
       { en: "Substring matching", zh: "子串匹配" },
@@ -317,7 +317,7 @@ export const PROBLEMS: Problem[] = [
           开 <code>numRows</code> 个收集器(StringBuilder 或 list),用 <code>row</code>{" "}
           指针和方向变量 <code>dir = ±1</code> 走一遍输入,碰到第 0 行或最后一行就反向。
           每个字符恰好被收集一次,最后按行拼接,O(n)。数学解法(按周期{" "}
-          <code>2·numRows - 2</code> 直接算下标)可作追问的加分项。
+          <code>2·numRows - 2</code> 直接算下标)可作为追问时的进阶解法。
         </>
       ),
     },
@@ -405,7 +405,7 @@ export const QUIZ: QuizItem[] = [
     ],
     why: {
       en: "Immutable means the contents of the object are fixed. replace, toUpperCase, and concatenation all look like edits but build a new string instead. Half the complexity results in this chapter follow from that one fact: concatenation is O(n + m), and += inside a loop is O(n²).",
-      zh: "不可变 = 对象内容焊死。replace、toUpperCase、拼接看起来在「改」,其实都在重抄一份新的 —— 本章一半的复杂度结论都由这一个事实推出:拼接 O(n+m)、循环 += O(n²)。",
+      zh: "不可变 = 对象内容一经创建就不能修改。replace、toUpperCase、拼接看起来在「改」,其实都在重抄一份新的 —— 本章一半的复杂度结论都由这一个事实推出:拼接 O(n+m)、循环 += O(n²)。",
     },
   },
   {
@@ -432,11 +432,11 @@ export const QUIZ: QuizItem[] = [
       },
       {
         en: "A log factor comes from halving the work at each step. Here every step copies the whole string again, which is the sum of an arithmetic series.",
-        zh: "log 来自「每步砍一半」的结构;这里是实打实的逐次全量重抄,是等差数列求和。",
+        zh: "log 来自「每步减半」的结构;这里是实打实的逐次全量重抄,是等差数列求和。",
       },
       {
-        en: "One step looks cheap, but the total is 1 + 2 + … + n = n(n+1)/2. The counter in ConcatLab shows how far apart the two curves get.",
-        zh: "单次看着快,累计成本是 1+2+…+n = n(n+1)/2 —— ConcatLab 里的计数器会告诉你差距有多夸张。",
+        en: "One step looks cheap, but the total is 1 + 2 + … + n = n(n+1)/2. The counter in the concatenation race (§03) shows how far apart the two approaches get.",
+        zh: "单次看着快,累计成本是 1+2+…+n = n(n+1)/2 —— §03「拼接赛跑」里的计数器会告诉你两者差距有多大。",
       },
     ],
     why: {
@@ -480,7 +480,7 @@ export const QUIZ: QuizItem[] = [
     ],
     why: {
       en: "In Java, == on objects compares references and equals compares contents. The string pool makes \"abc\" == \"abc\" true for compile-time literals, which creates the false impression that == works. It stops working with new String or with a string built at run time. Note that this trap is specific to Java: in JavaScript === on strings compares values, and in Python you use == for equality and keep is for identity.",
-      zh: "Java 里 == 比引用、equals 比内容。常量池让编译期字面量 \"abc\" == \"abc\" 为 true,给人「== 能用」的错觉,一遇到 new String 或运行期拼接就失效。注意这个坑是 Java 特有的:JavaScript 的 === 对字符串比的是值,Python 判相等用 ==、is 只问是不是同一个对象。",
+      zh: "Java 里 == 比引用、equals 比内容。常量池让编译期字面量 \"abc\" == \"abc\" 为 true,给人「== 能用」的错觉,一遇到 new String 或运行期拼接就失效。注意这个陷阱是 Java 特有的:JavaScript 的 === 对字符串比的是值,Python 判相等用 ==、is 只问是不是同一个对象。",
     },
   },
   {
@@ -506,8 +506,8 @@ export const QUIZ: QuizItem[] = [
     ],
     correct: [0, 1, 3],
     missHint: {
-      en: "Think back to EncodeLab. With the input “A字🙂”, how many bytes does each of the three characters take? 1, 3, and 4. Which options does that match?",
-      zh: "回想 EncodeLab:输入「A字🙂」时,三个字符的字节数各是多少?1、3、4 —— 对应哪几个选项?",
+      en: "Think back to the encoding lab (§02). With the input “A字🙂”, how many bytes does each of the three characters take? 1, 3, and 4. Which options does that match?",
+      zh: "回想 §02 的「编码实验室」:输入「A字🙂」时,三个字符的字节数各是多少?1、3、4 —— 对应哪几个选项?",
     },
     extraHint: {
       en: "“Exactly 2 bytes” describes UCS-2, or UTF-16 inside the Basic Multilingual Plane. UTF-8 exists precisely because it is variable length: 1 to 4 bytes.",

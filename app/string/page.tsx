@@ -661,7 +661,7 @@ const CHIPS = [
     label: { en: "Patterns and walkthroughs", zh: "套路与精讲" },
   },
   { id: "problems", n: "07", label: { en: "Problem set", zh: "高频题单" } },
-  { id: "quiz", n: "08", label: { en: "Quiz", zh: "通关测验" } },
+  { id: "quiz", n: "08", label: { en: "Quiz", zh: "本章测验" } },
 ];
 
 const KMP_PRE_STYLE = {
@@ -709,7 +709,7 @@ export default function StringChapter() {
             <>
               一个<strong>不许改字</strong>的字符数组:读哪个位置都是 O(1),
               但改一个字就要<strong>重抄全文</strong>。字符的本质是数字,
-              而这一章的一半坑,都埋在「数字怎么变成字」的编码表里。
+              而这一章的许多易错点,都与「数字如何变成文字」的编码表有关。
             </>
           ),
         }}
@@ -963,7 +963,7 @@ export default function StringChapter() {
                   一个字符一个字节,天下太平 —— 只要你不说英语以外的语言。
                   汉字有几万个,128 个编号塞不下,于是各地各造各的表(GB2312、Big5、
                   Shift-JIS……),同一串字节换个国家打开就是乱码。
-                  这就是上古时代「乱码地狱」的由来。
+                  这就是早年大量「乱码」问题的由来。
                 </>
               }
             />
@@ -1231,7 +1231,7 @@ export default function StringChapter() {
           tone="warn"
           title={{
             en: "“Length” has three meanings, and all three have caused real bugs",
-            zh: "「长度」有三种口径,面试和线上都栽过人",
+            zh: "「长度」有三种口径,面试和生产环境中都常因此出错",
           }}
         >
           <p>
@@ -1520,11 +1520,13 @@ export default function StringChapter() {
                 <>
                   By the rules of the language, the loop is O(n²) in Java,
                   Python, and JavaScript alike, because a string cannot be
-                  extended in place. <b>Java:</b> the compiler turns{" "}
+                  extended in place. <b>Java:</b> up to Java 8 the compiler turned{" "}
                   <code>s += x</code> into a new <code>StringBuilder</code> plus{" "}
-                  <code>toString()</code> on <i>every</i> iteration, so the total
-                  stays O(n²). You have to lift the builder out of the loop
-                  yourself. <b>Python:</b> CPython has an optimization that
+                  <code>toString()</code> on <i>every</i> iteration; since Java 9
+                  it uses <code>invokedynamic</code> (StringConcatFactory)
+                  instead. Either way every iteration builds a new string, so the
+                  total stays O(n²), and you have to keep one builder outside the
+                  loop yourself. <b>Python:</b> CPython has an optimization that
                   extends the buffer in place when the string has exactly one
                   reference, but the language does not guarantee it and it stops
                   applying as soon as a second reference exists. The idiom is to
@@ -1542,18 +1544,20 @@ export default function StringChapter() {
               zh={
                 <>
                   按语言规则算,这个循环在 Java、Python、JavaScript 里都是 O(n²)
-                  —— 因为字符串都没法原地续写。<b>Java:</b>编译器把{" "}
+                  —— 因为字符串都没法原地续写。<b>Java:</b>Java 8 及以前,编译器把{" "}
                   <code>s += x</code> 展开成「每一圈都 new 一个{" "}
-                  <code>StringBuilder</code> 再 <code>toString()</code>」,
-                  总量还是 O(n²),必须自己把 builder 提到循环外。<b>Python:</b>
+                  <code>StringBuilder</code> 再 <code>toString()</code>」;
+                  Java 9 起改用 <code>invokedynamic</code>(StringConcatFactory)。
+                  无论哪种,每一圈都会生成一个新字符串,总量仍是 O(n²),
+                  必须自己在循环外维护一个 builder。<b>Python:</b>
                   CPython 有一个优化:当字符串只剩一个引用时可以原地扩容;
                   但语言规范不保证,只要多出第二个引用就失效 ——
-                  惯用法永远是攒 list 最后 <code>&quot;&quot;.join()</code>。
+                  惯用法是先把各段收集到 list 里,最后调用一次 <code>&quot;&quot;.join()</code>。
                   <b>JavaScript:</b>V8 把 <code>a + b</code>{" "}
-                  先表示成一个指向两半的小节点,真正读取时才拍平,
-                  所以循环 += 在实践中常常快于 n²,但拍平的成本和内存峰值仍然要付,
+                  先表示成一个指向两半的小节点,真正读取时才展平,
+                  所以循环 += 在实践中常常快于 n²,但展平的成本和内存峰值仍然要付,
                   而且没有任何引擎承诺这件事。结论在三种语言里一致:
-                  <b>显式用可变容器,别赌引擎优化</b>。
+                  <b>显式使用可变容器,不要依赖引擎优化</b>。
                 </>
               }
             />
@@ -1980,7 +1984,7 @@ KMP:  "ABAB" 的开头和结尾最长重叠是 "AB"(长度 2)
 
 文本   A B A B A B C
 模式       A B A B C
-           ✓ ✓ ✓ ✓ ✓    命中!`}</pre>
+           ✓ ✓ ✓ ✓ ✓    命中`}</pre>
           }
         />
         <div className="prose">
@@ -2451,9 +2455,9 @@ KMP:  "ABAB" 的开头和结尾最长重叠是 "AB"(长度 2)
                   三种语言的字符串
                   <strong>都不可变、都能下标和遍历、拼接都要重建</strong> ——
                   抽象层面完全一致。不同的是各自的习惯:Java 有常量池和{" "}
-                  <code>==</code> 的坑;Python 用 join 和 f-string
+                  <code>==</code> 的陷阱;Python 用 join 和 f-string
                   把「先攒后拼」变成肌肉记忆;JavaScript
-                  的模板字符串最顺手,但 UTF-16 的 emoji 坑也最深:
+                  的模板字符串最顺手,但 UTF-16 下 emoji 的陷阱也最多:
                 </>
               }
             />
@@ -2466,14 +2470,14 @@ KMP:  "ABAB" 的开头和结尾最长重叠是 "AB"(长度 2)
               en: `// Java: String is immutable, and literals live in the string pool
 String a = "data";
 String b = "data";
-a == b;                 // true: both literals point at the same pooled object
+System.out.println(a == b);       // true: both literals point at the same pooled object
 String c = new String("data");
-a == c;                 // false: new forces a separate object on the heap
-a.equals(c);            // true: compares contents; always use equals for strings
+System.out.println(a == c);       // false: new forces a separate object on the heap
+System.out.println(a.equals(c));  // true: compares contents; always use equals for strings
 
 char ch = a.charAt(0);  // read one UTF-16 code unit, O(1)
 a.substring(1, 3);      // "at": copies k characters, O(k)
-a + "!";                // a new string "data!"; a itself is unchanged
+String t = a + "!";     // a new string "data!"; a itself is unchanged
 
 // Changing a string often -> StringBuilder (single-threaded)
 StringBuilder sb = new StringBuilder();
@@ -2483,14 +2487,14 @@ String s = sb.toString();   // "012"
               zh: `// Java:String 不可变,字面量放在字符串常量池里
 String a = "data";
 String b = "data";
-a == b;                 // true:两个字面量指向常量池里的同一个对象
+System.out.println(a == b);       // true:两个字面量指向常量池里的同一个对象
 String c = new String("data");
-a == c;                 // false:new 强行在堆里另开了一个对象
-a.equals(c);            // true:比内容 —— 字符串比较永远用 equals
+System.out.println(a == c);       // false:new 强行在堆里另开了一个对象
+System.out.println(a.equals(c));  // true:比内容 —— 字符串比较永远用 equals
 
 char ch = a.charAt(0);  // 取一个 UTF-16 编码单元,O(1)
 a.substring(1, 3);      // "at":拷贝 k 个字符,O(k)
-a + "!";                // 新串 "data!",原 a 纹丝不动
+String t = a + "!";     // 新串 "data!",原 a 纹丝不动
 
 // 频繁修改 → StringBuilder(单线程用它)
 StringBuilder sb = new StringBuilder();
@@ -2903,7 +2907,7 @@ for (const ch of "a👍") console.log(ch); // 'a'、'👍':按码点遍历`,
                   。JavaScript 引擎内部也做同样的共享,但你永远看不见,
                   因为 <code>===</code> 对字符串比的是值。所以三种语言的差别正在这里:
                   Java 必须用 <code>equals</code>,Python 要用 <code>==</code>{" "}
-                  而不是 <code>is</code>,JavaScript 没有对应的坑。
+                  而不是 <code>is</code>,JavaScript 没有对应的陷阱。
                   这一切成立的前提正是 §01 的不可变 ——
                   内容会变的对象,谁敢共享?
                 </>
@@ -2950,11 +2954,11 @@ for (const ch of "a👍") console.log(ch); // 'a'、'👍':按码点遍历`,
               }
               zh={
                 <>
-                  字符串的招式和数组高度同源(毕竟是孪生兄弟),但有自己的三张王牌。
+                  字符串的套路和数组高度同源(两者的结构本来就很接近),但有三种套路属于这一章。
                   拿到题先对信号:<strong>回文 / 反转</strong> → 对撞指针;
                   <strong>连续子串的最值</strong> → 滑动窗口;
                   <strong>异位词 / 字符统计</strong> → 计数数组。
-                  三张牌能解掉本章题单的大部分:
+                  这三种套路能解决本章题单的大部分题目:
                 </>
               }
             />
@@ -2963,7 +2967,7 @@ for (const ch of "a👍") console.log(ch); // 'a'、'👍':按码点遍历`,
         <div className="grid-3">
           <div className="card hoverable">
             <div className="card-kicker">
-              <T en="TECHNIQUE 01" zh="王牌一" />
+              <T en="Pattern 1" zh="套路一" />
             </div>
             <div className="card-title">
               <T en="Two pointers, closing in" zh="对撞指针" />
@@ -2991,7 +2995,7 @@ for (const ch of "a👍") console.log(ch); // 'a'、'👍':按码点遍历`,
           </div>
           <div className="card hoverable">
             <div className="card-kicker">
-              <T en="TECHNIQUE 02" zh="王牌二" />
+              <T en="Pattern 2" zh="套路二" />
             </div>
             <div className="card-title">
               <T en="Sliding window" zh="滑动窗口" />
@@ -3017,7 +3021,7 @@ for (const ch of "a👍") console.log(ch); // 'a'、'👍':按码点遍历`,
           </div>
           <div className="card hoverable">
             <div className="card-kicker">
-              <T en="TECHNIQUE 03" zh="王牌三" />
+              <T en="Pattern 3" zh="套路三" />
             </div>
             <div className="card-title">
               <T en="Counting array" zh="计数数组" />
@@ -3165,7 +3169,7 @@ for (const ch of "a👍") console.log(ch); // 'a'、'👍':按码点遍历`,
           js={{
             code: {
               en: `var isPalindrome = function (s) {
-  const ok = (c) => /[a-z0-9]/i.test(c);   // letter or digit?
+  const ok = (c) => /[a-z0-9]/i.test(c);   // letter or digit? (the input is printable ASCII)
   let l = 0, r = s.length - 1;
   while (l < r) {
     // Each pointer skips over characters that are not letters or digits
@@ -3178,7 +3182,7 @@ for (const ch of "a👍") console.log(ch); // 'a'、'👍':按码点遍历`,
   return true;                             // the pointers met; every pair matched
 };`,
               zh: `var isPalindrome = function (s) {
-  const ok = (c) => /[a-z0-9]/i.test(c);   // 是否字母数字
+  const ok = (c) => /[a-z0-9]/i.test(c);   // 是否字母数字(本题输入只含可打印 ASCII)
   let l = 0, r = s.length - 1;
   while (l < r) {
     // 各自跳过非字母数字的字符
@@ -3667,7 +3671,7 @@ for (const ch of "a👍") console.log(ch); // 'a'、'👍':按码点遍历`,
                   <b>Manacher 算法 O(n)</b>:在字符间插分隔符统一奇偶,
                   再复用已知回文的对称信息;实现复杂,面试说出名字和思想通常就够了。
                   追问二:「动态规划行不行?」行,dp[i][j] 表示 s[i..j] 是否回文,
-                  同样 O(n²) 时间,但要 O(n²) 空间 —— 中心扩展在空间上完胜。
+                  同样 O(n²) 时间,但要 O(n²) 空间 —— 中心扩展在空间上明显更优。
                 </>
               }
             />
@@ -3700,14 +3704,14 @@ for (const ch of "a👍") console.log(ch); // 'a'、'👍':按码点遍历`,
       <Section
         id="quiz"
         index="08"
-        title={{ en: "Chapter quiz", zh: "通关测验" }}
+        title={{ en: "Chapter quiz", zh: "本章测验" }}
         desc={{
           en: "Get all 7 right to turn on the green dot for this chapter.",
-          zh: "7 题全对,点亮本章绿灯",
+          zh: "7 题全部答对,即完成本章",
         }}
         badge={
           <span className="chip">
-            <T en="✎ Chapter quiz" zh="✎ 通关测验" />
+            <T en="✎ Chapter quiz" zh="✎ 本章测验" />
           </span>
         }
       >

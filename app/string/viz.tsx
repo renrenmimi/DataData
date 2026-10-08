@@ -212,7 +212,7 @@ export function EncodeLab() {
                 看标着「代理对」的那一行:它的码点超过了 U+FFFF,UTF-16 需要
                 <b>两个编码单元</b>才能表示它。所以 JavaScript 的{" "}
                 <code>.length</code> 把它数成 <b>2</b>,<code>charAt</code>{" "}
-                也只能取到它的一半。Java 的行为完全相同 —— 这就是 §05 的那个坑。
+                也只能取到它的一半。Java 的行为完全相同 —— 这就是 §05 提到的那个陷阱。
               </>
             }
           />
@@ -346,14 +346,14 @@ export function ConcatLab() {
           <T
             en={
               <>
-                Both runners do the same job: append {N} characters to a string.
+                Both approaches do the same job: append {N} characters to a string.
                 The number of appends is identical. What differs is{" "}
                 <b>how many characters get copied in total</b>.
               </>
             }
             zh={
               <>
-                两位选手做同一件事:往字符串尾部追加 {N} 个字符。
+                两种做法完成同一件事:往字符串尾部追加 {N} 个字符。
                 追加次数完全一样,比的是<b>背后总共拷贝了多少字符</b>。
               </>
             }
