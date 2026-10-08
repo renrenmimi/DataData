@@ -311,7 +311,7 @@ export function ShiftLab() {
         zh={
           <>
             删除 arr[{pos}]({victim})完成 —— 右侧 <b>{done}</b>{" "}
-            个元素集体左移一格填补空位。删除不是「抠掉」,是「补位」。
+            个元素集体左移一格填补空位。删除靠后面的元素补位,而不是在原处留下空格。
           </>
         }
       />,
@@ -450,17 +450,19 @@ export function GrowLab() {
         en={
           <>
             The move is done and {v} is stored. This push cost{" "}
-            <b>{oldLen} copies plus 1 write</b>, but the next resize is{" "}
-            {newCap - oldLen - 1} pushes away. Spread that cost over all the
-            pushes and the average stays <b>O(1) amortized</b>.
+            <b>{oldLen} copies plus 1 write</b>, but{" "}
+            {newCap - oldLen - 1} more push{newCap - oldLen - 1 === 1 ? "" : "es"}{" "}
+            fit{newCap - oldLen - 1 === 1 ? "s" : ""} before the next resize.
+            Spread that cost over all the pushes and the average stays{" "}
+            <b>O(1) amortized</b>.
           </>
         }
         zh={
           <>
             搬家完成,再写入 {v}。这次 push 花了{" "}
-            <b>{oldLen} 次拷贝 + 1 次写入</b>,但要再过 {newCap - oldLen - 1}{" "}
-            次 push 才会再次扩容。把成本摊到每次 push 上,平均仍是{" "}
-            <b>均摊 O(1)</b>。
+            <b>{oldLen} 次拷贝 + 1 次写入</b>,但之后还能再放{" "}
+            {newCap - oldLen - 1} 个元素,才会再次扩容。把成本摊到每次 push 上,均摊下来仍是{" "}
+            <b>O(1)</b>。
           </>
         }
       />,

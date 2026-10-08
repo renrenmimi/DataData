@@ -86,7 +86,7 @@ export const PROBLEMS: Problem[] = [
       zh: (
         <>
           fast 扫完全程,凡是 nums[fast] ≠ val 就写到 nums[slow++]。结束时 slow
-          就是新长度。数组里的「删除」从来不是抠掉一个元素,而是把要留下的往前挪。
+          就是新长度。数组里的「删除」从来不是让元素在原处消失,而是把要留下的元素往前挪。
         </>
       ),
     },
@@ -433,7 +433,7 @@ export const PROBLEMS: Problem[] = [
         <>
           四边界模拟:每走完一条边就收缩对应边界(top++ / right-- / bottom-- /
           left++),边界交错时停止。走反向的两条边之前要再检查一次 top ≤ bottom、
-          left ≤ right,否则单行或单列会被重复输出 —— 这是本题唯一的坑。
+          left ≤ right,否则单行或单列会被重复输出 —— 这是本题唯一容易出错的地方。
         </>
       ),
     },
@@ -553,7 +553,7 @@ export const QUIZ: QuizItem[] = [
       },
       {
         en: "log n comes from halving a range each step. Inserting moves elements one by one.",
-        zh: "log n 来自「每步砍一半」,插入是实打实的逐个搬动。",
+        zh: "log n 来自「每步减半」,插入是实打实的逐个搬动。",
       },
       {
         en: "The number of moves depends only on the position and the length, never on the value.",
@@ -807,7 +807,7 @@ export const QUIZ: QuizItem[] = [
       },
       {
         en: "Nothing here halves a range at each step, so no logarithm appears.",
-        zh: "这里没有任何「每步砍一半」的结构,log 不会凭空出现。",
+        zh: "这里没有任何「每步减半」的结构,log 不会凭空出现。",
       },
       {
         en: "The total number of copies is 1+2+…+n ≈ n²/2, so the total cost is O(n²), not O(n).",
