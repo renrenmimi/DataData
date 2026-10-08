@@ -25,7 +25,8 @@ import { ArrayStepper, type ArrayFrame } from "@/lib/stepper";
 import { ProblemSet } from "@/lib/problems";
 import { Quiz } from "@/lib/quiz";
 import { T, useL } from "@/lib/i18n";
-import { PROBLEMS, QUIZ } from "@/lib/string-data";
+import { PROBLEMS } from "@/lib/string-problems";
+import { QUIZ } from "@/lib/string-quiz";
 import { EncodeLab, ConcatLab } from "./viz";
 import "./chapter.css";
 

@@ -23,19 +23,19 @@ import { CHAPTERS, type ChapterId } from "@/lib/curriculum";
 import { useL, T, type Loc } from "@/lib/i18n";
 import { DecisionLab } from "./viz";
 
-import { PROBLEMS as P_ARRAY } from "@/lib/array-data";
-import { PROBLEMS as P_STRING } from "@/lib/string-data";
-import { PROBLEMS as P_LIST } from "@/lib/linked-list-data";
-import { PROBLEMS as P_STACK } from "@/lib/stack-data";
-import { PROBLEMS as P_QUEUE } from "@/lib/queue-data";
-import { PROBLEMS as P_HASH } from "@/lib/hash-data";
-import { PROBLEMS as P_BTREE } from "@/lib/binary-tree-data";
-import { PROBLEMS as P_BST } from "@/lib/bst-data";
-import { PROBLEMS as P_HEAP } from "@/lib/heap-data";
-import { PROBLEMS as P_TRIE } from "@/lib/trie-data";
-import { PROBLEMS as P_UF } from "@/lib/union-find-data";
-import { PROBLEMS as P_GRAPH } from "@/lib/graph-data";
-import { PROBLEMS as P_ADV } from "@/lib/advanced-data";
+import { PROBLEMS as P_ARRAY } from "@/lib/array-problems";
+import { PROBLEMS as P_STRING } from "@/lib/string-problems";
+import { PROBLEMS as P_LIST } from "@/lib/linked-list-problems";
+import { PROBLEMS as P_STACK } from "@/lib/stack-problems";
+import { PROBLEMS as P_QUEUE } from "@/lib/queue-problems";
+import { PROBLEMS as P_HASH } from "@/lib/hash-problems";
+import { PROBLEMS as P_BTREE } from "@/lib/binary-tree-problems";
+import { PROBLEMS as P_BST } from "@/lib/bst-problems";
+import { PROBLEMS as P_HEAP } from "@/lib/heap-problems";
+import { PROBLEMS as P_TRIE } from "@/lib/trie-problems";
+import { PROBLEMS as P_UF } from "@/lib/union-find-problems";
+import { PROBLEMS as P_GRAPH } from "@/lib/graph-problems";
+import { PROBLEMS as P_ADV } from "@/lib/advanced-problems";
 
 /* ---------- Course-wide problem set groups ---------- */
 

@@ -82,7 +82,8 @@ lib/highlight.tsx lib/progress.tsx lib/curriculum.ts lib/i18n.tsx
 app/<ch>/page.tsx      chapter page ("use client"; data + composition)
 app/<ch>/viz.tsx       visualizations specific to this chapter
 app/<ch>/chapter.css   styles specific to this chapter (imported by page.tsx)
-lib/<ch>-data.tsx      this chapter's PROBLEMS + QUIZ data
+lib/<ch>-problems.tsx  this chapter's PROBLEMS (the atlas imports these too)
+lib/<ch>-quiz.tsx      this chapter's QUIZ (kept apart so the atlas does not load it)
 ```
 
 Each chapter's palette comes free from `<main className="page" data-ch="<id>">`

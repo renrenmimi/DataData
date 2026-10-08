@@ -24,7 +24,8 @@ import { CodeTabs } from "@/lib/code";
 import { ArrayStepper, type ArrayFrame } from "@/lib/stepper";
 import { ProblemSet } from "@/lib/problems";
 import { Quiz } from "@/lib/quiz";
-import { PROBLEMS, QUIZ } from "@/lib/stack-data";
+import { PROBLEMS } from "@/lib/stack-problems";
+import { QUIZ } from "@/lib/stack-quiz";
 import { T } from "@/lib/i18n";
 import { StackMemFig, StackLab, CallStackDemo } from "./viz";
 

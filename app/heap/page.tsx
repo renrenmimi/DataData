@@ -27,7 +27,8 @@ import { CodeTabs } from "@/lib/code";
 import { ArrayStepper, type ArrayFrame } from "@/lib/stepper";
 import { ProblemSet } from "@/lib/problems";
 import { Quiz } from "@/lib/quiz";
-import { PROBLEMS, QUIZ } from "@/lib/heap-data";
+import { PROBLEMS } from "@/lib/heap-problems";
+import { QUIZ } from "@/lib/heap-quiz";
 import { T } from "@/lib/i18n";
 import { HeapLab, HeapMapFig } from "./viz";
 

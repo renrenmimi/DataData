@@ -28,7 +28,8 @@ import { ArrayStepper, type ArrayFrame } from "@/lib/stepper";
 import { ProblemSet } from "@/lib/problems";
 import { Quiz } from "@/lib/quiz";
 import { T, type Loc } from "@/lib/i18n";
-import { PROBLEMS, QUIZ } from "@/lib/bst-data";
+import { PROBLEMS } from "@/lib/bst-problems";
+import { QUIZ } from "@/lib/bst-quiz";
 import {
   BSTLab,
   InorderFig,

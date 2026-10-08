@@ -25,7 +25,8 @@ import {
 import { CodeTabs } from "@/lib/code";
 import { ProblemSet } from "@/lib/problems";
 import { Quiz } from "@/lib/quiz";
-import { PROBLEMS, QUIZ } from "@/lib/linked-list-data";
+import { PROBLEMS } from "@/lib/linked-list-problems";
+import { QUIZ } from "@/lib/linked-list-quiz";
 import { T } from "@/lib/i18n";
 import { ScatterMap, LinkedLab, ReverseAnim, CycleAnim, MergeAnim } from "./viz";
 import "./chapter.css";

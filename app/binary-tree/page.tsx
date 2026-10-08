@@ -21,7 +21,8 @@ import {
 import { CodeTabs } from "@/lib/code";
 import { ProblemSet } from "@/lib/problems";
 import { Quiz } from "@/lib/quiz";
-import { PROBLEMS, QUIZ } from "@/lib/binary-tree-data";
+import { PROBLEMS } from "@/lib/binary-tree-problems";
+import { QUIZ } from "@/lib/binary-tree-quiz";
 import { T } from "@/lib/i18n";
 import {
   TermTree,
