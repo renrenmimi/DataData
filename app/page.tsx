@@ -24,13 +24,16 @@ import { HeroMorph, BigOLab, RefLab } from "./home-viz";
 
 /* ---------- Complexity cheat-sheet data ---------- */
 
+/** A BigO key, or a key plus a custom label (O(L), O(α(n)), …) */
+type Op = string | { o: string; label: string };
+
 const CHEAT: {
   name: Loc<string>;
   href: string;
-  access: string;
-  search: string;
-  insert: string;
-  del: string;
+  access: Op;
+  search: Op;
+  insert: Op;
+  del: Op;
   note: Loc<string>;
 }[] = [
   {
@@ -66,7 +69,7 @@ const CHEAT: {
     del: "1",
     note: {
       en: "Insert and delete are O(1) only when you already hold the node in front.",
-      zh: "插删 O(1) 的前提:你已经站在那个位置",
+      zh: "插删 O(1) 的前提:已经拿到要操作位置的前一个节点",
     },
   },
   {
@@ -133,24 +136,24 @@ const CHEAT: {
     name: { en: "Trie", zh: "前缀树 Trie" },
     href: "/trie",
     access: "—",
-    search: "1",
-    insert: "1",
-    del: "1",
+    search: { o: "n", label: "O(L)" },
+    insert: { o: "n", label: "O(L)" },
+    del: { o: "n", label: "O(L)" },
     note: {
-      en: "Cost is measured by the word length L, not by how many words are stored.",
-      zh: "复杂度按词长 L 计,与词典大小无关",
+      en: "L is the word length; the cost does not depend on how many words are stored.",
+      zh: "L 为单词长度,与词典大小无关",
     },
   },
   {
     name: { en: "Union-Find", zh: "并查集 Union-Find" },
     href: "/union-find",
     access: "—",
-    search: "1",
-    insert: "1",
+    search: { o: "1", label: "O(α(n))" },
+    insert: { o: "1", label: "O(α(n))" },
     del: "—",
     note: {
-      en: "About O(α(n)), which is effectively O(1), with path compression and union by rank.",
-      zh: "近似 O(α(n)) ≈ O(1),需路径压缩+按秩合并",
+      en: "Amortized; effectively constant with path compression and union by rank. Search = find, insert = union.",
+      zh: "均摊;开启路径压缩 + 按秩合并时近乎常数。查找 = find,插入 = union",
     },
   },
 ];
@@ -222,7 +225,7 @@ const QUIZ: QuizItem[] = [
       },
       {
         en: "n log n usually comes from halving the input at each level, as in divide and conquer or sorting. Here the inner loop runs the full n steps.",
-        zh: "n log n 通常来自“每层砍一半”的分治或排序,这里内层是完整的 n 步。",
+        zh: "n log n 通常来自“每层减半”的分治或排序,这里内层是完整的 n 步。",
       },
       {
         en: "That would be a single loop. Here each step of the outer loop runs the inner loop completely, so the total is n × n.",
@@ -289,13 +292,13 @@ const QUIZ: QuizItem[] = [
       ),
       zh: (
         <>
-          二分每比较一次就砍掉一半:10⁶ → 5×10⁵ → … 问题等价于 2 的多少次方 ≈ 10⁶(2¹⁰ = 1024 ≈ 10³)。
+          二分每比较一次就排除一半:10⁶ → 5×10⁵ → … 问题等价于 2 的多少次方 ≈ 10⁶(2¹⁰ = 1024 ≈ 10³)。
         </>
       ),
     },
     why: {
       en: "log₂(10⁶) ≈ 19.9, so about 20 comparisons in the worst case. That is what O(log n) buys you: a million items settled in 20 steps.",
-      zh: "log₂(10⁶) ≈ 19.9,最坏约 20 次 —— 这就是 O(log n) 的价值:一百万的数据,20 步搞定。",
+      zh: "log₂(10⁶) ≈ 19.9,最坏约 20 次 —— 这就是 O(log n) 的价值:一百万的数据,20 步即可完成。",
     },
   },
   {
@@ -574,9 +577,9 @@ export default function Home() {
                 <p>
                   所以“数据结构”一句话说完:<strong>数据的组织方式</strong>。
                   而组织方式决定了每种操作的成本 —— 图书馆按拼音排书,找书快、插新书慢;
-                  按到货顺序堆书,插新书快、找书要命。没有“最好的结构”,
+                  按到货顺序堆书,插新书快、找书极慢。没有“最好的结构”,
                   只有“最适合这批操作的结构”。整本课程,就是带你认识每一种组织方式的
-                  <strong>脾气</strong>:它擅长什么,害怕什么,为什么。
+                  <strong>特性</strong>:它擅长什么,不擅长什么,为什么。
                 </p>
               </>
             }
@@ -586,7 +589,7 @@ export default function Home() {
           <div className="card hoverable">
             <div className="card-kicker">REASON 01</div>
             <div className="card-title">
-              <T en="⚖️ Every choice is a trade" zh="⚖️ 每个选择都是交易" />
+              <T en="Every choice is a trade" zh="每个选择都是取舍" />
             </div>
             <p>
               <T
@@ -684,7 +687,7 @@ export default function Home() {
               <p>
                 把内存(RAM)想象成<strong>一条无限长的街道</strong>,街上全是
                 一模一样的小房间,每间房有一个唯一的门牌号(<strong>地址</strong>),
-                每间房能放一个很小的东西(比如一个字节)。CPU 是个跑腿的:
+                每间房能放一个很小的东西(比如一个字节)。CPU 好比一位送件员:
                 你给它任何一个门牌号,它都能<strong>用同样的时间</strong>找到那间房
                 —— 这就是 RAM(Random Access,随机访问)的含义,也是一切 O(1) 的源头。
               </p>
@@ -735,7 +738,8 @@ export default function Home() {
                   element i sits at 1000 + i×4, computed in one step. On the
                   right, scattered rooms (<b>how a linked list lives</b>): each
                   room also stores where the next room is, so you can only hop
-                  from one to the next.
+                  from one to the next. Each integer here takes 4 bytes, that is
+                  4 rooms, so neighbouring elements are 4 addresses apart.
                 </>
               }
               zh={
@@ -743,6 +747,7 @@ export default function Home() {
                   左边 5 间连续的房(<b>数组的住法</b>):知道首地址 1000,第 i 个元素
                   = 1000 + i×4,一步算出。右边零散的房(<b>链表的住法</b>
                   ):每间房里额外记着“下一间在哪”,只能一间间跳。
+                  这里每个整数占 4 个字节,也就是 4 间房,所以相邻元素的门牌号相差 4。
                 </>
               }
             />
@@ -796,22 +801,22 @@ export default function Home() {
             en={
               <>
                 <p>
-                  Think of a variable as{" "}
-                  <strong>a box with a label on it</strong>. What goes into the
-                  box comes in two kinds. A small thing like <code>7</code>{" "}
-                  <strong>lives inside the box itself</strong> (a value). A
-                  large thing like an object or an array lives at some address
-                  on the memory street, and the box holds only{" "}
-                  <strong>a note with that address written on it</strong>. That
-                  note is a <strong>reference</strong>. In C it is called a
+                  Think of a variable as <strong>a label</strong>. What it holds
+                  comes in two kinds. A basic value such as <code>7</code> is{" "}
+                  <strong>written directly into the variable</strong>. A
+                  compound value such as an object or an array lives in{" "}
+                  <strong>a box</strong> somewhere on the memory street, and the
+                  variable holds only{" "}
+                  <strong>a note with that box&apos;s address written on it</strong>.
+                  That note is a <strong>reference</strong>. In C it is called a
                   pointer.
                 </p>
                 <p>
                   So the line <code>b = a</code> has two very different
-                  meanings. For a value it <strong>copies the contents</strong>.
+                  meanings. For a basic value it <strong>copies the value</strong>.
                   For a reference it <strong>copies the note</strong>. After the
-                  note is copied, both labels point at the same room, so a
-                  change made from either side is visible from the other. Try it
+                  note is copied, both labels point at the same box, so a change
+                  made through either label is visible through the other. Try it
                   yourself:
                 </p>
               </>
@@ -819,17 +824,17 @@ export default function Home() {
             zh={
               <>
                 <p>
-                  变量可以想成<strong>贴了标签的盒子</strong>。放进盒子的东西分两类:
-                  像 <code>7</code> 这样的小东西,<strong>直接住在盒子里</strong>(值);
-                  而对象、数组这类大家伙,住在内存长街的某个门牌号上,盒子里放的只是
-                  一张<strong>写着地址的纸条</strong> —— 这张纸条,就是<strong>引用(reference)</strong>,
-                  C 语言里叫指针(pointer)。
+                  变量可以想成<strong>一张标签</strong>。它记录的东西分两类:
+                  像 <code>7</code> 这样的基本类型的值,<strong>直接写在变量里</strong>;
+                  而对象、数组这类复合数据,放在内存长街上的某个<strong>盒子</strong>里,
+                  变量里存的只是一张<strong>写着盒子地址的纸条</strong> ——
+                  这张纸条,就是<strong>引用(reference)</strong>,C 语言里叫指针(pointer)。
                 </p>
                 <p>
-                  于是 <code>b = a</code> 这行代码有了两种截然不同的含义:值是
-                  <strong>复印内容</strong>,引用是<strong>复印纸条</strong>。
-                  复印纸条之后,两张标签指着同一间房 —— 从任何一边改房间里的东西,
-                  另一边看到的也变了。亲手试一次:
+                  于是 <code>b = a</code> 这行代码有了两种截然不同的含义:基本类型的值是
+                  <strong>复印数值</strong>,引用是<strong>复印纸条</strong>。
+                  复印纸条之后,两张标签指着同一个盒子 —— 通过任何一张标签修改盒子里的东西,
+                  另一张标签看到的也变了。亲手试一次:
                 </p>
               </>
             }
@@ -855,7 +860,7 @@ int y = x;        // 复印内容:y 是独立的 7
 y += 10;          // x 还是 7
 
 int[] a = {7};
-int[] b = a;      // 复印纸条:a、b 指向同一个数组!
+int[] b = a;      // 复印纸条:a、b 指向同一个数组
 b[0] += 10;       // a[0] 也变成了 17
 System.out.println(a[0]);  // 17`,
             },
@@ -892,11 +897,11 @@ print(a[0])       # 17
 print(a is b)     # True -- "is" asks whether it is the same object`,
               zh: `# Python:一切皆对象,变量只是"名字→对象"的绑定
 x = 7
-y = x             # 两个名字都绑到同一个 7 上(int 不可变,感觉像复印)
+y = x             # 两个名字都绑到同一个 7 上(int 不可变,效果与复印相同)
 y += 10           # y 绑到新对象 17,x 不受影响
 
 a = [7]
-b = a             # 复印纸条:同一个 list!
+b = a             # 复印纸条:两个名字指向同一个 list
 b[0] += 10
 print(a[0])       # 17
 print(a is b)     # True —— is 比较"是不是同一个对象"`,
@@ -937,7 +942,7 @@ let y = x;        // 复印内容
 y += 10;          // x 还是 7
 
 const a = [7];
-const b = a;      // 复印纸条:同一个数组!
+const b = a;      // 复印纸条:两个名字指向同一个数组
 b[0] += 10;
 console.log(a[0]);      // 17
 console.log(a === b);   // true —— 比较的是纸条`,
@@ -946,15 +951,15 @@ console.log(a === b);   // true —— 比较的是纸条`,
               en: (
                 <>
                   <b>Rule:</b> number, string, boolean, null, undefined, symbol,
-                  and bigint are copied by value. Objects and arrays are shared.
-                  <code>const</code> locks the note, not the contents of the
-                  box.
+                  and bigint are copied by value. Objects and arrays are shared.{" "}
+                  <code>const</code> locks the note (the variable cannot point at
+                  another box); the contents of the box can still change.
                 </>
               ),
               zh: (
                 <>
                   <b>规则:</b>number/string/boolean/null/undefined/symbol/bigint
-                  按值;对象和数组按引用。<code>const</code> 锁的是纸条,不是盒子内容!
+                  按值;对象和数组按引用。<code>const</code> 锁住的是纸条(变量不能再指向别的盒子),盒子里的内容仍可修改。
                 </>
               ),
             },
@@ -984,10 +989,10 @@ console.log(a === b);   // true —— 比较的是纸条`,
               }
               zh={
                 <>
-                  第 3 章链表的每个节点里,都躺着一张写着「下一个节点在哪」的纸条;
-                  树的每个节点揣着两张(left/right);图的每个点揣着一叠。
+                  第 3 章链表的每个节点里,都存着一张写着「下一个节点在哪」的纸条;
+                  树的每个节点存着两张(left/right);图的每个顶点存着一组。
                   <b>所谓“链式结构”,就是用纸条把散落在内存各处的盒子串起来</b>。
-                  看懂了这个实验室,后面没有任何一章能难住你。
+                  理解了这个实验室,后面各章就都有了基础。
                 </>
               }
             />
@@ -1028,7 +1033,7 @@ console.log(a === b);   // true —— 比较的是纸条`,
                 <p>
                   In the lab below, the six curves are the six levels you will
                   meet again and again. Note that the y axis uses a logarithmic
-                  scale. Even so, O(2ⁿ) still leaves the top of the chart.
+                  scale. Even so, O(2ⁿ) still rises far above every other curve.
                 </p>
               </>
             }
@@ -1041,8 +1046,8 @@ console.log(a === b);   // true —— 比较的是纸条`,
                   3n²+5n+20 → O(n²)。
                 </p>
                 <p>
-                  下面的实验室里,六条曲线就是你将来会天天遇到的六个档位。注意 y
-                  轴是对数刻度 —— 即便如此,O(2ⁿ) 依然一飞冲天。
+                  下面的实验室里,六条曲线就是你将来会经常遇到的六个档位。注意 y
+                  轴是对数刻度 —— 即便如此,O(2ⁿ) 依然远远高出其他所有曲线。
                 </p>
               </>
             }
@@ -1129,7 +1134,11 @@ console.log(a === b);   // true —— 比较的是纸条`,
                       </td>
                     ) : (
                       <td key={i}>
-                        <BigO o={v} />
+                        {typeof v === "string" ? (
+                          <BigO o={v} />
+                        ) : (
+                          <BigO o={v.o} label={v.label} />
+                        )}
                       </td>
                     ),
                   )}
@@ -1240,7 +1249,7 @@ console.log(a === b);   // true —— 比较的是纸条`,
           </div>
           <div className="card">
             <div className="card-title">
-              <T en="Then play with it" zh="再玩透" />
+              <T en="Then try it yourself" zh="再动手操作" />
             </div>
             <p>
               <T
@@ -1248,14 +1257,14 @@ console.log(a === b);   // true —— 比较的是纸条`,
                   <>
                     Every chapter has a visual playground. Insert, delete, and
                     traverse by hand, and watch the pointers move and the memory
-                    shift. A structure you have played with is a structure you
-                    own.
+                    shift. A structure you have worked through by hand is one
+                    you understand.
                   </>
                 }
                 zh={
                   <>
                     每章都有可视化 Playground:亲手插入、删除、遍历,看指针怎么跳、
-                    内存怎么搬。玩过的结构才是你的。
+                    内存怎么搬。亲手操作过的结构,才算真正理解。
                   </>
                 }
               />
@@ -1263,7 +1272,7 @@ console.log(a === b);   // true —— 比较的是纸条`,
           </div>
           <div className="card">
             <div className="card-title">
-              <T en="✍️ Then practice" zh="✍️ 后刷题" />
+              <T en="Then practice" zh="最后做题练习" />
             </div>
             <p>
               <T
@@ -1318,16 +1327,16 @@ console.log(a === b);   // true —— 比较的是纸条`,
         id="quiz"
         index="08"
         title={{
-          en: "Quick check: chapter 00 quiz",
-          zh: "快问快答:序章通关测验",
+          en: "Quick check: the Prologue quiz",
+          zh: "快速自测:序章测验",
         }}
         desc={{
           en: "7 questions. Get them all right to turn on the first green dot in the sidebar.",
-          zh: "7 题 —— 全对点亮侧栏第一盏绿灯",
+          zh: "7 题 —— 全部答对,侧栏的第一个绿点就会亮起",
         }}
         badge={
           <span className="chip">
-            <T en="✎ Chapter quiz" zh="✎ 通关测验" />
+            <T en="✎ Chapter quiz" zh="✎ 本章测验" />
           </span>
         }
       >

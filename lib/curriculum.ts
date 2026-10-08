@@ -53,11 +53,11 @@ export const CHAPTERS: Chapter[] = [
     id: "home",
     href: "/",
     num: "00",
-    title: { en: "Start here", zh: "序章 · 世界地图" },
+    title: { en: "Prologue", zh: "序章 · 世界地图" },
     en: "The Atlas & Big-O",
     essence: {
       en: "Every data structure is one move in a trade between time and space.",
-      zh: "所有数据结构,都是「时间换空间」棋局里的一步棋。",
+      zh: "所有数据结构,都是时间与空间之间的一次取舍。",
     },
     hue: 292,
     level: 1,
@@ -263,7 +263,7 @@ export const CHAPTERS: Chapter[] = [
     en: "Union-Find",
     essence: {
       en: "Two questions, a few lines of code: are these two in the same group, and merge two groups.",
-      zh: "两个问题、三行代码:你们是一伙的吗?合并!",
+      zh: "两个问题、几行代码:这两个元素是否同属一组,以及把两组合并。",
     },
     hue: 100,
     level: 4,
