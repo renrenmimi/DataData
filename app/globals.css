@@ -29,7 +29,7 @@
   --elevated: #171c30;
   --text: #eef1f8;
   --text-2: #a6afc2;
-  --text-3: #667089;
+  --text-3: #858fa7;
   --border: rgba(255, 255, 255, 0.075);
   --border-strong: rgba(255, 255, 255, 0.14);
   --shadow:
@@ -51,19 +51,21 @@
   --risk-bg: rgba(242, 117, 138, 0.1);
   --info: #7ab5f5;
   --info-bg: rgba(122, 181, 245, 0.1);
+  /* Text on a solid accent or status fill (primary buttons, answer keys) */
+  --on-fill: #07080f;
 
   /* Code window: both themes keep the dark-terminal feel */
   --code-bg: #0a0d16;
   --code-bar: #0e1220;
   --code-text: #dde3f2;
-  --code-ln: rgba(220, 226, 244, 0.22);
+  --code-ln: rgba(220, 226, 244, 0.54);
   --code-hl: rgba(255, 255, 255, 0.05);
 
   /* Syntax highlighting */
   --tk-kw: #c792ea;
   --tk-str: #a8d98a;
   --tk-num: #f2a76f;
-  --tk-com: #5a6478;
+  --tk-com: #808a9f;
   --tk-fn: #82aaff;
   --tk-type: #6fd6d0;
   --tk-op: #90a0be;
@@ -84,7 +86,7 @@
   --elevated: #ffffff;
   --text: #171c28;
   --text-2: #4d5871;
-  --text-3: #828da5;
+  --text-3: #5f6981;
   --border: rgba(23, 28, 45, 0.09);
   --border-strong: rgba(23, 28, 45, 0.16);
   --shadow:
@@ -97,25 +99,26 @@
   --acc-strong-l: 43%;
   --acc-strong-c: 0.19;
 
-  --ok: #14915f;
-  --ok-bg: rgba(20, 145, 95, 0.1);
-  --warn: #a8710f;
-  --warn-bg: rgba(168, 113, 15, 0.11);
-  --risk: #c4455e;
-  --risk-bg: rgba(196, 69, 94, 0.09);
-  --info: #2f6fb8;
-  --info-bg: rgba(47, 111, 184, 0.09);
+  --ok: #007142;
+  --ok-bg: rgba(0, 113, 66, 0.1);
+  --warn: #8c5700;
+  --warn-bg: rgba(140, 87, 0, 0.11);
+  --risk: #b33550;
+  --risk-bg: rgba(179, 53, 80, 0.09);
+  --info: #2465ad;
+  --info-bg: rgba(36, 101, 173, 0.09);
+  --on-fill: #ffffff;
 
   --code-bg: #10131d;
   --code-bar: #161a28;
   --code-text: #dde3f2;
-  --code-ln: rgba(220, 226, 244, 0.22);
+  --code-ln: rgba(220, 226, 244, 0.54);
   --code-hl: rgba(255, 255, 255, 0.05);
 
   --tk-kw: #c792ea;
   --tk-str: #a8d98a;
   --tk-num: #f2a76f;
-  --tk-com: #5a6478;
+  --tk-com: #808a9f;
   --tk-fn: #82aaff;
   --tk-type: #6fd6d0;
   --tk-op: #90a0be;
@@ -1101,9 +1104,9 @@ li code {
 .big-o[data-o="n2"]    { color: var(--risk); background: var(--risk-bg); }
 .big-o[data-o="2n"]    { color: #f26fb1; background: rgba(242, 111, 177, 0.11); }
 
-[data-theme="light"] .big-o[data-o="logn"]  { color: #0e8f6b; background: rgba(14, 143, 107, 0.1); }
-[data-theme="light"] .big-o[data-o="nlogn"] { color: #b06a13; background: rgba(176, 106, 19, 0.1); }
-[data-theme="light"] .big-o[data-o="2n"]    { color: #bb3f83; background: rgba(187, 63, 131, 0.09); }
+[data-theme="light"] .big-o[data-o="logn"]  { color: #00714f; background: rgba(0, 113, 79, 0.1); }
+[data-theme="light"] .big-o[data-o="nlogn"] { color: #955100; background: rgba(149, 81, 0, 0.1); }
+[data-theme="light"] .big-o[data-o="2n"]    { color: #ad3277; background: rgba(173, 50, 119, 0.09); }
 
 .lc-badge {
   font-family: var(--font-mono);
@@ -1164,7 +1167,7 @@ li code {
   );
   background-size: 200% 100%;
   background-position: 0% 0;
-  color: #fff;
+  color: var(--on-fill);
   box-shadow: 0 4px 18px var(--acc-glow);
   transition: background-position 0.6s ease, box-shadow 0.25s,
     transform 0.2s var(--ease-spring);
@@ -1300,8 +1303,9 @@ li code {
   background: rgba(255, 255, 255, 0.05);
 }
 
+/* The code bar is dark in both themes, so the tab keeps the dark theme's accent */
 .codewin-tab.on {
-  color: var(--acc);
+  color: oklch(76% 0.15 var(--hue));
   background: oklch(76% 0.15 var(--hue) / 0.13);
   border-color: oklch(76% 0.15 var(--hue) / 0.3);
 }
@@ -1450,7 +1454,7 @@ li code {
 .q-opt.picked .key {
   background: var(--acc);
   border-color: var(--acc);
-  color: #fff;
+  color: var(--on-fill);
 }
 
 .q-opt.right {
@@ -1462,7 +1466,7 @@ li code {
 .q-opt.right .key {
   background: var(--ok);
   border-color: var(--ok);
-  color: #04140c;
+  color: var(--on-fill);
 }
 
 .q-opt.wrong {
@@ -1473,7 +1477,7 @@ li code {
 .q-opt.wrong .key {
   background: var(--risk);
   border-color: var(--risk);
-  color: #fff;
+  color: var(--on-fill);
 }
 
 .q-opt:disabled {
@@ -1610,7 +1614,7 @@ li code {
 .prob.done .prob-check {
   background: var(--ok);
   border-color: var(--ok);
-  color: #04140c;
+  color: var(--on-fill);
 }
 
 .prob-id {
@@ -2427,13 +2431,13 @@ li code {
 .pf-opt.right .pf-key {
   background: var(--ok);
   border-color: var(--ok);
-  color: #04140c;
+  color: var(--on-fill);
 }
 
 .pf-opt.wrong .pf-key {
   background: var(--risk);
   border-color: var(--risk);
-  color: #fff;
+  color: var(--on-fill);
 }
 
 /* Mini snapshot */
