@@ -143,6 +143,8 @@ describe("quiz interaction", () => {
   });
 
   it("numbers questions and reveals the answer in Chinese for Chinese readers", async () => {
+    // A Chinese reader: the stored choice, already applied to <html> by langScript
+    window.localStorage.setItem("dd-lang", "zh");
     document.documentElement.dataset.lang = "zh";
     const user = userEvent.setup();
     renderQuiz();
