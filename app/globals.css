@@ -722,7 +722,9 @@ html[data-sidebar="collapsed"] .sidebar {
 
 .hero-title {
   font-family: var(--font-display);
-  font-size: clamp(40px, 6.2vw, 64px);
+  /* 34px keeps a long word such as "Composite" inside a 360px screen */
+  font-size: clamp(34px, 6.2vw, 64px);
+  overflow-wrap: break-word;
   font-weight: 900;
   letter-spacing: 0.005em;
   line-height: 1.08;
@@ -854,6 +856,31 @@ html[data-sidebar="collapsed"] .sidebar {
 .sec-badge {
   margin-left: auto;
   flex: 0 0 auto;
+}
+
+/* Phones: the badge moves under the title, aligned with it like .sec-desc,
+   instead of being pushed off the right edge and squeezing the title */
+@media (max-width: 560px) {
+  .sec-head {
+    flex-wrap: wrap;
+    row-gap: 6px;
+  }
+
+  /* A zero basis keeps the title beside the number, wrapping within its row */
+  .sec-title {
+    flex: 1 1 0;
+  }
+
+  .sec-badge {
+    flex-basis: 100%;
+    margin-left: 0;
+    padding-left: 44px;
+  }
+
+  .sec-badge .chip,
+  .sec-badge .lc-badge {
+    white-space: normal;
+  }
 }
 
 .sec-desc {
@@ -1198,6 +1225,9 @@ li code {
 /* Segmented control */
 .seg {
   display: inline-flex;
+  /* Wraps rather than running off a narrow screen */
+  flex-wrap: wrap;
+  max-width: 100%;
   padding: 3px;
   gap: 3px;
   border-radius: 12px;
@@ -2009,6 +2039,36 @@ li code {
   opacity: 1;
   transform: none;
   filter: none;
+}
+
+/* Print: every section shows (the scroll reveal never ran for sections the
+   reader did not scroll past) and the shell chrome is dropped. The palette
+   switches to light while printing (ThemeProvider); code windows stay dark
+   in both themes, so they keep their background to keep their text legible. */
+@media print {
+  .aurora,
+  .sidebar,
+  .toolbar,
+  .scrim,
+  .cmdk-overlay {
+    display: none !important;
+  }
+
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+  }
+
+  .shell-content {
+    padding: 0;
+  }
+
+  .codewin {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
 }
 
 @keyframes fade-in {
