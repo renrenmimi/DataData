@@ -133,8 +133,8 @@ const SIGNALS: {
     struct: { en: "Monotonic deque", zh: "单调队列" },
     href: "/queue",
     why: {
-      en: "Both ends change, and this is the only O(n) solution for the extreme value in a window.",
-      zh: "两端都要动,窗口最值的唯一 O(n) 解",
+      en: "Both ends change, and this is the standard O(n) solution for the extreme value in a window.",
+      zh: "两端都要动,窗口最值最常用的 O(n) 解",
     },
   },
   {
@@ -155,7 +155,7 @@ const SIGNALS: {
     href: "/array",
     why: {
       en: "Sorted plus random access means every step removes half of what is left.",
-      zh: "有序 + 随机访问 = 每步砍一半",
+      zh: "有序 + 随机访问 = 每步排除一半",
     },
   },
   {
@@ -202,8 +202,8 @@ const SIGNALS: {
     struct: { en: "Union-Find", zh: "并查集" },
     href: "/union-find",
     why: {
-      en: "You need the group, not the path. Merge and query both cost close to O(1).",
-      zh: "只问分组不问路径,near-O(1) 合并查询",
+      en: "You need the group, not the path. Merge and query both run in effectively constant time.",
+      zh: "只问分组不问路径,合并与查询都近乎常数时间",
     },
   },
   {
@@ -346,8 +346,8 @@ const QUIZ: QuizItem[] = [
   {
     type: "choice",
     q: {
-      en: "A live game leaderboard shows only the top 100, and player scores keep streaming in. What do you choose?",
-      zh: "实时游戏排行榜,只展示前 100 名,玩家分数不断刷新流入。选什么?",
+      en: "A live game leaderboard shows only the top 100, and new score records keep streaming in (a record never changes once it arrives). What do you choose?",
+      zh: "实时游戏排行榜,只展示前 100 名,新的分数记录不断流入(每条记录只增不改)。选什么?",
     },
     opts: [
       { en: "A min-heap of capacity 100", zh: "容量 100 的小根堆" },
@@ -380,7 +380,7 @@ const QUIZ: QuizItem[] = [
     type: "choice",
     q: {
       en: "In a social app, people keep adding each other as friends, and you must answer instantly whether A and B are in the same friend group. What do you choose?",
-      zh: "社交产品:不断有人互加好友,同时要秒答「A 和 B 是否在同一朋友圈」。选什么?",
+      zh: "社交产品:不断有人互加好友,同时要立即回答「A 和 B 是否在同一朋友圈」。选什么?",
     },
     opts: [
       { en: "Union-Find", zh: "并查集" },
@@ -445,8 +445,8 @@ const QUIZ: QuizItem[] = [
   {
     type: "choice",
     q: {
-      en: "A trading system writes a large stream of trade prices and must also report the total volume in any time range at any moment. What do you choose?",
-      zh: "股票系统:海量成交价不断写入,同时要随时查「任意时间区间的成交量总和」。选什么?",
+      en: "A trading system keeps per-minute trade volumes. Late trades and cancellations keep changing the volume of past minutes, and it must report the total volume in any time range at any moment. What do you choose?",
+      zh: "股票系统:按分钟统计成交量,迟到的成交和撤单会不断修改过去某一分钟的数值,同时要随时查「任意时间区间的成交量总和」。选什么?",
     },
     opts: [
       { en: "Segment tree / Fenwick tree", zh: "线段树 / 树状数组" },
@@ -458,8 +458,8 @@ const QUIZ: QuizItem[] = [
     wrong: [
       undefined,
       {
-        en: "A prefix sum answers a query in O(1), but every write rebuilds the array from that point on. Frequent updates are exactly its weak point.",
-        zh: "前缀和查询 O(1) 很好用,但每次写入要重建整条前缀 —— 「还要改」就是它的弱点。",
+        en: "A prefix sum answers a query in O(1), but changing a past minute forces every later prefix to be recomputed, which is O(n). Changes to old data are exactly its weak point.",
+        zh: "前缀和查询 O(1),但修改过去某一分钟,其后的前缀要全部重算,代价 O(n) —— 「历史数据还会改」正是它的弱点。",
       },
       {
         en: "A hash table is not built for ranges. It does not even know which keys are adjacent.",
@@ -471,8 +471,8 @@ const QUIZ: QuizItem[] = [
       },
     ],
     why: {
-      en: "Updates plus range statistics means a segment tree or a Fenwick tree. Both are O(log n) to update and O(log n) to query.",
-      zh: "改 + 区间统计 = 线段树 / BIT:两者都是 O(log n) 改、O(log n) 查。",
+      en: "Point updates plus range statistics means a segment tree or a Fenwick tree. Both are O(log n) to update and O(log n) to query. If old minutes never changed and data were only appended, a prefix sum extended at the end would be enough.",
+      zh: "单点修改 + 区间统计 = 线段树 / BIT:两者都是 O(log n) 改、O(log n) 查。如果历史数据从不修改、只在末尾追加,在末尾续写前缀和就够了。",
     },
   },
   {
@@ -578,7 +578,7 @@ const QUIZ: QuizItem[] = [
       },
       {
         en: "A queue evicts the oldest arrival (FIFO), not the least recently used (LRU). An old page that was just visited should stay.",
-        zh: "队列淘汰的是「最早进入」(FIFO),不是「最久未使用」(LRU)—— 访问过的老页面应该续命。",
+        zh: "队列淘汰的是「最早进入」(FIFO),不是「最久未使用」(LRU)—— 刚被访问过的老页面应当留在缓存中。",
       },
     ],
     why: {
@@ -657,7 +657,7 @@ const QUIZ: QuizItem[] = [
     ],
     correct: [0, 1, 2],
     missHint: {
-      en: "The first three are the formula from chapter 00, references, and the conditions behind hashing. One of them is still missing.",
+      en: "The first three are the formula from the Prologue (chapter 00), references, and the conditions behind hashing. One of them is still missing.",
       zh: "前三条分别是序章公式、引用、哈希前提 —— 再想想漏了哪条。",
     },
     extraHint: {
@@ -683,13 +683,16 @@ const CHIPS = [
   },
   { id: "problems", n: "04", label: { en: "All problems", zh: "全书题单" } },
   { id: "next", n: "05", label: { en: "What next", zh: "下一步" } },
-  { id: "quiz", n: "06", label: { en: "Final quiz", zh: "终极测验" } },
+  { id: "quiz", n: "06", label: { en: "Final quiz", zh: "全书测验" } },
 ];
+
+type Op = string | { o: string; label: string };
 
 const CHEAT: {
   name: Loc<string>;
   href: string;
-  ops: [string, string, string, string];
+  /** A BigO key, or a key plus a custom label (O(L), O(α(n)), …) */
+  ops: [Op, Op, Op, Op];
   space: string;
   note: Loc<string>;
 }[] = [
@@ -747,8 +750,8 @@ const CHEAT: {
     ops: ["logn", "logn", "logn", "logn"],
     space: "n",
     note: {
-      en: "O(n) if it degenerates. An in-order walk is sorted.",
-      zh: "退化最坏 O(n);中序即有序",
+      en: "A plain BST degrades to O(n). An in-order walk is sorted.",
+      zh: "普通 BST 退化时最坏 O(n);中序即有序",
     },
   },
   {
@@ -764,21 +767,21 @@ const CHEAT: {
   {
     name: "Trie",
     href: "/trie",
-    ops: ["—", "1", "1", "—"],
+    ops: ["—", { o: "n", label: "O(L)" }, { o: "n", label: "O(L)" }, "—"],
     space: "Σ|w|",
     note: {
-      en: "Cost is measured by the word length L.",
-      zh: "复杂度按词长 L 计",
+      en: "L is the word length; independent of how many words are stored.",
+      zh: "L 为单词长度,与词典大小无关",
     },
   },
   {
     name: { en: "Union-Find", zh: "并查集" },
     href: "/union-find",
-    ops: ["—", "1", "1", "—"],
+    ops: ["—", { o: "1", label: "O(α(n))" }, { o: "1", label: "O(α(n))" }, "—"],
     space: "n",
     note: {
-      en: "About O(α(n)), which is effectively O(1).",
-      zh: "近似 O(α(n)) ≈ O(1)",
+      en: "Amortized; effectively constant with both optimizations. Search = find, insert = union.",
+      zh: "均摊;两个优化都开时近乎常数。查找 = find,插入 = union",
     },
   },
   {
@@ -939,7 +942,7 @@ export default function AtlasChapter() {
         index="03"
         title={{ en: "The full complexity table", zh: "终极复杂度表" }}
         desc={{
-          en: "The complete version of the table from chapter 00. By now you can explain every cell.",
+          en: "The complete version of the table from the Prologue (chapter 00). By now you can explain every cell.",
           zh: "序章那张表的完整版 —— 现在每一格你都能讲出为什么",
         }}
       >
@@ -985,7 +988,11 @@ export default function AtlasChapter() {
                       </td>
                     ) : (
                       <td key={i}>
-                        <BigO o={v} />
+                        {typeof v === "string" ? (
+                          <BigO o={v} />
+                        ) : (
+                          <BigO o={v.o} label={v.label} />
+                        )}
                       </td>
                     ),
                   )}
@@ -1010,7 +1017,7 @@ export default function AtlasChapter() {
         }}
         desc={{
           en: "Every problem from the thirteen chapters, sharing the same progress as the chapters themselves.",
-          zh: "十三章的高频题全在这里,进度与各章互通 —— 这就是你的刷题地图",
+          zh: "十三章的高频题全在这里,进度与各章互通 —— 这就是你的练习地图",
         }}
       >
         <div className="atl-banner">
@@ -1050,7 +1057,7 @@ export default function AtlasChapter() {
               zh={
                 <>
                   建议节奏:每章先把 Easy 扫完建立手感,<br />
-                  二刷只做 Medium,三刷限时。
+                  第二遍只做 Medium,第三遍限时完成。
                 </>
               }
             />
@@ -1108,8 +1115,8 @@ export default function AtlasChapter() {
                     variants of binary search (a rotated array, searching on the
                     answer), then backtracking (the recursion tree you practised
                     in the binary tree chapter), then greedy algorithms, then
-                    dynamic programming (you already wrote Kadane's algorithm,
-                    which is DP). Every topic builds on a structure you already
+                    dynamic programming (you have already seen Kadane's
+                    algorithm in the LC 53 solution, and it is DP). Every topic builds on a structure you already
                     have.
                   </>
                 }
@@ -1117,7 +1124,7 @@ export default function AtlasChapter() {
                   <>
                     沿着本课的伏笔继续:二分的边界变体(旋转数组/答案二分)→
                     回溯(递归树,你在二叉树章练过的思维)→ 贪心 → 动态规划
-                    (Kadane 你已经会了,它就是 DP)。每个专题都建立在你手里的结构上。
+                    (Kadane 算法你已经在 LC 53 的题解里见过,它就是 DP)。每个专题都建立在你手里的结构上。
                   </>
                 }
               />
@@ -1152,7 +1159,7 @@ export default function AtlasChapter() {
           <div className="card hoverable">
             <div className="card-kicker">NEXT 03</div>
             <div className="card-title">
-              <T en="✍️ Close the practice loop" zh="✍️ 刷题闭环" />
+              <T en="Close the practice loop" zh="练习闭环" />
             </div>
             <p>
               <T
@@ -1194,7 +1201,7 @@ export default function AtlasChapter() {
                 }
                 zh={
                   <>
-                    一周后重走一遍每章的「通关测验」,一个月后只看每章的 KeyPoints
+                    一周后把每章的「本章测验」重做一遍,一个月后只看每章的 KeyPoints
                     要点卡。侧栏的绿灯会陪你记录这一切 —— 遗忘很正常,复习节奏对就行。
                   </>
                 }
@@ -1210,7 +1217,7 @@ export default function AtlasChapter() {
         index="06"
         title={{
           en: "Final quiz: 11 questions about choosing a structure",
-          zh: "终极测验:11 道跨章选型题",
+          zh: "全书测验:11 道跨章选型题",
         }}
         desc={{
           en: "Not definitions. Only choices. This is what an interview actually asks.",
@@ -1218,7 +1225,7 @@ export default function AtlasChapter() {
         }}
         badge={
           <span className="chip">
-            <T en="✎ Final quiz" zh="✎ 全书大考" />
+            <T en="✎ Final quiz" zh="✎ 全书测验" />
           </span>
         }
       >
@@ -1303,13 +1310,13 @@ export default function AtlasChapter() {
               <>
                 The end of this course is your starting point: work through the
                 problem table three times and turn on every green dot. Then go
-                and use it. 🎓
+                and use it.
               </>
             ),
             zh: (
               <>
-                这门课的终点是你的起点:题单总表刷三遍,每章绿灯点满 ——
-                然后,去外面的世界考试吧。🎓
+                这门课的终点是你的起点:把题单总表完整做三遍,让每一章都亮起绿灯,
+                然后把学到的内容用到实际问题中去。
               </>
             ),
           },
