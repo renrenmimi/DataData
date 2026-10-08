@@ -662,7 +662,7 @@ const CHIPS = [
     label: { en: "Patterns and monotonic stacks", zh: "套路与单调栈" },
   },
   { id: "problems", n: "07", label: { en: "Problem set", zh: "高频题单" } },
-  { id: "quiz", n: "08", label: { en: "Quiz", zh: "通关测验" } },
+  { id: "quiz", n: "08", label: { en: "Quiz", zh: "本章测验" } },
 ];
 
 export default function StackChapter() {
@@ -828,7 +828,7 @@ export default function StackChapter() {
               }
               zh={
                 <p>
-                  栈底焊死,不提供从底部或中间进出的通道。操作少,每个操作才能做到极致:
+                  栈底固定,不提供从底部或中间进出的通道。操作少,每个操作才能做到极致:
                   pop / peek / isEmpty / size 都是 <b>O(1)</b>,数组实现的 push 是
                   <b>均摊 O(1)</b>。
                 </p>
@@ -1145,7 +1145,7 @@ export default function StackChapter() {
           tone="warn"
           title={{
             en: "Edge case: popping an empty stack",
-            zh: "边界:空栈 pop 是必考题",
+            zh: "边界:空栈 pop",
           }}
         >
           <T
@@ -1187,7 +1187,8 @@ export default function StackChapter() {
                 parameters, the local variables, and the{" "}
                 <strong>return address</strong>, which is the point in the
                 caller where execution continues. Every <code>return</code> pops
-                one frame. Step through it:
+                one frame. Here is a short program; the demo below runs it frame
+                by frame (line 2 is where main waits for f):
               </p>
             }
             zh={
@@ -1196,11 +1197,94 @@ export default function StackChapter() {
                 <strong>调用栈(call stack)</strong>。每调用一个函数,就压入一个
                 <strong>栈帧(stack frame)</strong>:帧里装着参数、局部变量,
                 以及<strong>返回地址</strong>(调用方从哪一行继续执行)。
-                每次 <code>return</code> 弹掉一帧。逐帧走一遍:
+                每次 <code>return</code> 弹掉一帧。下面是一段小程序,
+                演示会逐帧执行它(第 2 行是 main 等待 f 返回的地方):
               </p>
             }
           />
         </div>
+        <CodeTabs
+          title="call_stack_demo"
+          java={{
+            code: {
+              en: `static void main(String[] args) {
+    int a = f(2);           // main pauses here until f returns 8
+    System.out.println(a);  // 8
+}
+static int f(int x) {       // x = 2
+    return g(x + 1) * 2;    // g(3) is 4, so f returns 8
+}
+static int g(int y) {       // y = 3
+    return y + 1;           // 4
+}`,
+              zh: `static void main(String[] args) {
+    int a = f(2);           // main 在这里暂停,直到 f 返回 8
+    System.out.println(a);  // 8
+}
+static int f(int x) {       // x = 2
+    return g(x + 1) * 2;    // g(3) 等于 4,所以 f 返回 8
+}
+static int g(int y) {       // y = 3
+    return y + 1;           // 4
+}`,
+            },
+            hl: [2],
+          }}
+          python={{
+            code: {
+              en: `def main():
+    a = f(2)             # main pauses here until f returns 8
+    print(a)             # 8
+
+def f(x):                # x = 2
+    return g(x + 1) * 2  # g(3) is 4, so f returns 8
+
+def g(y):                # y = 3
+    return y + 1         # 4
+
+main()`,
+              zh: `def main():
+    a = f(2)             # main 在这里暂停,直到 f 返回 8
+    print(a)             # 8
+
+def f(x):                # x = 2
+    return g(x + 1) * 2  # g(3) 等于 4,所以 f 返回 8
+
+def g(y):                # y = 3
+    return y + 1         # 4
+
+main()`,
+            },
+            hl: [2],
+          }}
+          js={{
+            code: {
+              en: `function main() {
+  const a = f(2);        // main pauses here until f returns 8
+  console.log(a);        // 8
+}
+function f(x) {          // x = 2
+  return g(x + 1) * 2;   // g(3) is 4, so f returns 8
+}
+function g(y) {          // y = 3
+  return y + 1;          // 4
+}
+main();`,
+              zh: `function main() {
+  const a = f(2);        // main 在这里暂停,直到 f 返回 8
+  console.log(a);        // 8
+}
+function f(x) {          // x = 2
+  return g(x + 1) * 2;   // g(3) 等于 4,所以 f 返回 8
+}
+function g(y) {          // y = 3
+  return y + 1;          // 4
+}
+main();`,
+            },
+            hl: [2],
+          }}
+        />
         <CallStackDemo />
         <Callout
           tone="deep"
@@ -1212,10 +1296,11 @@ export default function StackChapter() {
           <T
             en={
               <p>
-                As the introduction chapter described, a process reserves a
-                region of memory for the call stack, <b>one per thread</b>,
-                usually 1 to 8 MB by default (Java: <code>-Xss</code>, Linux:{" "}
-                <code>ulimit -s</code>). One frame takes tens to a few hundred
+                The operating system reserves a region of memory for the call
+                stack, the stack region, <b>one per thread</b>. Its default size
+                is typically between 1 MB (Windows, and JVM threads) and 8 MB
+                (the main thread on Linux); Java changes it with{" "}
+                <code>-Xss</code> and Linux with <code>ulimit -s</code>. One frame takes tens to a few hundred
                 bytes, so the depth limit is roughly tens of thousands of calls.
                 Python sets its own limit and stops at 1000 recursive calls by
                 default. This is why code that walks very deep trees or graphs
@@ -1227,9 +1312,9 @@ export default function StackChapter() {
             }
             zh={
               <p>
-                序章讲过,进程的内存里专门划了一块「栈区」给调用栈,<b>每个线程一条</b>
-                ,默认大小通常 1~8 MB(Java 用 <code>-Xss</code> 调,Linux 用{" "}
-                <code>ulimit -s</code>)。一个栈帧几十到几百字节,所以递归深度上限
+                操作系统会在内存里划出一块区域专门存放调用栈(称为栈区),<b>每个线程一块</b>。
+                默认大小通常在 1 MB(Windows 和 JVM 线程)到 8 MB(Linux 主线程)之间,
+                Java 用 <code>-Xss</code> 调整,Linux 用 <code>ulimit -s</code> 调整。一个栈帧几十到几百字节,所以递归深度上限
                 大致在几万层;Python 干脆自己设限,默认只允许 1000 层。
                 这就是为什么处理超深的树 / 图时,工程代码常把递归改写成
                 <b>显式栈 + 迭代</b>(§06 套路三)。任何递归都能这样改写,
@@ -1480,8 +1565,8 @@ public class ArrayStack {
               zh: (
                 <>
                   <b>注意:</b>这里主动抛错,补上了原生 <code>Array.pop()</code>{" "}
-                  在空数组上静默返回 undefined 的坑 —— 封装的另一个价值:
-                  把语言的坑挡在算法之外。
+                  在空数组上静默返回 undefined 的问题 —— 封装的另一个价值:
+                  把语言层面的陷阱挡在算法之外。
                 </>
               ),
             },
@@ -1515,7 +1600,7 @@ public class ArrayStack {
             zh={
               <p>
                 三种语言里栈的抽象完全一致,但「出厂配置」差别不小:Java
-                要挑对容器(这里有个经典大坑),Python 和 JS 直接用自家动态数组就好:
+                要挑对容器(这里有一个经典陷阱),Python 和 JS 直接用自家动态数组就好:
               </p>
             }
           />
@@ -1812,7 +1897,7 @@ const empty = stack.length === 0;`,
         <div className="grid-3">
           <div className="card hoverable">
             <div className="card-kicker">
-              <T en="PATTERN 01" zh="套路一" />
+              <T en="Pattern 1" zh="套路一" />
             </div>
             <div className="card-title">
               <T en="Matching and nesting" zh="配对 / 嵌套" />
@@ -1836,7 +1921,7 @@ const empty = stack.length === 0;`,
           </div>
           <div className="card hoverable">
             <div className="card-kicker">
-              <T en="PATTERN 02" zh="套路二" />
+              <T en="Pattern 2" zh="套路二" />
             </div>
             <div className="card-title">
               <T en="Next greater or next smaller" zh="找下一个更大 / 更小" />
@@ -1861,7 +1946,7 @@ const empty = stack.length === 0;`,
           </div>
           <div className="card hoverable">
             <div className="card-kicker">
-              <T en="PATTERN 03" zh="套路三" />
+              <T en="Pattern 3" zh="套路三" />
             </div>
             <div className="card-title">
               <T en="Replace recursion with a stack" zh="用栈消除递归" />
@@ -1898,11 +1983,10 @@ const empty = stack.length === 0;`,
                 bottom to top. When a new element is larger than the value on
                 top, that new element is the first larger element to the right of
                 the top, so the top is popped and its answer is recorded. Why
-                can a popped index be forgotten? Any later element that looks
-                left for a larger value meets the element that did the popping
-                first, because it is both larger and closer. So a popped index
-                can never be anyone&rsquo;s answer again. Three questions cover
-                the whole technique:
+                can a popped index be forgotten? Its first larger element to the
+                right has just been found and recorded, and the stack only holds
+                indices still waiting for an answer, so it is never needed again.
+                Three questions cover the whole technique:
               </p>
             }
             zh={
@@ -1912,9 +1996,9 @@ const empty = stack.length === 0;`,
                 以「找下一个更大元素」为例:栈里存的是
                 <strong>答案还未确定的元素下标</strong>,它们的值自底向上不递增。
                 新元素比栈顶大时,它就是栈顶右边第一个更大的元素,于是弹出栈顶并记下答案。
-                为什么被弹出的下标可以彻底忘掉?因为后面任何元素向左找更大值时,
-                都会先遇到「弹它的那个元素」—— 那个元素既更大又更近,
-                所以被弹出的下标不可能再是任何人的答案。三个问题想清楚,单调栈就通了:
+                为什么被弹出的下标可以彻底忘掉?因为它右边第一个更大的元素刚刚已经找到,
+                答案当场记下;栈里只保留还在等待答案的下标,所以它之后不会再被用到。
+                三个问题想清楚,单调栈就通了:
               </p>
             }
           />
@@ -2081,12 +2165,11 @@ const empty = stack.length === 0;`,
             code: {
               en: `class Solution {
     public boolean isValid(String s) {
+        Map<Character, Character> pairs = Map.of(')', '(', ']', '[', '}', '{');
         Deque<Character> stack = new ArrayDeque<>();
         for (char c : s.toCharArray()) {
-            if (c == '(') stack.push(')');       // opening: push the closing bracket it needs
-            else if (c == '[') stack.push(']');
-            else if (c == '{') stack.push('}');
-            else if (stack.isEmpty() || stack.pop() != c)
+            if (!pairs.containsKey(c)) stack.push(c); // opening bracket: push and wait
+            else if (stack.isEmpty() || stack.pop() != (char) pairs.get(c))
                 return false;                    // nothing waiting, or the wrong partner
         }
         return stack.isEmpty();                  // leftover opening brackets -> false
@@ -2094,31 +2177,35 @@ const empty = stack.length === 0;`,
 }`,
               zh: `class Solution {
     public boolean isValid(String s) {
+        Map<Character, Character> pairs = Map.of(')', '(', ']', '[', '}', '{');
         Deque<Character> stack = new ArrayDeque<>();
         for (char c : s.toCharArray()) {
-            if (c == '(') stack.push(')');       // 左括号:压入它需要的那个右括号
-            else if (c == '[') stack.push(']');
-            else if (c == '{') stack.push('}');
-            else if (stack.isEmpty() || stack.pop() != c)
+            if (!pairs.containsKey(c)) stack.push(c); // 左括号:压栈等待
+            else if (stack.isEmpty() || stack.pop() != (char) pairs.get(c))
                 return false;                    // 没人在等,或者等错了人
         }
         return stack.isEmpty();                  // 还有左括号没配对 -> false
     }
 }`,
             },
-            hl: [5, 6, 7, 8, 9, 11],
+            hl: [6, 7, 8, 10],
             note: {
               en: (
                 <>
-                  <b>A small trick:</b> pushing the expected closing bracket
-                  instead of the opening one turns the comparison into a single{" "}
-                  <code>!=</code>, with no lookup table.
+                  <b>A variant:</b> push the closing bracket each opening one
+                  expects (<code>if (c == &apos;(&apos;) stack.push(&apos;)&apos;)</code>{" "}
+                  and so on). The check then becomes a single{" "}
+                  <code>stack.pop() != c</code>, with no lookup table. The code
+                  above pushes the opening bracket so that its stack matches the
+                  animation.
                 </>
               ),
               zh: (
                 <>
-                  <b>小技巧:</b>压栈时直接存「期待的右括号」,比对时一个{" "}
-                  <code>!=</code> 就够,不用查配对表。
+                  <b>另一种写法:</b>遇到左括号时直接压入它期待的右括号(如{" "}
+                  <code>if (c == &apos;(&apos;) stack.push(&apos;)&apos;)</code>),
+                  比对时一个 <code>stack.pop() != c</code> 就够,不用查配对表。
+                  上面的写法压入左括号,是为了让栈的内容和动画一致。
                 </>
               ),
             },
@@ -2702,14 +2789,14 @@ MinStack.prototype.getMin = function () { return this.mins.at(-1); }; // O(1)`,
       <Section
         id="quiz"
         index="08"
-        title={{ en: "Quiz", zh: "通关测验" }}
+        title={{ en: "Chapter quiz", zh: "本章测验" }}
         desc={{
           en: "All 7 correct turns this chapter green.",
-          zh: "7 题全对,点亮本章绿灯",
+          zh: "7 题全部答对,即完成本章",
         }}
         badge={
           <span className="chip">
-            <T en="✎ Quiz" zh="✎ 通关测验" />
+            <T en="✎ Chapter quiz" zh="✎ 本章测验" />
           </span>
         }
       >
