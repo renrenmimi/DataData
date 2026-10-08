@@ -245,7 +245,7 @@ export const PROBLEMS: Problem[] = [
           把 A + B + C + D = 0 改写成 (A + B) = −(C + D)。第一步:双层循环枚举
           A、B,用 Map 记录每种和出现了几次,O(n²)。第二步:双层循环枚举 C、D,
           查 −(c + d) 在表里出现了几次,累加进答案。时间与空间都是 O(n²),
-          从 n⁴ 降下来两个数量级。「折半 + 哈希配对」就是 meet in the middle
+          从 n⁴ 降到 n²。「折半 + 哈希配对」就是 meet in the middle
           思想的入门款。
         </>
       ),
@@ -400,7 +400,7 @@ export const QUIZ: QuizItem[] = [
     ],
     correct: [0, 1, 2],
     missHint: {
-      en: "You missed one. Determinism means you can find a value again after storing it. Good spread keeps the average lookup constant. Speed keeps the hash itself from eating the time you saved. All three are needed.",
+      en: "You missed at least one correct option. Determinism means you can find a value again after storing it. Good spread keeps the average lookup constant. Speed keeps the hash itself from eating the time you saved. All three are needed.",
       zh: "少选了:确定性(不然存进去就找不回来)、均匀(不然全挤一个桶,退化成一条长链)、快(不然省下的时间全花在算哈希上)—— 三者缺一不可。",
     },
     extraHint: {
@@ -481,8 +481,8 @@ export const QUIZ: QuizItem[] = [
       zh: "在「桶太满冲突多」和「桶太空浪费内存」之间取的平衡点,是四分之三。",
     },
     why: {
-      en: "0.75 is a compromise between space and time. Higher, and each bucket holds more entries on average, so the chains get longer and the average lookup stops being constant. Lower, and many buckets sit empty and waste memory. Around 0.75 the chance that one bucket collects a long chain is already very small, assuming the hash spreads the keys well.",
-      zh: "0.75 是空间与时间的折中:再高,每个桶平均挂的元素变多,链变长,平均查找不再是常数;再低,大片桶空着浪费内存。在哈希分布良好的前提下,0.75 附近单桶出现长链的概率已经极小。",
+      en: "0.75 is a compromise between space and time. Higher, and each bucket holds more entries on average, so the chains get longer and each lookup makes more comparisons. The average stays O(1) as long as the load factor is capped, but the constant grows. Lower, and many buckets sit empty and waste memory. Around 0.75 the chance that one bucket collects a long chain is already very small, assuming the hash spreads the keys well.",
+      zh: "0.75 是空间与时间的折中:再高,每个桶平均挂的元素变多,链变长,每次查找要比较的次数变多 —— 只要负载因子有上限,平均仍是 O(1),只是常数变大;再低,大片桶空着浪费内存。在哈希分布良好的前提下,0.75 附近单桶出现长链的概率已经极小。",
     },
   },
   {
@@ -615,7 +615,7 @@ export const QUIZ: QuizItem[] = [
     type: "choice",
     q: {
       en: "In JavaScript, what is the most important difference between using a plain object as a dictionary and using a Map?",
-      zh: "JavaScript 里用普通 Object 当字典,和用 Map 相比,最要命的区别是?",
+      zh: "JavaScript 里用普通 Object 当字典,和用 Map 相比,最关键的区别是?",
     },
     opts: [
       {
