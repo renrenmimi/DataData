@@ -142,7 +142,7 @@ const F146: ArrayFrame[] = [
       ),
       zh: (
         <>
-          put(3,3):容量满!尾部的 <b>2:2</b> 被淘汰 —— 链表 O(1) 摘除,
+          put(3,3):容量已满,尾部的 <b>2:2</b> 被淘汰 —— 链表 O(1) 摘除,
           再用节点里存的 key 在哈希表里 O(1) 删掉条目,然后 3:3 头插。
         </>
       ),
@@ -199,13 +199,13 @@ const F146: ArrayFrame[] = [
         <>
           Final state: get(1) returns -1, get(3) returns 3, get(4) returns 4.
           All <b>9 cache operations were O(1)</b>. This is the official LC 146
-          example, and its output is [1,-1,-1,3,4].
+          example; its get calls return [1,-1,-1,3,4].
         </>
       ),
       zh: (
         <>
           终态:get(1)→-1、get(3)→3、get(4)→4。<b>9 次缓存操作,每次都是 O(1)</b>
-          —— 这正是 LC 146 的官方样例,输出 [1,-1,-1,3,4]。
+          —— 这正是 LC 146 的官方样例,其中各次 get 依次返回 [1,-1,-1,3,4]。
         </>
       ),
     },
@@ -499,7 +499,7 @@ const CHIPS = [
   { id: "bloom", n: "07", label: { en: "Bloom filter", zh: "布隆过滤器" } },
   { id: "featured", n: "08", label: { en: "Worked examples", zh: "三道精讲" } },
   { id: "problems", n: "09", label: { en: "Problem set", zh: "高频题单" } },
-  { id: "quiz", n: "10", label: { en: "Quiz", zh: "通关测验" } },
+  { id: "quiz", n: "10", label: { en: "Quiz", zh: "本章测验" } },
 ];
 
 export default function AdvancedChapter() {
@@ -707,7 +707,7 @@ export default function AdvancedChapter() {
               <T en="Rule 03" zh="拼装原则 03" />
             </div>
             <div className="card-title">
-              ⚖️ <T en="Update every member together" zh="同步更新" />
+              <T en="Update every member together" zh="同步更新" />
             </div>
             <p>
               <T
@@ -964,7 +964,7 @@ export default function AdvancedChapter() {
                 zh={
                   <>
                     <span className="t">单链表 + 哈希表(哈希存节点引用)</span>
-                    最接近了!哈希表存「key → 链表节点」,一步定位到节点,
+                    最接近了。哈希表存「key → 链表节点」,一步定位到节点,
                     拿到节点后链表插删又是 O(1)……但把节点从链表中间<b>摘下来</b>,
                     要把前驱的 next 指到自己的 next 上 ——{" "}
                     <b>单链表的节点拿不到自己的前驱</b>,找前驱只能从头扫,O(n)。就差一根指针。
@@ -1728,7 +1728,7 @@ class LRUCache {
                 <code>freq → 桶</code> 哈希表,每个桶按时间序存该频次的所有 key
                 (桶内天然是个小 LRU);③ 一个 <code>minFreq</code> 变量记录当前最小频次。
                 访问某 key = 把它从 freq 桶搬进 freq+1 桶(两次 O(1) 链表操作);
-                淘汰 = 掐掉 minFreq 桶里最老的 key,也就是「频次最低者中最久未用的那个」。
+                淘汰 = 移除 minFreq 桶里最老的 key,也就是「频次最低者中最久未用的那个」。
                 minFreq 同样不需要搜索:<strong>只有两种时刻它会变</strong> ——
                 旧桶被搬空时 +1(刚搬走的 key 正是 minFreq 桶里最后一个),
                 插入新 key 时归 1(新 key 频次必为 1,不可能更小)。
@@ -2111,8 +2111,9 @@ class LFUCache:
               <p>
                 A different kind of requirement. Given an array, you are asked
                 many times for the <strong>sum of the range l to r</strong>. The{" "}
-                <strong>prefix sum</strong> from chapter 1 already solves that:
-                build the table once, then every query is O(1). Now add one
+                <strong>prefix sum</strong> solves that: precompute pre[i] =
+                a[0] + … + a[i−1], and a range sum is pre[r+1] − pre[l], so after
+                building the table once, every query is O(1). Now add one
                 condition: <strong>the elements can be modified</strong>.
                 Changing a single <code>a[i]</code> invalidates every prefix sum
                 after it, so the table has to be rebuilt in O(n). With 100,000
@@ -2123,8 +2124,9 @@ class LFUCache:
             zh={
               <p>
                 换一类需求。给一个数组,反复问「下标 l 到 r 的
-                <strong>区间和</strong>是多少」—— 第 1 章的<strong>前缀和</strong>
-                就能解决:预处理一遍,每次查询 O(1)。
+                <strong>区间和</strong>是多少」——<strong>前缀和</strong>就能解决:
+                先算 pre[i] = a[0] + … + a[i−1],区间和 = pre[r+1] − pre[l],
+                预处理一遍,每次查询 O(1)。
                 但加一个条件:<strong>数组元素还会被修改</strong>。改一个{" "}
                 <code>a[i]</code>,它后面的所有前缀和全部作废,重建要 O(n) ——
                 改 10 万次就是 10 万次重建,前缀和不再可用。
@@ -2684,8 +2686,8 @@ class LFUCache:
           zh: "树状数组:用 lowbit 维护前缀和",
         }}
         desc={{
-          en: "Binary indexed tree — about 15 lines, smaller and faster than a segment tree, but it does less",
-          zh: "Binary Indexed Tree / Fenwick Tree —— 约 15 行,比线段树更小更快,但能做的事更少",
+          en: "Binary indexed tree — about 25 lines, smaller and faster than a segment tree, but it does less",
+          zh: "Binary Indexed Tree / Fenwick Tree —— 约 25 行,比线段树更小更快,但能做的事更少",
         }}
       >
         <div className="prose">
@@ -2715,8 +2717,9 @@ class LFUCache:
                   <code>-x = ~x + 1</code>. Inverting turns the lowest 1 into a 0
                   and every bit below it into 1. Adding 1 then carries through
                   those bits and stops exactly at the position of the original
-                  lowest 1. So x and -x agree on that one bit and differ
-                  everywhere else, and the AND keeps only that bit. Check it with
+                  lowest 1. So above that bit x and -x are complements of each
+                  other and AND to 0, below it both are 0, and only at that bit
+                  are both 1, so the AND keeps exactly that bit. Check it with
                   6: 6 = 0110, -6 = 1010, and 0110 &amp; 1010 = 0010 = 2.
                 </p>
               </>
@@ -2736,7 +2739,7 @@ class LFUCache:
                   为什么成立:补码里 <code>-x = ~x + 1</code>。
                   取反把最低位的 1 变成 0、其后各位全变 1;
                   再 +1 时进位穿过这些位,恰好停在原来那个 1 的位置。
-                  于是 x 和 -x 只在这一位上相同,按位与就只剩这一位。
+                  于是在这一位之上,x 与 -x 各位互反,按位与为 0;这一位之下两者都是 0;只有这一位两者都是 1,按位与就只剩这一位。
                   拿 6 验算:6 = 0110,-6 = 1010,0110 &amp; 1010 = 0010 = 2。
                 </p>
               </>
@@ -3071,8 +3074,8 @@ class LFUCache:
             <tbody>
               <tr>
                 <td><b><T en="Amount of code" zh="码量" /></b></td>
-                <td><T en="about 50–60 lines" zh="约 50–60 行" /></td>
-                <td><T en="about 15 lines" zh="约 15 行" /></td>
+                <td><T en="about 45 lines" zh="约 45 行" /></td>
+                <td><T en="about 25 lines" zh="约 25 行" /></td>
               </tr>
               <tr>
                 <td><b><T en="Constant factor and space" zh="常数 / 空间" /></b></td>
@@ -3274,7 +3277,8 @@ class LFUCache:
                 Both give O(log n) search, insert, and delete. Salvatore
                 Sanfilippo, the author of Redis, gave three reasons.
                 ① <b>The implementation is far simpler</b>: red-black tree
-                insertion has a dozen rotation and recolouring cases, while skip
+                insertion and deletion together have about a dozen rotation and
+                recolouring cases, while skip
                 list insertion is an ordinary linked-list insertion repeated once
                 per level. ② <b>Range operations are natural</b>: ZRANGE asks for
                 a rank interval, and a skip list locates the start and then walks
@@ -3289,7 +3293,7 @@ class LFUCache:
             zh={
               <p>
                 两者的查 / 插 / 删都是 O(log n)。Redis 作者 Salvatore Sanfilippo
-                给过三个理由:① <b>实现简单一个量级</b> —— 红黑树插入有十几种旋转和变色
+                给过三个理由:① <b>实现简单一个量级</b> —— 红黑树插入、删除合起来有十几种旋转和变色
                 的情况,跳表插入就是「普通链表插入 × 层数」;② <b>范围操作天然顺滑</b> ——
                 ZRANGE 取的是排名区间,跳表定位到起点后沿 L0 一路往前走即可,
                 而树要反复做中序遍历;③ 更容易改造(Redis 在跳表节点上加了 span 字段做排名)。
@@ -3600,16 +3604,17 @@ class Skiplist:
               en: (
                 <>
                   <code>update = [self.head] * MAX_LEVEL</code> stores the same
-                  head reference many times. That is safe here because the code
-                  only replaces list elements and never mutates one through the
-                  shared reference.
+                  head reference many times. That is safe here because every one
+                  of those slots should point at head to begin with: sharing one
+                  object is exactly what is wanted (unlike <code>[[]] * n</code>,
+                  where each slot needs its own list).
                 </>
               ),
               zh: (
                 <>
                   <code>update = [self.head] * MAX_LEVEL</code> 存的是同一个 head
-                  的多个引用 —— 这里没问题,因为代码只替换列表元素,
-                  不会通过共享引用去改内容。
+                  的多个引用 —— 这里没问题:这些格子本来就都应指向 head,
+                  共享同一个对象正是想要的效果(与需要独立对象的 <code>[[]] * n</code> 不同)。
                 </>
               ),
             },
@@ -4095,7 +4100,7 @@ class Skiplist {
         {/* — Walkthrough A — */}
         <div className="sec-head" style={{ marginTop: 24 }}>
           <span className="sec-index">
-            <T en="Example A" zh="精讲 A" />
+            <T en="Walkthrough A" zh="精讲 A" />
           </span>
           <h3 className="sec-title" style={{ fontSize: 20 }}>
             LC 146 · <T en="LRU Cache" zh="LRU 缓存" />
@@ -4369,7 +4374,7 @@ class LRUCache:
         {/* — Walkthrough B — */}
         <div className="sec-head" style={{ marginTop: 44 }}>
           <span className="sec-index">
-            <T en="Example B" zh="精讲 B" />
+            <T en="Walkthrough B" zh="精讲 B" />
           </span>
           <h3 className="sec-title" style={{ fontSize: 20 }}>
             LC 307 ·{" "}
@@ -4399,9 +4404,9 @@ class LRUCache:
               <p>
                 <b>题意:</b>update(i, val) 单点改值,sumRange(l, r) 查区间和,两者交替出现。
                 <b> 为什么这样拼:</b>前缀和查 O(1) 但改 O(n),裸数组改 O(1) 但查 O(n) ——
-                两个操作都频繁时,任一极端都会被打爆,需要一个两边都 O(log n) 的结构,
+                两个操作都频繁时,任一极端都无法满足要求,需要一个两边都 O(log n) 的结构,
                 这正是 §04 和 §05 的主场。
-                <b> 逐帧:</b>线段树的路径动画在 §04 实验室里玩过了,
+                <b> 逐帧:</b>线段树的路径动画已在 §04 实验室里演示过,
                 这里走一遍树状数组版,看 lowbit 怎么在 tree 数组上跳。
               </p>
             }
@@ -4561,7 +4566,7 @@ class LRUCache:
               zh: (
                 <>
                   建树还有一种 O(n) 的写法(先算前缀和再相减),
-                  但刷题时用逐个 add 的 O(n log n) 已经够了。
+                  但做题时用逐个 add 的 O(n log n) 已经够了。
                 </>
               ),
             },
@@ -4624,12 +4629,12 @@ class LRUCache:
               en: (
                 <>
                   The segment tree solution is in §04. Both are accepted, and the
-                  Fenwick version is less than half the code.
+                  Fenwick version is about 60% as long.
                 </>
               ),
               zh: (
                 <>
-                  线段树版解法在 §04。两版都能通过,树状数组版的代码量不到一半。
+                  线段树版解法在 §04。两版都能通过,树状数组版的代码量约为线段树版的六成。
                 </>
               ),
             },
@@ -4673,7 +4678,7 @@ class LRUCache:
         {/* — Walkthrough C — */}
         <div className="sec-head" style={{ marginTop: 44 }}>
           <span className="sec-index">
-            <T en="Example C" zh="精讲 C" />
+            <T en="Walkthrough C" zh="精讲 C" />
           </span>
           <h3 className="sec-title" style={{ fontSize: 20 }}>
             LC 380 ·{" "}
@@ -4707,8 +4712,8 @@ class LRUCache:
                 random selection, and the hash map stores{" "}
                 <code>value → index</code>, which handles lookup. One problem is
                 left: deleting from the middle of an array shifts elements. The
-                fix is the technique from chapter 1, swapping with the last
-                element before removing.
+                fix is the technique from the LC 380 note in chapter 6: swap with
+                the last element before removing.
               </p>
             }
             zh={
@@ -4722,7 +4727,7 @@ class LRUCache:
                 再把洞补上(又 O(n))。
                 <b> 组合:</b>数组存值,负责随机;哈希表存 <code>值 → 下标</code>,负责定位。
                 还剩一个问题:数组中间删除要搬移元素。
-                解法是第 1 章的老办法 —— 先和末尾元素交换,再删末尾。
+                解法正是第 6 章 LC 380 题解里的办法 —— 先和末尾元素交换,再删末尾。
               </p>
             }
           />
@@ -5020,11 +5025,11 @@ class RandomizedSet:
         }}
         desc={{
           en: "Easiest first. Do 303 and 307 together as a pair, then work through the three hard ones.",
-          zh: "由易到难。先把 303 和 307 当一对做完,再啃三道 Hard",
+          zh: "由易到难。先把 303 和 307 当一对做完,再完成三道 Hard",
         }}
         badge={
           <span className="chip">
-            <T en="Final problem set" zh="压轴题单" />
+            <T en="Final problem set" zh="最后一份题单" />
           </span>
         }
       >
@@ -5035,14 +5040,14 @@ class RandomizedSet:
       <Section
         id="quiz"
         index="10"
-        title={{ en: "Chapter quiz", zh: "通关测验" }}
+        title={{ en: "Chapter quiz", zh: "本章测验" }}
         desc={{
           en: "Answer all 7 correctly to complete the last chapter",
-          zh: "7 题全对,点亮全书最后一盏绿灯",
+          zh: "7 题全部答对,即完成最后一章",
         }}
         badge={
           <span className="chip">
-            ✎ <T en="Quiz" zh="通关测验" />
+            ✎ <T en="Chapter quiz" zh="本章测验" />
           </span>
         }
       >
@@ -5121,7 +5126,7 @@ class RandomizedSet:
                 </b>
                 . A segment tree handles any associative merge and, with lazy
                 propagation, range updates in O(log n) instead of O(n log n). A
-                Fenwick tree is about 15 lines and uses{" "}
+                Fenwick tree is about 25 lines and uses{" "}
                 <code>lowbit = x &amp; (−x)</code> to isolate the lowest set bit,
                 but it only works for operations recoverable by subtracting two
                 prefixes, and it must be 1-based.
@@ -5135,7 +5140,7 @@ class RandomizedSet:
                   两者都是 O(log n)
                 </b>
                 。线段树能挂任何满足结合律的合并,配懒标记后区间修改是 O(log n)
-                而不是 O(n log n)。树状数组约 15 行,靠{" "}
+                而不是 O(n log n)。树状数组约 25 行,靠{" "}
                 <code>lowbit = x &amp; (−x)</code> 取出最低位的 1,
                 但只适用于「答案能由两个前缀相减还原」的运算,而且必须 1-based。
               </>

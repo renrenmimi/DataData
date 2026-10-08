@@ -171,16 +171,16 @@ export const PROBLEMS: Problem[] = [
           Segment tree: update walks from the leaf back up to the root, and query
           handles three cases per node (no overlap, full cover, partial overlap).
           Both are O(log n), and §04 has the line-by-line implementation. Fenwick
-          tree: about a quarter of the code. update first computes delta = val −
+          tree: about 60% as much code. update first computes delta = val −
           a[i], then adds delta along i += lowbit(i). A prefix query walks i −=
           lowbit(i) and adds up the segments, and a range sum is the difference
-          of two prefix sums. Worked example B compares both solutions.
+          of two prefix sums. Walkthrough B compares both solutions.
         </>
       ),
       zh: (
         <>
           线段树:update 从叶到根回溯重算,query 分三种相交情况处理,双 O(log n)
-          (§04 有逐行实现)。树状数组:码量只有四分之一 —— update 先算
+          (§04 有逐行实现)。树状数组:代码量约为线段树的六成 —— update 先算
           delta = val − a[i],再沿 i += lowbit(i) 一路加上去;查询沿
           i −= lowbit(i) 拼前缀和,区间和 = 两次前缀相减。精讲 B 有两种解法的完整对照。
         </>
@@ -218,7 +218,7 @@ export const PROBLEMS: Problem[] = [
         <>
           三份状态:key → (val, freq);freq → 该频次的有序桶(桶内按时间序,
           天然是个小 LRU);再加一个 minFreq 变量。访问 = 把 key 从 freq 桶搬进
-          freq+1 桶;淘汰 = 掐掉 minFreq 桶里最老的 key,也就是「频次最低者中最久未用的那个」。
+          freq+1 桶;淘汰 = 移除 minFreq 桶里最老的 key,也就是「频次最低者中最久未用的那个」。
           minFreq 不用搜索:旧桶被搬空时 +1,插入新 key 时归 1。所有操作 O(1)。
           §03 有分桶图解和三语言核心实现。
         </>
@@ -331,7 +331,7 @@ export const QUIZ: QuizItem[] = [
       undefined,
       {
         en: "Searching is never the list's job here. Locating a node is the hash map's work. The list only maintains the access order and does O(1) unlink and insert, and the number of pointers per node does not change search speed.",
-        zh: "查找从来不是链表的活 —— 定位靠哈希表。链表只负责维护访问顺序和 O(1) 摘除/插入,双向与否不改变查找速度。",
+        zh: "查找从来不由链表负责 —— 定位靠哈希表。链表只负责维护访问顺序和 O(1) 摘除/插入,双向与否不改变查找速度。",
       },
       {
         en: "The opposite is true. Every node stores one extra prev pointer, so the list uses more memory. That extra memory is what buys O(1) unlinking.",
@@ -441,7 +441,7 @@ export const QUIZ: QuizItem[] = [
       },
       {
         en: "Each query would be O(n), which collapses as soon as the query count grows. Prefix sums pay O(n) once and get O(1) queries forever.",
-        zh: "每次查询 O(n),查询一多立刻拖垮;前缀和用一次 O(n) 预处理换来此后每次 O(1) 查询,这笔买卖必须做。",
+        zh: "每次查询 O(n),查询一多立刻拖垮;前缀和用一次 O(n) 预处理换来此后每次 O(1) 查询,这样的交换非常划算。",
       },
     ],
     why: {
@@ -472,8 +472,8 @@ export const QUIZ: QuizItem[] = [
     },
     answers: ["x&(-x)", "x&-x", "(-x)&x", "-x&x", "x&(~x+1)", "(~x+1)&x"],
     hint: {
-      en: "In two's complement, -x equals \"invert every bit, then add 1\". That operation keeps the lowest set bit and clears every other bit. Try it with 6 = 0110.",
-      zh: "提示:补码里 -x 等于「按位取反再 +1」,这个操作恰好保留最低位的 1、清零其余所有位。拿 6 = 0110 试一试。",
+      en: "In two's complement, -x equals \"invert every bit, then add 1\". ANDing it with x keeps only the lowest set bit. Try it with 6 = 0110.",
+      zh: "补码里 -x 等于「按位取反再 +1」;把它与 x 按位与,恰好只留下最低位的 1。拿 6 = 0110 试一试。",
     },
     why: {
       en: "The answer is x & (-x). In two's complement, -x = ~x + 1. Inverting turns the lowest 1 into 0 and every bit below it into 1; adding 1 then carries up and stops exactly at the position of that original lowest 1. The AND therefore keeps only that bit. Example: 6 = 0110, -6 = 1010, and 0110 & 1010 = 0010 = 2.",
@@ -588,7 +588,7 @@ export const QUIZ: QuizItem[] = [
       },
       {
         en: "Binary search on a sorted array is fast, but zset members are inserted and removed constantly, and array insertion or deletion is O(n) because of the shifting.",
-        zh: "有序数组二分查得快,但 zset 的成员是频繁增删的 —— 数组插入删除要 O(n) 搬移元素,扛不住。",
+        zh: "有序数组二分查得快,但 zset 的成员是频繁增删的 —— 数组插入删除要 O(n) 搬移元素,无法满足要求。",
       },
       {
         en: "A heap only guarantees that the root is the extreme value; the rest is unordered. It cannot answer a range query such as \"members ranked 5 through 15\".",
