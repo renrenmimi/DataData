@@ -183,7 +183,11 @@ the DOM.
   - `{type: "choice", q, opts: [...], correct: i, wrong: [undefined, …per-option correction], why}`
   - `{type: "multi", q, opts, correct: [i], missHint, extraHint, why}`
   - `{type: "fill", q, placeholder?, answers: [strings, lenient match — include both
-    the English and Chinese spellings], hint, why}`
+    the English and Chinese spellings], hint, why}`. Matching ignores case,
+    spaces and full-width forms (NFKC), and reads the IME's 「、」 as `,` or `/`
+    and 「。」 as `.`, so there is no need to list those variants. After three
+    misses the component shows the first answer written in the reader's
+    language, so keep one English and one Chinese spelling in the list.
   - **No generic feedback.** "Incorrect" is not acceptable; every wrong option
     must explain what specifically is wrong with it.
 
