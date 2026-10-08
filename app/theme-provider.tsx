@@ -4,6 +4,10 @@
 //  - ThemeProvider: mirrors data-theme ("dark" | "light") onto <html> and
 //    persists it in localStorage. The inline script in <head> (themeScript)
 //    sets it before the first paint, so the wrong theme never flashes.
+//    The providers read their settings back from localStorage, not from the
+//    <html> attributes: if React gives up hydrating the root, it renders it
+//    again on the client and drops the attributes the inline script wrote,
+//    so the providers write them back on mount.
 //  - ShellProvider: workbench UI state (mobile drawer sidebar / desktop
 //    collapse / ⌘K palette / preferred code language).
 //    The preferred code language is shared site-wide: switch any CodeTabs to
@@ -27,6 +31,15 @@ const THEME_KEY = "dd-theme";
 const SIDEBAR_KEY = "dd-sidebar";
 const CODELANG_KEY = "dd-codelang";
 
+/** A stored setting, or null when there is none or storage is blocked. */
+function stored(key: string): string | null {
+  try {
+    return window.localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
 // Runs before the first paint: restores the theme and sidebar collapse state
 // to avoid a flash. Defaults to dark + expanded.
 export const themeScript = `(function(){var d=document.documentElement;try{var t=localStorage.getItem("${THEME_KEY}");if(t!=="light"&&t!=="dark"){t="dark";}d.dataset.theme=t;}catch(e){d.dataset.theme="dark";}try{d.dataset.sidebar=localStorage.getItem("${SIDEBAR_KEY}")==="collapsed"?"collapsed":"expanded";}catch(e){d.dataset.sidebar="expanded";}})();`;
@@ -45,8 +58,9 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, set] = useState<Theme>("dark");
 
   useEffect(() => {
-    const current = document.documentElement.dataset.theme;
-    if (current === "light" || current === "dark") set(current);
+    const current: Theme = stored(THEME_KEY) === "light" ? "light" : "dark";
+    document.documentElement.dataset.theme = current;
+    set(current);
   }, []);
 
   // Paper is light: print with the light palette whatever the screen shows,
@@ -122,13 +136,11 @@ export function ShellProvider({ children }: { children: ReactNode }) {
   const [codeLang, setCodeLangState] = useState<CodeLang>("python");
 
   useEffect(() => {
-    setSidebarCollapsed(document.documentElement.dataset.sidebar === "collapsed");
-    try {
-      const l = window.localStorage.getItem(CODELANG_KEY);
-      if (l === "java" || l === "python" || l === "js") setCodeLangState(l);
-    } catch {
-      /* ignore */
-    }
+    const collapsed = stored(SIDEBAR_KEY) === "collapsed";
+    document.documentElement.dataset.sidebar = collapsed ? "collapsed" : "expanded";
+    setSidebarCollapsed(collapsed);
+    const l = stored(CODELANG_KEY);
+    if (l === "java" || l === "python" || l === "js") setCodeLangState(l);
   }, []);
 
   const toggleSidebarCollapsed = useCallback(() => {
