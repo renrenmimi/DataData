@@ -42,7 +42,7 @@ const CHIPS = [
     label: { en: "Patterns and walkthroughs", zh: "套路与精讲" },
   },
   { id: "problems", n: "07", label: { en: "Problem set", zh: "高频题单" } },
-  { id: "quiz", n: "08", label: { en: "Quiz", zh: "通关测验" } },
+  { id: "quiz", n: "08", label: { en: "Quiz", zh: "本章测验" } },
 ];
 
 export default function LinkedListChapter() {
@@ -70,7 +70,8 @@ export default function LinkedListChapter() {
               memory and index access. What it gets back:{" "}
               <strong>
                 when you already hold the node in front of a position, inserting
-                or deleting there is two reference writes and nothing moves
+                there takes two reference writes, deleting takes one, and nothing
+                moves
               </strong>
               .
             </>
@@ -80,7 +81,7 @@ export default function LinkedListChapter() {
               每个节点只存一个值和<strong>下一个节点的地址</strong>。
               链表交出了连续内存与下标访问,换回来的是:
               <strong>
-                只要位置前面那个节点已经在手上,插入或删除就只是改两根引用,谁都不用搬家
+                只要位置前面那个节点已经在手上,插入只需改两根引用,删除只需改一根,不必搬动任何元素
               </strong>
               。
             </>
@@ -145,7 +146,7 @@ export default function LinkedListChapter() {
                   <strong>所有元素集体右移一格</strong>;删一个,右边全体左移补位。
                   数据量十万条、操作又频繁落在中间时,这份 O(n)
                   的搬家成本就是实打实的账单。根源只有一个:数组把
-                  <strong>逻辑上的相邻</strong>焊死在了<strong>物理上的相邻</strong>
+                  <strong>逻辑上的相邻</strong>绑定在<strong>物理上的相邻</strong>
                   上 —— 两个邻居在内存里就是邻居,中间挤不进人。
                 </p>
                 <p>
@@ -249,10 +250,10 @@ export default function LinkedListChapter() {
               <p>
                 A memory allocator keeps its unused blocks in a{" "}
                 <b>free list</b>, so a freed block is returned by rewriting two
-                references instead of moving memory. The FAT file system stores
-                each file as a chain of blocks, where every block records the
-                number of the next one, which is why a file can be spread over a
-                whole disk. And the best known interview combination,{" "}
+                references instead of moving memory. The FAT file system keeps a
+                table that records, for every block, the number of the next one,
+                so a file is a chain inside that table, which is why a file can
+                be spread over a whole disk. And the best known interview combination,{" "}
                 <b>the LRU cache (LC 146) = a hash map + a doubly linked list</b>
                 , exists because a node reference taken from the hash map can be
                 unlinked and relinked in O(1). Chapter 13 builds one.
@@ -262,7 +263,7 @@ export default function LinkedListChapter() {
               <p>
                 内存分配器把空闲块串成一条<b>空闲链表(free list)</b>,
                 归还一块内存只是改两根引用,不必搬动任何数据;FAT
-                文件系统把文件存成一条块链,每一块记录下一块的编号 ——
+                文件系统用一张分配表记录每个块的下一个块号,文件就是表里的一条链 ——
                 所以一个文件可以散落在整块磁盘上。而面试里最出名的组合 ——
                 <b>LRU 缓存(LC 146)= 哈希表 + 双向链表</b> ——
                 之所以成立,正是因为从哈希表里拿到的节点引用可以 O(1)
@@ -290,7 +291,7 @@ export default function LinkedListChapter() {
           <T
             en={
               <p>
-                <Link href="/#refs">Introduction §03</Link> said it already:{" "}
+                <Link href="/#refs">The Prologue, §03,</Link> said it already:{" "}
                 <strong>a reference is a memory address</strong>, a note that
                 says &ldquo;the object is at 2096&rdquo;. A linked list node is
                 nothing more than a value and such a note packed together. The
@@ -365,7 +366,7 @@ export default function LinkedListChapter() {
                   <code>{"{ val: 7, next: 1432 }"}</code> —— 一格值 + 一格地址。
                   在 Java / Python / JS 里,next 就是一个指向下一个节点对象的引用;
                   没有下一个时记作 <code>null / None / null</code>,
-                  它是每条链的终点站,也是空指针异常的第一案发现场。
+                  它是每条链的终点,也是空指针异常最常见的发生位置。
                 </p>
               }
             />
@@ -511,7 +512,7 @@ export default function LinkedListChapter() {
                     zh={
                       <>
                         改 2 根(插)或 1 根(删)指针 ——{" "}
-                        <b>前提是前驱已经在手里!</b>这一行就是链表全部价值的来源
+                        <b>前提是前驱已经在手里。</b>这一行就是链表全部价值的来源
                       </>
                     }
                   />
@@ -653,7 +654,7 @@ export default function LinkedListChapter() {
           tone="warn"
           title={{
             en: "Three bugs that account for most linked list mistakes",
-            zh: "链表 bug 三巨头",
+            zh: "链表最常见的三类 bug",
           }}
         >
           <T
@@ -885,7 +886,7 @@ class MyLinkedList {
     // 原地反转:三指针,§06 精讲 A 有逐帧动画
     public void reverse() {
         ListNode prev = null, cur = head;
-        tail = head;                  // 老头将成为新尾
+        tail = head;                  // 原来的头节点将成为新的尾节点
         while (cur != null) {
             ListNode nxt = cur.next;  // ① 备份下一站
             cur.next = prev;          // ② 箭头调头
@@ -1085,7 +1086,7 @@ class MyLinkedList:
     def reverse(self):
         """原地反转:三指针,§06 精讲 A 有逐帧动画"""
         prev, cur = None, self.head
-        self.tail = self.head     # 老头将成为新尾
+        self.tail = self.head     # 原来的头节点将成为新的尾节点
         while cur:
             nxt = cur.next        # ① 备份下一站
             cur.next = prev       # ② 箭头调头
@@ -1291,7 +1292,7 @@ class MyLinkedList {
   // 原地反转:三指针,§06 精讲 A 有逐帧动画
   reverse() {
     let prev = null, cur = this.head;
-    this.tail = this.head;      // 老头将成为新尾
+    this.tail = this.head;      // 原来的头节点将成为新的尾节点
     while (cur) {
       const nxt = cur.next;     // ① 备份下一站
       cur.next = prev;          // ② 箭头调头
@@ -1340,8 +1341,9 @@ class MyLinkedList {
                 already knows its predecessor, so holding the node is enough to
                 delete it in O(1). That is what makes an LRU cache work. (2) You
                 can walk from the tail to the head. The price: one more
-                reference per node, and every insertion or deletion now rewrites{" "}
-                <strong>four</strong> references, which is easier to get wrong:
+                reference per node, and an insertion now rewrites{" "}
+                <strong>four</strong> references (a deletion two), which is
+                easier to get wrong:
               </p>
             }
             zh={
@@ -1351,7 +1353,7 @@ class MyLinkedList {
                 两大收益:① <strong>删除不再需要「找前驱」</strong> ——
                 节点自己就知道前驱是谁,拿到节点即可 O(1) 删除,
                 LRU 缓存正是靠它;② 支持从尾向头遍历。代价:每个节点多一根引用,
-                每次插删要改<strong>四根</strong>指针,更容易写错:
+                插入要改<strong>四根</strong>指针(删除改两根),更容易写错:
               </p>
             }
           />
@@ -1398,10 +1400,10 @@ class Doubly {
         x.next = node.next;       // ② x 牵住右邻
         if (node.next != null)
             node.next.prev = x;   // ③ 右邻回牵 x(右邻可能不存在)
-        node.next = x;            // ④ 左邻最后改口 —— 还是「先接后断」
+        node.next = x;            // ④ 左邻最后才改指向
     }
 
-    // 删除 node:不用找前驱!这就是 prev 的意义
+    // 删除 node:不用找前驱,这正是 prev 的用途
     static void remove(DNode node) {
         if (node.prev != null) node.prev.next = node.next;
         if (node.next != null) node.next.prev = node.prev;
@@ -1448,10 +1450,10 @@ def insert_after(node, x):
     x.next = node.next        # ② x 牵住右邻
     if node.next:
         node.next.prev = x    # ③ 右邻回牵 x(右邻可能不存在)
-    node.next = x             # ④ 左邻最后改口 —— 还是「先接后断」
+    node.next = x             # ④ 左邻最后才改指向
 
 def remove(node):
-    """删除 node:不用找前驱!这就是 prev 的意义"""
+    """删除 node:不用找前驱,这正是 prev 的用途"""
     if node.prev:
         node.prev.next = node.next
     if node.next:
@@ -1499,10 +1501,10 @@ function insertAfter(node, x) {
   x.prev = node;              // ① x 牵住左邻
   x.next = node.next;         // ② x 牵住右邻
   if (node.next) node.next.prev = x; // ③ 右邻回牵 x
-  node.next = x;              // ④ 左邻最后改口 —— 还是「先接后断」
+  node.next = x;              // ④ 左邻最后才改指向
 }
 
-// 删除 node:不用找前驱!这就是 prev 的意义
+// 删除 node:不用找前驱,这正是 prev 的用途
 function remove(node) {
   if (node.prev) node.prev.next = node.next;
   if (node.next) node.next.prev = node.prev;
@@ -1570,10 +1572,10 @@ public ListNode removeElements(ListNode head, int val) {
     }
     return dummy.next;                    // the real head is here
 }`,
-              zh: `// ❶ 没有 dummy:头节点要单独伺候
+              zh: `// ❶ 没有 dummy:头节点需要单独一个循环
 public ListNode removeElements(ListNode head, int val) {
     while (head != null && head.val == val)
-        head = head.next;                 // 头是坏的就一直换头
+        head = head.next;                 // 头节点要删就继续换头
     ListNode cur = head;
     while (cur != null && cur.next != null) {
         if (cur.next.val == val) cur.next = cur.next.next;
@@ -1582,11 +1584,11 @@ public ListNode removeElements(ListNode head, int val) {
     return head;
 }
 
-// ❷ 有 dummy:头节点变成普通节点,一套逻辑通吃
+// ❷ 有 dummy:头节点变成普通节点,一个循环处理所有节点
 public ListNode removeElements(ListNode head, int val) {
     ListNode dummy = new ListNode(0);     // 哨兵站到 head 前面
     dummy.next = head;
-    ListNode cur = dummy;                 // 从哨兵出发,人人有前驱
+    ListNode cur = dummy;                 // 从哨兵出发,每个节点都有前驱
     while (cur.next != null) {
         if (cur.next.val == val) cur.next = cur.next.next;
         else cur = cur.next;
@@ -1621,10 +1623,10 @@ def remove_elements(head, val):
         else:
             cur = cur.next
     return dummy.next                 # the real head is here`,
-              zh: `# ❶ 没有 dummy:头节点要单独伺候
+              zh: `# ❶ 没有 dummy:头节点需要单独一个循环
 def remove_elements(head, val):
     while head and head.val == val:
-        head = head.next              # 头是坏的就一直换头
+        head = head.next              # 头节点要删就继续换头
     cur = head
     while cur and cur.next:
         if cur.next.val == val:
@@ -1633,11 +1635,11 @@ def remove_elements(head, val):
             cur = cur.next
     return head
 
-# ❷ 有 dummy:头节点变成普通节点,一套逻辑通吃
+# ❷ 有 dummy:头节点变成普通节点,一个循环处理所有节点
 def remove_elements(head, val):
     dummy = ListNode(0)               # 哨兵站到 head 前面
     dummy.next = head
-    cur = dummy                       # 从哨兵出发,人人有前驱
+    cur = dummy                       # 从哨兵出发,每个节点都有前驱
     while cur.next:
         if cur.next.val == val:
             cur.next = cur.next.next
@@ -1672,10 +1674,10 @@ var removeElements = function (head, val) {
   }
   return dummy.next;                // the real head is here
 };`,
-              zh: `// ❶ 没有 dummy:头节点要单独伺候
+              zh: `// ❶ 没有 dummy:头节点需要单独一个循环
 var removeElements = function (head, val) {
   while (head && head.val === val)
-    head = head.next;               // 头是坏的就一直换头
+    head = head.next;               // 头节点要删就继续换头
   let cur = head;
   while (cur && cur.next) {
     if (cur.next.val === val) cur.next = cur.next.next;
@@ -1684,11 +1686,11 @@ var removeElements = function (head, val) {
   return head;
 };
 
-// ❷ 有 dummy:头节点变成普通节点,一套逻辑通吃
+// ❷ 有 dummy:头节点变成普通节点,一个循环处理所有节点
 var removeElements = function (head, val) {
   const dummy = new ListNode(0);    // 哨兵站到 head 前面
   dummy.next = head;
-  let cur = dummy;                  // 从哨兵出发,人人有前驱
+  let cur = dummy;                  // 从哨兵出发,每个节点都有前驱
   while (cur.next) {
     if (cur.next.val === val) cur.next = cur.next.next;
     else cur = cur.next;
@@ -1743,7 +1745,7 @@ var removeElements = function (head, val) {
         }}
         desc={{
           en: "For interview problems you write ListNode yourself, and Java LinkedList has a well known trap.",
-          zh: "刷题全靠手写 ListNode —— 以及 Java LinkedList 的著名陷阱",
+          zh: "做题时都要手写 ListNode —— 以及 Java LinkedList 的著名陷阱",
         }}
       >
         <div className="prose">
@@ -1765,9 +1767,9 @@ var removeElements = function (head, val) {
             zh={
               <p>
                 一个可能让你意外的事实:
-                <strong>三种语言都没有可以直接拿来刷题的内置单链表</strong>。
+                <strong>三种语言都没有可以直接用于做题的内置单链表</strong>。
                 原因正是 §02 那条工程结论 —— 通用场景下动态数组几乎总是更快,
-                而单链表值得出场的地方,往往也特殊到值得手写。所以刷题时,
+                而单链表值得出场的地方,往往也特殊到值得手写。所以做题时,
                 链表就是一个约定俗成的 <code>ListNode</code>,
                 LeetCode 帮你定义好,三语言长这样:
               </p>
@@ -1839,7 +1841,7 @@ class ListNode:
 # 标准库里没有链表:list 是动态数组,
 # collections.deque 是「块状双向链表」,
 # 两端 O(1),但它不暴露节点,
-# 不能拿来当刷题链表用 —— 队列章(第 5 章)再见。`,
+# 不能用在这里。`,
             },
             note: {
               en: (
@@ -1917,7 +1919,7 @@ function ListNode(val, next) {
                 <td>
                   <T
                     en="None (write ListNode yourself)"
-                    zh="无(刷题手写 ListNode)"
+                    zh="无(做题时手写 ListNode)"
                   />
                 </td>
                 <td>
@@ -2080,7 +2082,7 @@ function ListNode(val, next) {
                 </code>{" "}
                 这段代码对 ArrayList 是 O(n),对 <b>LinkedList 是 O(n²)</b>:
                 每次 <code>get(i)</code> 都要从头(或者从更近的尾)重新走 i 步。
-                十万条数据,前者毫秒级,后者要好几十秒。遍历 LinkedList
+                十万条数据,前者毫秒级,后者要好几秒。遍历 LinkedList
                 必须用 for-each 或迭代器 —— 它们沿着 next 走一遍,整体 O(n)。
                 更实际的建议来自这个类的作者 Joshua Bloch:他说自己也几乎不用它。
                 需要队列用 ArrayDeque,需要列表用 ArrayList,通常都更快。
@@ -2129,7 +2131,7 @@ function ListNode(val, next) {
         index="06"
         title={{
           en: "Three patterns: reversal, fast and slow pointers, dummy node",
-          zh: "链表的三大招式:反转、快慢指针、dummy",
+          zh: "链表的三种套路:反转、快慢指针、dummy",
         }}
         desc={{
           en: "Almost every linked list problem is a combination of these three. Three worked examples, one step at a time.",
@@ -2168,7 +2170,7 @@ function ListNode(val, next) {
         <div className="grid-3">
           <div className="card hoverable">
             <div className="card-kicker">
-              <T en="PATTERN 01" zh="招式一" />
+              <T en="Pattern 1" zh="套路一" />
             </div>
             <div className="card-title">
               <T en="Three-pointer reversal" zh="三指针反转" />
@@ -2193,7 +2195,7 @@ function ListNode(val, next) {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">
-              <T en="PATTERN 02" zh="招式二" />
+              <T en="Pattern 2" zh="套路二" />
             </div>
             <div className="card-title">
               <T en="Fast and slow pointers" zh="快慢指针" />
@@ -2223,7 +2225,7 @@ function ListNode(val, next) {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">
-              <T en="PATTERN 03" zh="招式三" />
+              <T en="Pattern 3" zh="套路三" />
             </div>
             <div className="card-title">
               <T en="Dummy node" zh="dummy 哨兵" />
@@ -2413,7 +2415,7 @@ function ListNode(val, next) {
                 <code>head.next.next = head</code> 把自己接到末尾,
                 最后 <code>head.next = null</code> 收口。写法优雅,
                 但调用栈每个节点占一帧,空间是 <b>O(n)</b> 而不是 O(1),
-                链一长还可能爆栈 —— 迭代版是更稳妥的答案。
+                链很长时还可能栈溢出 —— 迭代版是更稳妥的答案。
               </p>
             }
           />
@@ -2640,7 +2642,7 @@ function ListNode(val, next) {
           </h3>
           <span className="sec-badge">
             <span className="lc-badge" data-d="easy">
-              EASY+
+              EASY
             </span>
           </span>
         </div>
@@ -2807,7 +2809,7 @@ function ListNode(val, next) {
                 segment of a linked list is a single pointer write, O(1);
                 merging arrays would have to copy those elements. The follow-up
                 to expect: <b>what about K lists?</b> (LC 23, Hard) Merging them
-                one pair at a time is O(nK); taking the smallest of the K
+                into the result one after another is O(nK); taking the smallest of the K
                 current heads from a min-heap gives O(n log K), which is covered
                 in the heap chapter (chapter 09). This merge step is also the
                 core of <b>merge sort</b>, which is how a linked list is sorted
@@ -2821,7 +2823,7 @@ function ListNode(val, next) {
                 注意最后那行 <code>tail.next = l1 或 l2</code>:
                 链表拼接剩余整段只是一次指针写入,O(1);换成数组合并,
                 剩下的元素还得逐个复制。必考追问:<b>合并 K 条呢?</b>
-                (LC 23,Hard)两两合并是 O(nK);
+                (LC 23,Hard)把各条链依次并入结果是 O(nK);
                 用最小堆每次取 K 个当前头节点里最小的,是 O(n log K) ——
                 堆章(第 9 章)会讲。这个合并本身也是<b>归并排序</b>的核心步骤,
                 链表排序(LC 148)就靠它。
@@ -2856,14 +2858,14 @@ function ListNode(val, next) {
       <Section
         id="quiz"
         index="08"
-        title={{ en: "Quiz", zh: "通关测验" }}
+        title={{ en: "Chapter quiz", zh: "本章测验" }}
         desc={{
           en: "Answer all 7 correctly to light up this chapter.",
-          zh: "7 题全对,点亮本章绿灯",
+          zh: "7 题全部答对,即完成本章",
         }}
         badge={
           <span className="chip">
-            <T en="✎ Quiz" zh="✎ 通关测验" />
+            <T en="✎ Chapter quiz" zh="✎ 本章测验" />
           </span>
         }
       >
@@ -2942,7 +2944,7 @@ function ListNode(val, next) {
             ),
             zh: (
               <>
-                三大招式:<b>三指针反转</b>(备份 → 调头 → 前移)、
+                三种套路:<b>三指针反转</b>(备份 → 调头 → 前移)、
                 <b>快慢指针</b>(相对速度 1,距离每步减 1,
                 在环里必然相遇)、<b>dummy 哨兵</b>
                 (人人有前驱,头节点的特判随之消失)。
@@ -2961,8 +2963,8 @@ function ListNode(val, next) {
             ),
             zh: (
               <>
-                选型与语言坑:默认用数组家族(缓存友好);
-                三语言都没有内置单链表,刷题手写 ListNode;
+                选型与语言陷阱:默认用数组家族(缓存友好);
+                三语言都没有内置单链表,做题时手写 ListNode;
                 <b>Java 的 LinkedList.get(i) 是 O(n)</b>,
                 用下标循环遍历就变成 O(n²) —— 它是双端队列,不是数组。
               </>

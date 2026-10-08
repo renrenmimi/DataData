@@ -275,7 +275,7 @@ export const PROBLEMS: Problem[] = [
           <b>one node at a time</b>. They meet again at the entrance of the
           cycle. Why: let a be the distance from head to the entrance, b the
           distance from the entrance to the meeting point, and c the rest of the
-          cycle. From distance(fast) = 2 x distance(slow) you get a = c + k x
+          cycle. From distance(fast) = 2 × distance(slow) you get a = c + k ×
           (cycle length) for some whole number k. Interviewers often ask for
           that equation, so make sure §06 walkthrough B is clear first.
         </>
@@ -645,7 +645,7 @@ export const QUIZ: QuizItem[] = [
     ],
     why: {
       en: "The head is special because nothing points at it: deleting it means assigning to the head variable, and inserting before it means the same, so both need their own branch. A dummy node placed in front of the head gives it a predecessor, so one uniform 'operate on cur.next' loop handles every position. Return dummy.next at the end. LC 203, 19, 21, and 25 all become shorter this way.",
-      zh: "头节点特殊,是因为没有任何节点指向它:删它、在它前面插入,都得直接给 head 变量赋值,于是各需要一个分支。dummy 站到 head 前面,头节点就有了前驱,一套「操作 cur.next」的循环通吃所有位置,最后返回 dummy.next。LC 203、19、21、25 都因此变短。",
+      zh: "头节点特殊,是因为没有任何节点指向它:删它、在它前面插入,都得直接给 head 变量赋值,于是各需要一个分支。dummy 站到 head 前面,头节点就有了前驱,一套「操作 cur.next」的循环就能处理所有位置,最后返回 dummy.next。LC 203、19、21、25 都因此变短。",
     },
   },
   {
@@ -656,8 +656,8 @@ export const QUIZ: QuizItem[] = [
     },
     opts: [
       {
-        en: "Both are O(n). The advantage of fast and slow pointers is that the list is read only once, which matters for streamed data and keeps the code to one loop.",
-        zh: "两种都是 O(n);快慢指针的优势是只读一遍数据 —— 流式场景需要它,代码也只剩一个循环",
+        en: "Both are O(n). Fast and slow pointers need only one loop and no length up front, and the same template also works on a list that may contain a cycle.",
+        zh: "两种都是 O(n);快慢指针只需一个循环、不必先知道长度,同一模板还能用于可能有环的链表",
       },
       {
         en: "Fast and slow pointers are O(log n); counting the length is O(n).",
@@ -677,20 +677,20 @@ export const QUIZ: QuizItem[] = [
       undefined,
       {
         en: "Nothing here halves the remaining work: slow takes n/2 steps while fast takes n. Both are linear. A linked list offers no O(log n) way to reach a position.",
-        zh: "这里没有任何「每次砍一半」的结构:slow 走 n/2 步,fast 走 n 步,都是线性的。链表上不存在 O(log n) 的定位方式。",
+        zh: "这里没有任何「每次减半」的结构:slow 走 n/2 步,fast 走 n 步,都是线性的。链表上不存在 O(log n) 的定位方式。",
       },
       {
         en: "Counting the length works perfectly well. It is two loops of O(n) each, and it is arguably easier to get right. It just reads the list twice.",
         zh: "数长度法完全正确,两个循环各 O(n),写起来甚至更不容易错 —— 只是要把链表读两遍。",
       },
       {
-        en: "Add it up: fast and slow take n/2 + n = 1.5n pointer moves, counting takes n + n/2 = 1.5n. They tie. The difference is the number of passes, not the number of steps.",
-        zh: "算总账:快慢指针 n/2 + n = 1.5n 步,数长度法 n + n/2 = 1.5n 步 —— 打平。区别在遍历的「遍数」,不在步数。",
+        en: "Add it up: fast and slow take n/2 + n = 1.5n pointer moves, counting takes n + n/2 = 1.5n. They tie. The difference is the number of loops, not the number of steps.",
+        zh: "算总账:快慢指针 n/2 + n = 1.5n 步,数长度法 n + n/2 = 1.5n 步 —— 打平。区别在循环的个数,不在步数。",
       },
     ],
     why: {
-      en: "Both are correct and both are O(n), and the total number of pointer moves is 1.5n either way. Fast and slow pointers win because the data is read in a single pass, which is required when the input can only be read once, and because the same template also solves cycle detection and palindrome checking. That is why it is the expected answer in an interview.",
-      zh: "两种都对、都是 O(n),总的指针移动次数还恰好都是 1.5n。快慢指针胜在单次扫描 —— 数据只能读一遍的流式场景是刚需 —— 而且判环、回文链表共用同一套模板。这就是它成为面试默认答案的原因。",
+      en: "Both are correct and both are O(n), and the total number of pointer moves is 1.5n either way. Fast and slow pointers win because they need one loop and no length in advance, and because the same template also handles a list that may contain a cycle, where counting the length would never finish, as well as palindrome checking. That is why it is the expected answer in an interview.",
+      zh: "两种都对、都是 O(n),总的指针移动次数也都是 1.5n。快慢指针的优势在于只需一个循环、不必事先知道长度,而且同一套模板还能处理可能有环的链表(有环时「先数长度」根本不会结束)和回文链表。这就是它成为面试默认答案的原因。",
     },
   },
 ];
