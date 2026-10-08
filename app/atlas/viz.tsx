@@ -5,7 +5,7 @@
 // The data is a small decision tree; the path walked is kept as breadcrumbs and can be
 // restarted at any time.
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useL, T, type Loc } from "@/lib/i18n";
 
@@ -35,36 +35,36 @@ const TREE: Record<string, Node> = {
     opts: [
       {
         label: {
-          en: "🔍 Fast lookup, removing duplicates, or counting",
-          zh: "🔍 快速查找 / 去重 / 计数",
+          en: "Fast lookup, removing duplicates, or counting",
+          zh: "快速查找 / 去重 / 计数",
         },
         next: "lookup",
       },
       {
         label: {
-          en: "📋 Processing elements one at a time in some order",
-          zh: "📋 按某种顺序逐个处理元素",
+          en: "Processing elements one at a time in some order",
+          zh: "按某种顺序逐个处理元素",
         },
         next: "order",
       },
       {
         label: {
-          en: "📦 Reading and writing a group of elements by position",
-          zh: "📦 按位置存取一批元素",
+          en: "Reading and writing a group of elements by position",
+          zh: "按位置存取一批元素",
         },
         next: "seq",
       },
       {
         label: {
-          en: "🕸 Working with relationships or connectivity between elements",
-          zh: "🕸 处理元素之间的关系 / 连通",
+          en: "Working with relationships or connectivity between elements",
+          zh: "处理元素之间的关系 / 连通",
         },
         next: "rel",
       },
       {
         label: {
-          en: "📊 Range queries (sum or minimum) on data that keeps changing",
-          zh: "📊 区间统计(求和 / 最值),数据还会改",
+          en: "Range queries (sum or minimum) on data that keeps changing",
+          zh: "区间统计(求和 / 最值),数据还会改",
         },
         next: "range",
       },
@@ -103,7 +103,7 @@ const TREE: Record<string, Node> = {
     href: "/hash",
     why: {
       en: "Reads and writes are O(1) on average. Three common signals point here: have I seen this before, find the matching pair, and count by group. If you do not need order, this is the fastest way to look something up.",
-      zh: "平均 O(1) 的存取,「见过吗 / 配对 / 分组计数」三大信号全归它。只要不需要顺序,它就是查找之王。",
+      zh: "平均 O(1) 的存取,「见过吗 / 配对 / 分组计数」三大信号全归它。只要不需要顺序,它就是查找的首选。",
     },
     runnerUp: {
       en: "If you only store whether something is present, use a Set. If you also need an eviction policy (a cache), see LRU in chapter 13.",
@@ -116,7 +116,7 @@ const TREE: Record<string, Node> = {
     href: "/bst",
     why: {
       en: "The all-round choice when order matters: search, insert, delete, range query, and k-th smallest are all O(log n). In real code you use TreeMap or TreeSet, which are red-black trees.",
-      zh: "有序世界的全能选手:查找 / 插入 / 删除 / 范围查询 / 第 K 小全是 O(log n)。工程里直接用红黑树实现的 TreeMap / TreeSet。",
+      zh: "有序数据的通用结构:查找 / 插入 / 删除 / 范围查询 / 第 K 小全是 O(log n)。工程里直接用红黑树实现的 TreeMap / TreeSet。",
     },
     runnerUp: {
       en: "If you only need the smallest or largest value and never an arbitrary rank, a heap is lighter (chapter 9).",
@@ -129,7 +129,7 @@ const TREE: Record<string, Node> = {
     href: "/trie",
     why: {
       en: "Words share a path character by character, so insert, search, and startsWith all cost O(length of the word), no matter how many words are stored. This answers the prefix questions a hash table cannot.",
-      zh: "按字符共享路径,insert / search / startsWith 都是 O(词长),与词典大小无关 —— 哈希表答不了的「前缀问题」它包了。",
+      zh: "按字符共享路径,insert / search / startsWith 都是 O(词长),与词典大小无关 —— 哈希表答不了的「前缀问题」正由它解决。",
     },
   },
   order: {
@@ -181,7 +181,7 @@ const TREE: Record<string, Node> = {
     href: "/queue",
     why: {
       en: "FIFO: first in, first served. It is the structure BFS is built on, and it fits any problem that expands one layer at a time.",
-      zh: "FIFO:先来先服务。BFS 的御用结构,层层扩散的问题都靠它。",
+      zh: "FIFO:先来先服务。BFS 依靠的就是它,逐层扩展的问题都用它。",
     },
   },
   "r-heap": {
@@ -198,8 +198,8 @@ const TREE: Record<string, Node> = {
     structure: { en: "Deque (monotonic queue)", zh: "双端队列 Deque(单调队列)" },
     href: "/queue",
     why: {
-      en: "Both ends accept O(1) push and pop. For sliding window maximum and similar window problems, a monotonic deque is the only O(n) solution.",
-      zh: "两端都能 O(1) 进出;滑动窗口最大值这类「窗口最值」问题,单调队列是唯一的 O(n) 解。",
+      en: "Both ends accept O(1) push and pop. For sliding window maximum and similar window problems, a monotonic deque is the standard O(n) solution.",
+      zh: "两端都能 O(1) 进出;滑动窗口最大值这类「窗口最值」问题,单调队列是最常用的 O(n) 解。",
     },
   },
   seq: {
@@ -282,8 +282,8 @@ const TREE: Record<string, Node> = {
     structure: { en: "Union-Find", zh: "并查集 Union-Find" },
     href: "/union-find",
     why: {
-      en: "Both actions, connect and query, cost close to O(1) with path compression and union by rank. Friend groups, equality propagation, and dynamic connectivity all fit a template of a few lines.",
-      zh: "connect + query 两个动作近乎 O(1)(路径压缩+按秩合并)。朋友圈、等式传递、动态连通性,三行模板就能解决。",
+      en: "Both actions, connect and query, run in effectively constant time, O(α(n)), with path compression and union by rank. Friend groups, equality propagation, and dynamic connectivity all fit one short template of under 40 lines.",
+      zh: "connect + query 两个动作都近乎常数时间,即 O(α(n))(路径压缩 + 按秩合并)。朋友圈、等式传递、动态连通性,一份不到 40 行的模板就能解决。",
     },
   },
   "r-graph": {
@@ -310,11 +310,11 @@ const TREE: Record<string, Node> = {
     href: "/advanced",
     why: {
       en: "Updates plus range queries is the signal that a prefix sum array is no longer enough. A segment tree handles more cases; a Fenwick tree is shorter and has a smaller constant. Chapter 13 compares them.",
-      zh: "「又要改又要查区间」= 前缀和失效的信号。线段树全能,树状数组码短常数小 —— 第 13 章二选一。",
+      zh: "「又要改又要查区间」= 前缀和失效的信号。线段树适用面更广,树状数组代码更短、常数更小 —— 第 13 章对两者作了比较。",
     },
     runnerUp: {
       en: "If the data never changes, a plain prefix sum array with O(1) queries is enough.",
-      zh: "数据不改的话,老老实实用前缀和 O(1) 查询就够了。",
+      zh: "数据不改的话,直接用前缀和,O(1) 查询就够了。",
     },
   },
 };
@@ -324,9 +324,26 @@ export function DecisionLab() {
   const [path, setPath] = useState<string[]>(["root"]);
   const cur = TREE[path[path.length - 1]];
 
-  const choose = (next: string) => {
-    setPath((p) => [...p, next]);
+  // Every step replaces the button that was just pressed, which would drop
+  // focus onto <body>. After a learner-initiated step (never on first load),
+  // move focus to the new question or result so keyboard and screen-reader
+  // users continue from there.
+  const questionRef = useRef<HTMLParagraphElement>(null);
+  const resultRef = useRef<HTMLDivElement>(null);
+  const stepped = useRef(false);
+  useEffect(() => {
+    if (!stepped.current) return;
+    stepped.current = false;
+    (questionRef.current ?? resultRef.current)?.focus();
+  }, [path]);
+
+  const go = (next: string[] | ((p: string[]) => string[])) => {
+    stepped.current = true;
+    setPath(next);
   };
+  const choose = (next: string) => go((p) => [...p, next]);
+  const back = () => go((p) => p.slice(0, -1));
+  const restart = () => go(["root"]);
 
   return (
     <div className="viz atl-decision">
@@ -352,7 +369,13 @@ export function DecisionLab() {
 
       {cur.kind === "q" ? (
         <>
-          <p className="atl-q">{L(cur.q)}</p>
+          <p
+            className="atl-q"
+            tabIndex={-1}
+            ref={questionRef}
+          >
+            {L(cur.q)}
+          </p>
           <div className="atl-opts">
             {cur.opts.map((o) => (
               <button
@@ -372,20 +395,27 @@ export function DecisionLab() {
           <div className="atl-result-label">
             <T en="Recommended structure" zh="推荐结构" />
           </div>
-          <div className="atl-result-name">{L(cur.structure)}</div>
+          <div
+            className="atl-result-name"
+            tabIndex={-1}
+            ref={resultRef}
+          >
+            {L(cur.structure)}
+          </div>
           <p className="atl-result-why">{L(cur.why)}</p>
           {cur.runnerUp && (
-            <p className="atl-result-runner">💡 {L(cur.runnerUp)}</p>
+            <p className="atl-result-runner">
+              <b>{L({ en: "Alternatives:", zh: "备选:" })}</b> {L(cur.runnerUp)}
+            </p>
           )}
-          <div style={{ display: "flex", gap: 10, marginTop: 14 }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 14 }}>
             <Link href={cur.href} className="btn btn-sm btn-primary">
               <T en="Go to that chapter →" zh="去这一章复习 →" />
             </Link>
-            <button
-              type="button"
-              className="btn btn-sm"
-              onClick={() => setPath(["root"])}
-            >
+            <button type="button" className="btn btn-sm" onClick={back}>
+              <T en="← Previous question" zh="← 上一问" />
+            </button>
+            <button type="button" className="btn btn-sm" onClick={restart}>
               <T en="↻ Start over" zh="↻ 再走一次" />
             </button>
           </div>
@@ -394,17 +424,13 @@ export function DecisionLab() {
 
       {cur.kind === "q" && path.length > 1 && (
         <div className="viz-ctl">
-          <button
-            type="button"
-            className="btn btn-sm btn-ghost"
-            onClick={() => setPath((p) => p.slice(0, -1))}
-          >
+          <button type="button" className="btn btn-sm btn-ghost" onClick={back}>
             <T en="← Previous question" zh="← 上一问" />
           </button>
           <button
             type="button"
             className="btn btn-sm btn-ghost"
-            onClick={() => setPath(["root"])}
+            onClick={restart}
           >
             <T en="↻ Start over" zh="↻ 重新开始" />
           </button>
