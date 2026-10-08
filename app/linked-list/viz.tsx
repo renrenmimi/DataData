@@ -847,7 +847,7 @@ export function LinkedLab() {
           <T en={<>Delete at {p}</>} zh={<>删除位置 {p}</>} />
         </button>
         <button type="button" className="btn btn-sm" onClick={badDemo} disabled={busy}>
-          <T en="☠ Wrong order: disconnect first" zh="☠ 反面教材:先断后接" />
+          <T en="Wrong order: disconnect first" zh="错误示范:先断后接" />
         </button>
       </div>
     </div>
@@ -1323,7 +1323,7 @@ export function CycleAnim() {
             d={`M ${X(4)} ${Y + 23} Q ${(X(4) + X(2)) / 2} ${Y + 96} ${X(2) + 6} ${Y + 25}`}
           />
           <text x={(X(4) + X(2)) / 2} y={Y + 86} textAnchor="middle" fontSize={10.5} fill="var(--acc)">
-            <T en="5.next points back to 3" zh="5.next 指回 3 —— 环!" />
+            <T en="5.next points back to 3" zh="5.next 指回 3,形成环" />
           </text>
           {/* Nodes */}
           {[1, 2, 3, 4, 5].map((v, i) => (
@@ -1344,7 +1344,7 @@ export function CycleAnim() {
           </text>
           {f.meet && (
             <text x={X(f.slow)} y={Y - 52} textAnchor="middle" fontSize={11} fontWeight={700} fill="var(--ok)">
-              <T en="they meet" zh="相遇!" />
+              <T en="they meet" zh="相遇" />
             </text>
           )}
         </svg>
