@@ -66,7 +66,7 @@ export const PROBLEMS: Problem[] = [
           k − v. O(n) time and O(n) space, and it does not use the BST property
           at all. Second: flatten the tree with in-order traversal to get a
           sorted array, then use the two pointers from LC 167. Also O(n), but it
-          converges faster. A stronger answer for an interview: run two BST
+          uses the BST's order. A stronger answer for an interview: run two BST
           iterators, one from the smallest end and one from the largest, and move
           them towards each other. That keeps space at O(h).
         </>
@@ -74,8 +74,8 @@ export const PROBLEMS: Problem[] = [
       zh: (
         <>
           两条路:① 任意遍历 + 哈希集合查 k − v,O(n) 时间 O(n) 空间,
-          连 BST 性质都不需要;② 中序展开成升序数组 + 对撞双指针(LC 167 的老朋友),
-          同样 O(n),但收敛更快。面试加分答法:用两个 BST 迭代器分别从最小、
+          连 BST 性质都不需要;② 中序展开成升序数组 + 对撞双指针(即 LC 167 的做法),
+          同样 O(n),但用上了 BST 的有序性。面试中更进一步的答法:用两个 BST 迭代器分别从最小、
           最大两端向中间逼近,空间压到 O(h)。
         </>
       ),
@@ -314,8 +314,9 @@ export const PROBLEMS: Problem[] = [
           as first, and the later value of the last inversion as second, then
           swap the two values. O(n) time and O(h) stack space. If the interviewer
           asks for O(1) space, the answer is Morris in-order traversal, which
-          borrows the empty right pointers of leaves as temporary links back up.
-          The advanced chapter covers it.
+          borrows the empty right pointer of each node's in-order predecessor as
+          a temporary link back up. It is an advanced topic this course does not
+          cover.
         </>
       ),
       zh: (
@@ -324,7 +325,7 @@ export const PROBLEMS: Problem[] = [
           或两处(原本不相邻)逆序。中序扫描:第一处逆序取前者为 first,
           最后一处逆序取后者为 second,交换两者的值即可。O(n) 时间、O(h) 栈空间。
           追问 O(1) 空间就答 Morris 中序 ——
-          借用叶子空着的右指针当临时的「回程线索」,进阶章会展开。
+          借用每个节点的中序前驱空着的右指针当临时的「回程线索」,属于进阶话题,本课不展开。
         </>
       ),
     },
@@ -395,7 +396,7 @@ export const QUIZ: QuizItem[] = [
       zh: "对 BST 做哪种遍历,输出恰好是升序序列?(填遍历名称)",
     },
     placeholder: { en: "____ traversal", zh: "____遍历" },
-    answers: ["中序", "中序遍历", "inorder", "in-order", "in order", "ldr"],
+    answers: ["中序", "中序遍历", "inorder", "in-order", "in order", "inorder traversal", "in-order traversal", "ldr"],
     hint: {
       en: "Left → node → right: first everything smaller than the root, then the root, then everything larger.",
       zh: "左 → 根 → 右:先输出所有比根小的,再输出根,最后输出所有比根大的。",
@@ -589,7 +590,7 @@ export const QUIZ: QuizItem[] = [
     },
     extraHint: {
       en: "Single-key access is exactly where HashMap wins: O(1) on average against O(log n). Take that option out of the answer.",
-      zh: "单点存取恰恰是 HashMap 的主场:均摊 O(1) 对 TreeMap 的 O(log n) —— 把它从答案里去掉。",
+      zh: "单点存取恰恰是 HashMap 的主场:平均 O(1) 对 TreeMap 的 O(log n) —— 把它从答案里去掉。",
     },
     why: {
       en: "The deciding question is ordering, not speed. If you only ask \"is this key present\" or \"what is its value\", use a hash table. If the requirement mentions order, range, nearest, or k-th, use an ordered structure such as TreeMap or SortedList.",
