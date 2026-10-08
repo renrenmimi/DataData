@@ -267,7 +267,7 @@ export const PROBLEMS: Problem[] = [
       en: "Maximum XOR of Two Numbers in an Array",
       zh: "数组中两个数的最大异或值",
     },
-    d: "hard",
+    d: "medium",
     tags: [
       { en: "0/1 Trie", zh: "0-1 Trie" },
       { en: "Bit manipulation", zh: "位运算" },

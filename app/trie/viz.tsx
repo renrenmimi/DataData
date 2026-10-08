@@ -189,6 +189,11 @@ export function TrieLab() {
   const [born, setBorn] = useState<number[]>([]);
   const [busy, setBusy] = useState(false);
   const [input, setInput] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+  // After an operation: typing replaces the word just used
+  const selectInput = () => {
+    if (document.activeElement === inputRef.current) inputRef.current?.select();
+  };
   const [msg, setMsg] = useState<ReactNode>(
     <T
       en={
@@ -337,6 +342,7 @@ export function TrieLab() {
       ),
     );
     setBusy(false);
+    selectInput();
   };
 
   const doQuery = async (prefixMode: boolean) => {
@@ -370,8 +376,8 @@ export function TrieLab() {
         <T
           en={
             <>
-              Looking up <b>{w}</b>: the walk reached <b>{acc.length}</b> nodes
-              counting the root, and then the next letter had no matching child.
+              Looking up <b>{w}</b>: the walk reached <b>{acc.length}</b>{" "}
+              {acc.length === 1 ? "node" : "nodes"} counting the root, and then the next letter had no matching child.
               The path stops here. <b>No match</b>, and nothing in the tree can
               start with {w}, because any such word would have to lie on this
               same path.
@@ -449,6 +455,7 @@ export function TrieLab() {
       );
     }
     setBusy(false);
+    selectInput();
   };
 
   const doReset = () => {
@@ -526,13 +533,18 @@ export function TrieLab() {
         </span>
       </div>
       <div className="viz-ctl">
+        {/* readOnly rather than disabled while animating: a disabled input
+            drops keyboard focus to <body> */}
         <input
+          ref={inputRef}
           className="tr-input"
           value={input}
           placeholder={L({ en: "word, e.g. care", zh: "输入单词,如 care" })}
-          disabled={busy}
+          readOnly={busy}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => {
+            // Enter that confirms an IME composition is not a submit
+            if (e.nativeEvent.isComposing || e.keyCode === 229) return;
             if (e.key === "Enter") doInsert();
           }}
           aria-label={L({

@@ -300,7 +300,7 @@ const CHIPS = [
   { id: "langs", n: "05", label: { en: "Three languages", zh: "三语言对照" } },
   { id: "patterns", n: "06", label: { en: "Patterns", zh: "套路与精讲" } },
   { id: "problems", n: "07", label: { en: "Problem set", zh: "高频题单" } },
-  { id: "quiz", n: "08", label: { en: "Quiz", zh: "通关测验" } },
+  { id: "quiz", n: "08", label: { en: "Quiz", zh: "本章测验" } },
 ];
 
 export default function TrieChapter() {
@@ -549,8 +549,8 @@ export default function TrieChapter() {
             </div>
             <div className="card-title">
               <T
-                en="⚡ The cost follows the length, not the count"
-                zh="⚡ 代价只看词长,不看词数"
+                en="The cost follows the length, not the count"
+                zh="代价只看词长,不看词数"
               />
             </div>
             <T
@@ -1111,7 +1111,7 @@ export default function TrieChapter() {
                   <b>每个节点无论用不用,都占着 26 个指针</b>,
                   词稀疏时浪费惊人;而且 26 只覆盖小写 ASCII 字母 ——
                   输入里有数字、大写字母或非 ASCII 文本,就得换一张表。
-                  适合明确「只有小写字母」的刷题场景。
+                  适合明确「只有小写字母」的做题场景。
                 </p>
               }
             />
@@ -1635,7 +1635,7 @@ class Trie {
                 ① search 和 startsWith 的区别落在哪一行?(答:那个{" "}
                 <code>&amp;&amp; isEnd</code>)② 为什么 insert 遇到缺失的 child
                 就新建,而 search 遇到就返回空?③ 复杂度 O(L) 里的 L,指的是
-                <b>词长</b>还是<b>词数</b>?—— 三问都能秒答,LC 208 就是你的了。
+                <b>词长</b>还是<b>词数</b>?—— 这三个问题都能立即答出,LC 208 就不成问题了。
               </p>
             }
           />
@@ -1700,7 +1700,7 @@ class Trie {
                   />
                 </th>
                 <th>
-                  <T en="What to watch out for" zh="坑 / 注意" />
+                  <T en="What to watch out for" zh="注意事项" />
                 </th>
               </tr>
             </thead>
@@ -1889,7 +1889,7 @@ class Trie {
         {/* — Walkthrough A — */}
         <div className="sec-head" style={{ marginTop: 40 }}>
           <span className="sec-index">
-            <T en="Deep dive A" zh="精讲 A" />
+            <T en="Walkthrough A" zh="精讲 A" />
           </span>
           <h3 className="sec-title" style={{ fontSize: 20 }}>
             <T
@@ -1925,7 +1925,7 @@ class Trie {
                 <b>题意:</b>实现 insert / search / startsWith 三个方法。
                 <b> 暴力:</b>用一个 <code>HashSet&lt;String&gt;</code> 存所有词 ——
                 search 确实 O(L),但 startsWith 只能读遍集合里每个词、逐个比对开头,
-                <b>O(N·L)</b>,词典一大就废。
+                <b>O(N·L)</b>,词典一大就无法接受。
                 <b> 正解:</b>就是 §04 那份 Trie。代码不再重复,
                 我们把它<strong>跑一遍</strong>:先插入 <code>app</code>,
                 再插入 <code>apple</code>(看前缀怎么复用),然后做四次查询,
@@ -1987,7 +1987,7 @@ class Trie {
         {/* — Walkthrough B — */}
         <div className="sec-head" style={{ marginTop: 44 }}>
           <span className="sec-index">
-            <T en="Deep dive B" zh="精讲 B" />
+            <T en="Walkthrough B" zh="精讲 B" />
           </span>
           <h3 className="sec-title" style={{ fontSize: 20 }}>
             <T
@@ -2284,7 +2284,7 @@ class WordDictionary {
         {/* — Walkthrough C — */}
         <div className="sec-head" style={{ marginTop: 44 }}>
           <span className="sec-index">
-            <T en="Deep dive C" zh="精讲 C" />
+            <T en="Walkthrough C" zh="精讲 C" />
           </span>
           <h3 className="sec-title" style={{ fontSize: 20 }}>
             <T
@@ -2328,10 +2328,10 @@ class WordDictionary {
                   同一格不重复用)拼出的单词。
                   <b> 暴力:</b>对 words 里<strong>每个词</strong>各做一次网格搜索。
                   词表一大(几千个词)、很多词开头还相同,
-                  「从某个 c 出发」这件事会被<strong>重复搜千百遍</strong>,稳稳超时。
+                  「从某个 c 出发」这件事会被<strong>重复搜千百遍</strong>,必然超时。
                 </p>
                 <p>
-                  <b>为什么 Trie 能救场:</b>先把所有词建成一棵 Trie,
+                  <b>为什么 Trie 能解决这个问题:</b>先把所有词建成一棵 Trie,
                   然后<strong>只在网格上走一次</strong>,
                   <strong>DFS 每走一步,就在 Trie 上同步下沉一步</strong>。
                   两个结果随之而来:
@@ -2781,14 +2781,14 @@ var findWords = function (board, words) {
       <Section
         id="quiz"
         index="08"
-        title={{ en: "Quiz", zh: "通关测验" }}
+        title={{ en: "Chapter quiz", zh: "本章测验" }}
         desc={{
           en: "Six correct answers light this chapter green.",
-          zh: "6 题全对,点亮本章绿灯",
+          zh: "6 题全部答对,即完成本章",
         }}
         badge={
           <span className="chip">
-            <T en="✎ Quiz" zh="✎ 通关测验" />
+            <T en="✎ Chapter quiz" zh="✎ 本章测验" />
           </span>
         }
       >
