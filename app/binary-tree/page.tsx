@@ -61,7 +61,7 @@ const CHIPS = [
     label: { en: "Patterns and walkthroughs", zh: "套路与精讲" },
   },
   { id: "problems", n: "08", label: { en: "Problem set", zh: "高频题单" } },
-  { id: "quiz", n: "09", label: { en: "Quiz", zh: "通关测验" } },
+  { id: "quiz", n: "09", label: { en: "Quiz", zh: "本章测验" } },
 ];
 
 export default function BinaryTreeChapter() {
@@ -539,7 +539,7 @@ export default function BinaryTreeChapter() {
         }}
         badge={
           <span className="chip" data-tone="warn">
-            <T en="★ Start here" zh="★ 零基础重点" />
+            <T en="★ Key for beginners" zh="★ 零基础重点" />
           </span>
         }
       >
@@ -634,7 +634,7 @@ console.log(factorial(3)); // 6`,
               <p>
                 &ldquo;The function has not finished, and it calls itself. Does
                 the computer not get confused?&rdquo; It does not, because of the{" "}
-                <strong>call stack</strong> (the CallStack from chapter 4 again).
+                <strong>call stack</strong> (the call stack demo from chapter 4 again).
                 Each call pushes a new frame, and each frame keeps its own
                 arguments and its own position in the code. Watch factorial(3)
                 from beginning to end:
@@ -643,7 +643,7 @@ console.log(factorial(3)); // 6`,
             zh={
               <p>
                 「函数还没执行完,又调用了自己 —— 电脑不会晕吗?」不会,
-                因为有<strong>调用栈</strong>(第 4 章的 CallStack 又见面了):
+                因为有<strong>调用栈</strong>(第 4 章的调用栈演示又出现了):
                 每次调用压入一个新栈帧,各帧独立保存自己的参数和执行进度。
                 眼见为实,逐帧看 factorial(3) 的一生:
               </p>
@@ -1185,7 +1185,7 @@ class Traversals {
     List<List<Integer>> levelOrder(TreeNode root) {
         List<List<Integer>> res = new ArrayList<>();
         if (root == null) return res;
-        Queue<TreeNode> q = new LinkedList<>();
+        Queue<TreeNode> q = new ArrayDeque<>();
         q.offer(root);
         while (!q.isEmpty()) {
             int size = q.size();               // record how many nodes this level has
@@ -1250,7 +1250,7 @@ class Traversals {
     List<List<Integer>> levelOrder(TreeNode root) {
         List<List<Integer>> res = new ArrayList<>();
         if (root == null) return res;
-        Queue<TreeNode> q = new LinkedList<>();
+        Queue<TreeNode> q = new ArrayDeque<>();
         q.offer(root);
         while (!q.isEmpty()) {
             int size = q.size();               // 先记住这一层有几个节点
@@ -1271,8 +1271,9 @@ class Traversals {
             note: {
               en: (
                 <>
-                  <b>Stack depth:</b> a JVM thread stack is about 512 KB to 1 MB
-                  by default. A tree of a million nodes that has degenerated into
+                  <b>Stack depth:</b> a JVM thread stack is about 1 MB by default
+                  on common 64-bit platforms (the exact size depends on the
+                  platform). A tree of a million nodes that has degenerated into
                   a chain will raise StackOverflowError. For deep trees, use the
                   iterative version or raise the stack size with <code>-Xss</code>
                   .
@@ -1280,7 +1281,7 @@ class Traversals {
               ),
               zh: (
                 <>
-                  <b>栈深:</b>JVM 默认线程栈约 512KB~1MB,
+                  <b>栈深:</b>JVM 默认线程栈在常见的 64 位平台上约为 1 MB(具体随平台而异),
                   退化成一条链的百万节点树会抛 StackOverflowError ——
                   深树要么用迭代版,要么用 <code>-Xss</code> 调大栈。
                 </>
@@ -1424,7 +1425,7 @@ def level_order(root):
               zh: (
                 <>
                   <b>红线:</b>默认 <code>sys.getrecursionlimit()</code> 约为
-                  1000,一条 1000 节点的链状树就能撞爆。LeetCode 的 Python
+                  1000,一条 1000 节点的链状树就会超出这个上限。LeetCode 的 Python
                   环境已经帮你调大了,但本地运行和面试口头回答时必须知道这回事。
                 </>
               ),
@@ -1604,7 +1605,7 @@ function levelOrder(root) {
                 代价是栈深有限(Python 默认约 1000 层,JVM 和 JS
                 引擎也各有几千到几万层的红线);极深或链状的树需要迭代版 ——
                 它自己管栈,深度只受堆内存限制。两者时间复杂度都是 O(n)。
-                能顺手写出迭代前序是加分动作。如果面试官进一步要求
+                能顺手写出迭代前序,会让回答更完整。如果面试官进一步要求
                 <b>额外空间 O(1)</b>,答案是 <b>Morris 遍历</b>:
                 它借用节点闲置的右指针记住「回来时该去哪」,完全不需要栈。
                 代价是它<b>运行期间会修改树</b>,并在结束前把改过的指针全部复原。
@@ -1647,7 +1648,7 @@ function levelOrder(root) {
                 数组、字典每个语言都自带,树却没有 ——
                 因为树的形状由具体问题决定,标准库给不出通用款(Java 的{" "}
                 <code>TreeMap</code> 内部虽是红黑树,但不暴露节点)。好消息:
-                刷题时 <code>TreeNode</code> 由题目提供,你只需要会读;
+                做题时 <code>TreeNode</code> 由题目提供,你只需要会读;
                 本地调试时,下面的 <code>buildTree</code> 能把 LeetCode
                 的层序数组(例如 <code>[3,9,20,null,null,15,7]</code>)变成一棵真树:
               </p>
@@ -1672,7 +1673,7 @@ class Build {
     static TreeNode buildTree(Integer[] vals) {
         if (vals.length == 0 || vals[0] == null) return null;
         TreeNode root = new TreeNode(vals[0]);
-        Queue<TreeNode> q = new LinkedList<>();
+        Queue<TreeNode> q = new ArrayDeque<>();
         q.offer(root);
         int i = 1;
         while (!q.isEmpty() && i < vals.length) {
@@ -1711,7 +1712,7 @@ class Build {
     static TreeNode buildTree(Integer[] vals) {
         if (vals.length == 0 || vals[0] == null) return null;
         TreeNode root = new TreeNode(vals[0]);
-        Queue<TreeNode> q = new LinkedList<>();
+        Queue<TreeNode> q = new ArrayDeque<>();
         q.offer(root);
         int i = 1;
         while (!q.isEmpty() && i < vals.length) {
@@ -1828,7 +1829,7 @@ print(root.right.left.val)  # 15`,
                 <>
                   <b>细节:</b>判断空位要用 <code>is None</code> 而不是{" "}
                   <code>not vals[i]</code> —— 后者会把合法的节点值 0 也当成空位,
-                  这是真实的刷题事故高发区。
+                  这是做题时实际很常见的错误。
                 </>
               ),
             },
@@ -2044,13 +2045,13 @@ console.log(root.right.left.val); // 15`,
                   <T
                     en={
                       <>
-                        Thread stack 512 KB to 1 MB (tunable with{" "}
+                        Thread stack about 1 MB by default (tunable with{" "}
                         <code>-Xss</code>)
                       </>
                     }
                     zh={
                       <>
-                        线程栈 512KB~1MB(<code>-Xss</code> 可调)
+                        线程栈默认约 1 MB(<code>-Xss</code> 可调)
                       </>
                     }
                   />
@@ -2092,7 +2093,7 @@ console.log(root.right.left.val); // 15`,
         }}
         desc={{
           en: "Two recursive styles cover almost everything. Four problems, frame by frame.",
-          zh: "两种递归做法打天下 —— 四道代表题,逐帧拆解",
+          zh: "两种递归做法覆盖几乎所有题目 —— 四道代表题,逐帧拆解",
         }}
         badge={
           <span className="chip" data-tone="warn">
@@ -2138,8 +2139,8 @@ console.log(root.right.left.val); // 15`,
             </div>
             <div className="card-title">
               <T
-                en="⬇️ Top-down: state in the parameter"
-                zh="⬇️ 自顶向下(参数下传)"
+                en="Top-down: state in the parameter"
+                zh="自顶向下(参数下传)"
               />
             </div>
             <p>
@@ -2170,8 +2171,8 @@ console.log(root.right.left.val); // 15`,
             </div>
             <div className="card-title">
               <T
-                en="⬆️ Bottom-up: answer in the return value"
-                zh="⬆️ 自底向上(返回值上传)"
+                en="Bottom-up: answer in the return value"
+                zh="自底向上(返回值上传)"
               />
             </div>
             <p>
@@ -2530,7 +2531,7 @@ console.log(root.right.left.val); // 15`,
             zh={
               <p>
                 Mac 开发者人手一个的包管理器 Homebrew,其作者 Max Howell
-                当年面试谷歌被拒后发了条推特自嘲:谷歌说,
+                当年面试谷歌被拒后发推谈到这件事:谷歌说,
                 虽然他们绝大多数工程师都在用他写的软件,
                 但他在白板上翻转不出一棵二叉树。这条推特让 LC 226
                 成了全站最有名的 Easy 题。现在你会写了 ——
@@ -2550,7 +2551,7 @@ console.log(root.right.left.val); // 15`,
           </h3>
           <span className="sec-badge">
             <span className="lc-badge" data-d="easy">
-              EASY+
+              EASY
             </span>
           </span>
         </div>
@@ -2770,7 +2771,7 @@ console.log(root.right.left.val); // 15`,
     public List<List<Integer>> levelOrder(TreeNode root) {
         List<List<Integer>> res = new ArrayList<>();
         if (root == null) return res;
-        Queue<TreeNode> q = new LinkedList<>();
+        Queue<TreeNode> q = new ArrayDeque<>();
         q.offer(root);
         while (!q.isEmpty()) {
             int size = q.size();              // record size: this fixes the level boundary
@@ -2790,7 +2791,7 @@ console.log(root.right.left.val); // 15`,
     public List<List<Integer>> levelOrder(TreeNode root) {
         List<List<Integer>> res = new ArrayList<>();
         if (root == null) return res;
-        Queue<TreeNode> q = new LinkedList<>();
+        Queue<TreeNode> q = new ArrayDeque<>();
         q.offer(root);
         while (!q.isEmpty()) {
             int size = q.size();              // 先记 size:锁定本层边界
@@ -2937,7 +2938,7 @@ class Solution:
         }}
         desc={{
           en: "Easy to hard: two-tree recursion, the two styles, BFS, construction, ancestors, ending with LC 124.",
-          zh: "由易到难:双树递归 → 两种做法 → BFS → 构造 → 祖先,压轴 124",
+          zh: "由易到难:双树递归 → 两种做法 → BFS → 构造 → 祖先,最后是 124",
         }}
         badge={
           <span className="chip">
@@ -2952,14 +2953,14 @@ class Solution:
       <Section
         id="quiz"
         index="09"
-        title={{ en: "Quiz", zh: "通关测验" }}
+        title={{ en: "Chapter quiz", zh: "本章测验" }}
         desc={{
           en: "Eight questions. Get them all right to light up this chapter.",
-          zh: "8 题全对,点亮本章绿灯",
+          zh: "8 题全部答对,即完成本章",
         }}
         badge={
           <span className="chip">
-            <T en="✎ Quiz" zh="✎ 通关测验" />
+            <T en="✎ Chapter quiz" zh="✎ 本章测验" />
           </span>
         }
       >
