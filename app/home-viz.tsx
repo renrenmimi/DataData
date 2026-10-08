@@ -1,12 +1,15 @@
 "use client";
 
 // Home-page signature animation: the same 7 nodes morph between four shapes
-// (array → linked list → binary tree → graph) with frame-by-frame rAF
-// interpolation plus easing; edges redraw from the live positions.
+// (array → linked list → binary tree → graph). React only sets each shape's
+// target positions; a CSS transition moves the nodes, and the new shape's
+// edges fade in once they arrive. The cycle runs only while the figure can be
+// seen and has not been paused (readers who prefer reduced motion start
+// paused), so an idle page does no work for it.
 // The intuition it aims for: the data never changes, only the way it is
 // organized — and that is exactly what a data structure is.
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type RefObject } from "react";
 import { useL, useLang, T, type Lang, type Loc } from "@/lib/i18n";
 
 type P = { x: number; y: number };
@@ -96,44 +99,46 @@ const LAYOUTS: {
   },
 ];
 
-const ease = (t: number) => 1 - Math.pow(1 - t, 3);
+/** Reports whether an element can be seen: on screen and in a visible tab. */
+function useSeen(ref: RefObject<Element | null>, setSeen: (seen: boolean) => void) {
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    let onScreen = false;
+    const report = () => setSeen(onScreen && document.visibilityState === "visible");
+    const io = new IntersectionObserver(([e]) => {
+      onScreen = e.isIntersecting;
+      report();
+    });
+    io.observe(el);
+    document.addEventListener("visibilitychange", report);
+    return () => {
+      io.disconnect();
+      document.removeEventListener("visibilitychange", report);
+    };
+  }, [ref, setSeen]);
+}
 
 export function HeroMorph() {
   const L = useL();
+  const wrapRef = useRef<HTMLDivElement>(null);
   const [layout, setLayout] = useState(0);
-  const [pts, setPts] = useState<P[]>(LAYOUTS[0].pts);
-  const fromRef = useRef<P[]>(LAYOUTS[0].pts);
-  const startRef = useRef(0);
-  const rafRef = useRef(0);
+  const [seen, setSeen] = useState(false);
+  const [paused, setPaused] = useState(false);
+  useSeen(wrapRef, setSeen);
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) setPaused(true);
+  }, []);
+
+  const running = seen && !paused;
 
   // Switch shape every 3 seconds
   useEffect(() => {
+    if (!running) return;
     const t = setInterval(() => setLayout((l) => (l + 1) % LAYOUTS.length), 3000);
     return () => clearInterval(t);
-  }, []);
-
-  // Interpolate toward the target shape with rAF
-  useEffect(() => {
-    const target = LAYOUTS[layout].pts;
-    fromRef.current = pts;
-    startRef.current = performance.now();
-    const D = 850;
-
-    const tick = (now: number) => {
-      const t = Math.min(1, (now - startRef.current) / D);
-      const k = ease(t);
-      setPts(
-        fromRef.current.map((p, i) => ({
-          x: p.x + (target[i].x - p.x) * k,
-          y: p.y + (target[i].y - p.y) * k,
-        })),
-      );
-      if (t < 1) rafRef.current = requestAnimationFrame(tick);
-    };
-    rafRef.current = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(rafRef.current);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [layout]);
+  }, [running]);
 
   const Lay = LAYOUTS[layout];
   const name = L(Lay.name);
@@ -141,20 +146,24 @@ export function HeroMorph() {
   const showEn = name.toUpperCase() !== Lay.en;
 
   return (
-    <div className="hm-wrap" aria-hidden>
-      <svg viewBox={`0 0 ${W} ${H}`} className="hm-svg">
+    <div className="hm-wrap" ref={wrapRef} data-paused={running ? undefined : ""}>
+      <svg viewBox={`0 0 ${W} ${H}`} className="hm-svg" aria-hidden>
         {Lay.edges.map(([a, b], i) => (
           <line
             key={`${layout}-${i}`}
-            x1={pts[a].x}
-            y1={pts[a].y}
-            x2={pts[b].x}
-            y2={pts[b].y}
+            x1={Lay.pts[a].x}
+            y1={Lay.pts[a].y}
+            x2={Lay.pts[b].x}
+            y2={Lay.pts[b].y}
             className="hm-edge"
           />
         ))}
-        {pts.map((p, i) => (
-          <g key={i} transform={`translate(${p.x}, ${p.y})`}>
+        {Lay.pts.map((p, i) => (
+          <g
+            key={i}
+            className="hm-n"
+            style={{ transform: `translate(${p.x}px, ${p.y}px)` }}
+          >
             <rect
               x={-19}
               y={-19}
@@ -170,10 +179,22 @@ export function HeroMorph() {
           </g>
         ))}
       </svg>
-      <div className="hm-caption mono">
+      <div className="hm-caption mono" aria-hidden>
         <span className="hm-caption-zh">{name}</span>
         {showEn && <span className="hm-caption-en">{Lay.en}</span>}
       </div>
+      <button
+        type="button"
+        className="hm-toggle"
+        onClick={() => setPaused((v) => !v)}
+        aria-label={L(
+          paused
+            ? { en: "Play the shape animation", zh: "播放形状动画" }
+            : { en: "Pause the shape animation", zh: "暂停形状动画" },
+        )}
+      >
+        {L(paused ? { en: "Play", zh: "播放" } : { en: "Pause", zh: "暂停" })}
+      </button>
     </div>
   );
 }
@@ -261,6 +282,9 @@ const MSG_RESET = (
 
 export function RefLab() {
   const L = useL();
+  const rootRef = useRef<HTMLDivElement>(null);
+  const [seen, setSeen] = useState(false);
+  useSeen(rootRef, setSeen);
   const [state, setState] = useState<RefState>("separate");
   const [aVal, setAVal] = useState(7);
   const [bVal, setBVal] = useState(3);
@@ -291,7 +315,7 @@ export function RefLab() {
   const boxY = { a: 46, b: 132 };
 
   return (
-    <div className="viz">
+    <div className="viz" ref={rootRef} data-paused={seen ? undefined : ""}>
       <div className="viz-title">
         <T
           en="Reference lab: labels, notes, and boxes"

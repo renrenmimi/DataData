@@ -2486,9 +2486,11 @@ li code {
     opacity: 1;
   }
 }
+/* One drift on arrival, then still: a background-position animation repaints
+   on the main thread every frame, so an endless one kept idle pages busy */
 .hero-title .grad {
   background-size: 220% auto;
-  animation: grad-shift 9s ease-in-out infinite;
+  animation: grad-shift 9s ease-in-out 1;
 }
 @keyframes grad-shift {
   0%,
