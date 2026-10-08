@@ -618,7 +618,7 @@ export function ArrayStepper({
                   predictOn
                     ? {
                         en: "Step forward and predict each frame",
-                        zh: "逐帧前进，每一步先作预测",
+                        zh: "逐帧前进,每一步先作预测",
                       }
                     : {
                         en: "Guess each next frame before it plays",
