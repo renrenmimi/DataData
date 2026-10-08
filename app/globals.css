@@ -230,6 +230,27 @@ button {
   color: inherit;
 }
 
+/* Text shows the characters a learner has to type: JetBrains Mono's contextual
+   ligatures would draw != as ≠ and -> as an arrow, in code windows and in every
+   monospace label and input. Form controls do not inherit it, so they are
+   listed too. */
+body,
+button,
+input,
+textarea,
+select {
+  font-variant-ligatures: no-contextual;
+}
+
+/* Every <code> uses the site's monospace font; contexts such as .prose add
+   their own chip styling */
+code,
+kbd,
+samp,
+pre {
+  font-family: var(--font-mono);
+}
+
 ::selection {
   background: var(--acc-soft);
   color: var(--acc-ink);
@@ -1276,6 +1297,11 @@ li code {
   text-overflow: ellipsis;
 }
 
+/* Balances the dots so a single-language window's name stays centred */
+.codewin-spacer {
+  flex: 0 0 47px;
+}
+
 .codewin-tabs {
   display: flex;
   gap: 3px;
@@ -1312,6 +1338,10 @@ li code {
   font-family: var(--font-mono);
   font-size: 13px;
   line-height: 1.72;
+  /* One column as wide as the longest line (or the window, if wider), so a
+     highlighted line's band still reaches the end after scrolling sideways */
+  display: grid;
+  grid-template-columns: minmax(max-content, 1fr);
 }
 
 .cl {
@@ -1346,6 +1376,31 @@ li code {
 }
 
 .codewin-note b { color: rgba(240, 244, 255, 0.9); }
+
+/* The tabpanel spans the bottom of the window, which clips outside outlines */
+.codewin-panel:focus-visible {
+  outline-offset: -2px;
+  border-radius: 0 0 15px 15px;
+}
+
+/* Phones: the decorative dots go, and the full file name gets its own row
+   above the language tabs */
+@media (max-width: 560px) {
+  .codewin-bar {
+    flex-wrap: wrap;
+    row-gap: 8px;
+  }
+
+  .codewin-dots,
+  .codewin-spacer {
+    display: none;
+  }
+
+  .codewin-name {
+    flex-basis: 100%;
+    text-align: left;
+  }
+}
 
 /* Syntax tokens */
 .tk-kw   { color: var(--tk-kw); }

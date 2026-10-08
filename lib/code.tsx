@@ -5,14 +5,16 @@
 //    numbers + highlightable lines + footnote).
 //  - CodeTabs: tabbed Java / Python / JS window; switching writes back to the
 //    site-wide preferred language, so every code window on the site switches
-//    with it — the core mechanism of the three-language comparison.
+//    with it — the core mechanism of the three-language comparison. It follows
+//    the WAI-ARIA tabs pattern: one tab stop, arrow keys / Home / End move
+//    between the languages and select as they go, and the code is the tabpanel.
 //
 // Bilingual: title / note / code all accept Loc<…>. Comments inside the code
 // are part of the teaching content, so write the whole snippet as { en, zh }
 // when it needs both languages — the two versions must stay line-for-line
 // equivalent and differ only in the comments, or the hl line numbers drift.
 
-import { useMemo, type ReactNode } from "react";
+import { useId, useMemo, type KeyboardEvent, type ReactNode } from "react";
 import { highlight, type CodeLangId } from "@/lib/highlight";
 import { useL, type Loc } from "@/lib/i18n";
 import { useShell, type CodeLang } from "@/app/theme-provider";
@@ -28,6 +30,8 @@ const LANG_FILE: Record<CodeLangId, string> = {
   python: ".py",
   js: ".js",
 };
+
+const LANGS: CodeLang[] = ["java", "python", "js"];
 
 export function CodeLines({
   code,
@@ -88,7 +92,7 @@ export function CodeBlock({
         <span className="codewin-name">
           {title === undefined ? LANG_LABEL[lang] : L(title)}
         </span>
-        <span style={{ width: 47 }} aria-hidden />
+        <span className="codewin-spacer" aria-hidden />
       </div>
       <CodeLines code={L(code)} lang={lang} hl={hl} />
       {note && <div className="codewin-note">{L(note)}</div>}
@@ -119,6 +123,27 @@ export function CodeTabs({
   const { codeLang, setCodeLang } = useShell();
   const snippets: Record<CodeLang, LangSnippet> = { java, python, js };
   const cur = snippets[codeLang];
+  const id = useId();
+  const tabId = (l: CodeLang) => `${id}-tab-${l}`;
+  const panelId = `${id}-panel`;
+
+  const onTabKey = (e: KeyboardEvent<HTMLButtonElement>, from: CodeLang) => {
+    const i = LANGS.indexOf(from);
+    const next =
+      e.key === "ArrowRight"
+        ? LANGS[(i + 1) % LANGS.length]
+        : e.key === "ArrowLeft"
+          ? LANGS[(i + LANGS.length - 1) % LANGS.length]
+          : e.key === "Home"
+            ? LANGS[0]
+            : e.key === "End"
+              ? LANGS[LANGS.length - 1]
+              : null;
+    if (!next) return;
+    e.preventDefault();
+    setCodeLang(next);
+    document.getElementById(tabId(next))?.focus();
+  };
 
   return (
     <div className="codewin">
@@ -137,22 +162,34 @@ export function CodeTabs({
           role="tablist"
           aria-label={L({ en: "Switch code language", zh: "切换语言" })}
         >
-          {(Object.keys(snippets) as CodeLang[]).map((l) => (
+          {LANGS.map((l) => (
             <button
               key={l}
               type="button"
               role="tab"
+              id={tabId(l)}
               aria-selected={codeLang === l}
+              aria-controls={panelId}
+              tabIndex={codeLang === l ? 0 : -1}
               className={`codewin-tab${codeLang === l ? " on" : ""}`}
               onClick={() => setCodeLang(l)}
+              onKeyDown={(e) => onTabKey(e, l)}
             >
               {LANG_LABEL[l]}
             </button>
           ))}
         </div>
       </div>
-      <CodeLines code={L(cur.code)} lang={codeLang} hl={cur.hl} />
-      {cur.note && <div className="codewin-note">{L(cur.note)}</div>}
+      <div
+        className="codewin-panel"
+        role="tabpanel"
+        id={panelId}
+        aria-labelledby={tabId(codeLang)}
+        tabIndex={0}
+      >
+        <CodeLines code={L(cur.code)} lang={codeLang} hl={cur.hl} />
+        {cur.note && <div className="codewin-note">{L(cur.note)}</div>}
+      </div>
     </div>
   );
 }
