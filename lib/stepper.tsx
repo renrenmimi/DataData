@@ -23,7 +23,17 @@
 // which question is open, whether it has been answered, and the score. The
 // score is scoped to one frame dataset — see the reset effect below.
 
-import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
+import {
+  useCallback,
+  useEffect,
+  useId,
+  useMemo,
+  useReducer,
+  useRef,
+  useState,
+  type ReactNode,
+  type Ref,
+} from "react";
 import { useL, useLang, T, type Loc } from "@/lib/i18n";
 import {
   buildChallenge,
@@ -79,6 +89,7 @@ export function useStepper(total: number, intervalMs = 1100) {
       if (step >= total - 1) setStep(0);
       setPlaying((p) => !p);
     },
+    pause: () => setPlaying(false),
     reset: () => {
       setPlaying(false);
       setStep(0);
@@ -98,6 +109,9 @@ export function StepControls({
   playDisabled,
   /** Extra controls (the predict-mode switch, for one), rendered before the counter */
   extra,
+  /** Handles on the Next and Play buttons, so a caller can return focus to them */
+  nextRef,
+  playRef,
 }: {
   stepper: ReturnType<typeof useStepper>;
   step: number;
@@ -106,6 +120,8 @@ export function StepControls({
   nextDisabled?: boolean;
   playDisabled?: boolean;
   extra?: ReactNode;
+  nextRef?: Ref<HTMLButtonElement>;
+  playRef?: Ref<HTMLButtonElement>;
 }) {
   return (
     <div className="viz-ctl">
@@ -118,6 +134,7 @@ export function StepControls({
         <T en="← Back" zh="← 上一步" />
       </button>
       <button
+        ref={playRef}
         type="button"
         className="btn btn-sm btn-primary"
         onClick={stepper.toggle}
@@ -132,6 +149,7 @@ export function StepControls({
         )}
       </button>
       <button
+        ref={nextRef}
         type="button"
         className="btn btn-sm"
         onClick={onNext ?? stepper.next}
@@ -215,6 +233,51 @@ function MiniBoard({
 
 const KEYS = ["A", "B", "C", "D"];
 
+/* ---- Predict-mode state ----
+ * The open question and the running score live in one reducer, so answering
+ * updates both in a single pure transition. React may run a reducer twice
+ * (StrictMode does so on purpose); with no side effect inside, an answer is
+ * still scored exactly once. */
+type PredictState = {
+  challenge: Challenge | null;
+  score: { right: number; total: number };
+};
+
+type PredictAction =
+  | { type: "ask"; challenge: Challenge }
+  | { type: "pick"; option: number }
+  | { type: "close" }
+  | { type: "reset" };
+
+const PREDICT_START: PredictState = {
+  challenge: null,
+  score: { right: 0, total: 0 },
+};
+
+function predictReducer(s: PredictState, a: PredictAction): PredictState {
+  switch (a.type) {
+    case "ask":
+      return { ...s, challenge: a.challenge };
+    case "pick": {
+      const c = s.challenge;
+      // Answer once per question: a second pick is ignored even if it is
+      // dispatched before the first one has been rendered.
+      if (!c || c.picked !== null) return s;
+      return {
+        challenge: { ...c, picked: a.option },
+        score: {
+          right: s.score.right + (a.option === c.correct ? 1 : 0),
+          total: s.score.total + 1,
+        },
+      };
+    }
+    case "close":
+      return s.challenge ? { ...s, challenge: null } : s;
+    case "reset":
+      return PREDICT_START;
+  }
+}
+
 /* ================= ArrayStepper ================= */
 
 export function ArrayStepper({
@@ -231,10 +294,19 @@ export function ArrayStepper({
   const { lang } = useLang();
   const stepper = useStepper(frames.length);
   const [predictOn, setPredictOn] = useState(false);
-  const [challenge, setChallenge] = useState<Challenge | null>(null);
-  const [score, setScore] = useState({ right: 0, total: 0 });
+  const [{ challenge, score }, dispatch] = useReducer(
+    predictReducer,
+    PREDICT_START,
+  );
 
-  const { step, prev: goPrev, next: goNext, toggle: goToggle } = stepper;
+  const {
+    step,
+    prev: goPrev,
+    next: goNext,
+    toggle: goToggle,
+    pause,
+    reset,
+  } = stepper;
   const total = frames.length;
 
   // Score scope: one prediction score belongs to one frame dataset. Chapters
@@ -248,9 +320,35 @@ export function ArrayStepper({
   // inline would otherwise reset the score on every render).
   const datasetKey = useMemo(() => framesSig(frames), [frames]);
   useEffect(() => {
-    setChallenge(null);
-    setScore({ right: 0, total: 0 });
+    dispatch({ type: "reset" });
   }, [datasetKey]);
+
+  // Keyboard flow through a question. The control that opens, answers or
+  // closes a question is disabled or removed the moment it is used, which
+  // would drop focus onto <body>. Each of those handlers therefore records
+  // where focus should go, and this effect moves it once the new state has
+  // rendered: Next → first option → "Reveal & continue" → Next again (or
+  // Replay on the last frame, where Next is disabled).
+  const focusAfterRender = useRef<"options" | "reveal" | "next" | null>(null);
+  const firstOptionRef = useRef<HTMLButtonElement>(null);
+  const revealRef = useRef<HTMLButtonElement>(null);
+  const nextRef = useRef<HTMLButtonElement>(null);
+  const playRef = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    const target = focusAfterRender.current;
+    if (!target) return;
+    focusAfterRender.current = null;
+    if (target === "options") firstOptionRef.current?.focus();
+    else if (target === "reveal") revealRef.current?.focus();
+    else {
+      const next = nextRef.current;
+      (next && !next.disabled ? next : playRef.current)?.focus();
+    }
+  });
+
+  const ids = useId();
+  const promptId = `${ids}-prompt`;
+  const verdictId = `${ids}-verdict`;
 
   const n = frames.length
     ? Math.max(...frames.map((fr) => fr.cells.length))
@@ -262,42 +360,46 @@ export function ArrayStepper({
       goNext();
       return;
     }
+    // Autoplay must never advance frames underneath an open question
+    pause();
     const c = buildChallenge(frames, step, n);
-    if (c) setChallenge(c);
-    else goNext(); // If no distractor can be built (identical frames, say), just advance
-  }, [predictOn, frames, step, n, goNext]);
+    if (c) {
+      dispatch({ type: "ask", challenge: c });
+      focusAfterRender.current = "options";
+    } else goNext(); // If no distractor can be built (identical frames, say), just advance
+  }, [predictOn, frames, step, n, goNext, pause]);
 
   const pick = (i: number) => {
-    setChallenge((c) => {
-      // Answer once per question: a second pick is ignored even if it is
-      // dispatched before this state update has been rendered.
-      if (!c || c.picked !== null) return c;
-      setScore((s) => ({
-        right: s.right + (i === c.correct ? 1 : 0),
-        total: s.total + 1,
-      }));
-      return { ...c, picked: i };
-    });
+    dispatch({ type: "pick", option: i });
+    focusAfterRender.current = "reveal";
   };
 
   const commit = () => {
-    setChallenge(null);
+    dispatch({ type: "close" });
     goNext();
+    focusAfterRender.current = "next";
   };
 
   const togglePredict = () => {
-    setPredictOn((v) => !v);
-    setChallenge(null);
+    // Entering predict mode stops autoplay first: a running interval would
+    // keep advancing frames and show each answer before it is given
+    if (!predictOn) pause();
+    setPredictOn(!predictOn);
+    dispatch({ type: "close" });
   };
 
   // Clear an unfinished prediction when stepping back or replaying
   const handlePrev = () => {
-    setChallenge(null);
+    dispatch({ type: "close" });
     goPrev();
   };
   const handleToggle = () => {
-    setChallenge(null);
-    goToggle();
+    dispatch({ type: "close" });
+    // In predict mode this button is enabled only on the last frame, where it
+    // reads "Replay": start over at frame 1 without autoplay, ready to
+    // predict again
+    if (predictOn) reset();
+    else goToggle();
   };
 
   // step can briefly sit outside a freshly swapped frame array (see the
@@ -417,8 +519,8 @@ export function ArrayStepper({
 
       {/* Prediction panel */}
       {challenge && (
-        <div className="pf-panel" role="group">
-          <div className="pf-q">
+        <div className="pf-panel" role="group" aria-labelledby={promptId}>
+          <div className="pf-q" id={promptId}>
             <span className="pf-badge">
               <T en="PREDICT" zh="预测" />
             </span>
@@ -439,6 +541,7 @@ export function ArrayStepper({
               return (
                 <button
                   key={i}
+                  ref={i === 0 ? firstOptionRef : undefined}
                   type="button"
                   className={cls}
                   disabled={challenge.picked !== null}
@@ -456,7 +559,7 @@ export function ArrayStepper({
 
           {answered && (
             <div className={`pf-feedback ${isRight ? "ok" : "no"}`}>
-              <div className="pf-verdict">
+              <div className="pf-verdict" id={verdictId}>
                 {isRight ? (
                   <T
                     en="✓ Correct — you predicted the next state."
@@ -472,10 +575,14 @@ export function ArrayStepper({
                   </>
                 )}
               </div>
+              {/* Focus lands here after a pick; the verdict is attached as
+                  its description, so a screen reader announces it */}
               <button
+                ref={revealRef}
                 type="button"
                 className="btn btn-sm btn-primary"
                 onClick={commit}
+                aria-describedby={verdictId}
               >
                 <T en="Reveal & continue →" zh="揭晓并继续 →" />
               </button>
@@ -494,7 +601,11 @@ export function ArrayStepper({
         total={total}
         onNext={handleNext}
         nextDisabled={!!challenge}
-        playDisabled={predictOn}
+        // Autoplay would skip the predictions. On the last frame the same
+        // button reads "Replay" and restarts the walkthrough instead.
+        playDisabled={predictOn && step < total - 1}
+        nextRef={nextRef}
+        playRef={playRef}
         extra={
           total > 1 ? (
             <>
@@ -503,11 +614,17 @@ export function ArrayStepper({
                 className={`btn btn-sm pf-toggle${predictOn ? " on" : ""}`}
                 onClick={togglePredict}
                 aria-pressed={predictOn}
-                title={
+                title={L(
                   predictOn
-                    ? "Step forward and predict each frame"
-                    : "Guess each next frame before it plays"
-                }
+                    ? {
+                        en: "Step forward and predict each frame",
+                        zh: "逐帧前进,每一步先作预测",
+                      }
+                    : {
+                        en: "Guess each next frame before it plays",
+                        zh: "在下一帧播放之前先作预测",
+                      },
+                )}
               >
                 <T en="🔮 Predict" zh="🔮 预测模式" />
               </button>

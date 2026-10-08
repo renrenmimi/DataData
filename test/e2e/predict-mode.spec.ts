@@ -154,6 +154,29 @@ test.describe("predict mode", () => {
     await expect(play).toBeEnabled();
   });
 
+  test("(16) turning predict on during autoplay stops playback", async ({ page }) => {
+    const stepper = await openStepper(page);
+    const frameCounter = stepper.locator(".viz-ctl [aria-live]");
+    const play = stepper.locator(".viz-ctl button").nth(1);
+
+    await play.click();
+    await expect(frameCounter).toHaveText("2 / 7", { timeout: 3000 });
+    await stepper.locator(".pf-toggle").click();
+
+    // Playback has stopped: the button reads Play (unavailable while
+    // predicting) and the frame stays put long after the next autoplay tick.
+    await expect(play).toHaveText(/Play/);
+    await expect(play).toBeDisabled();
+    const frozen = await frameCounter.textContent();
+    await page.waitForTimeout(2500);
+    await expect(frameCounter).toHaveText(frozen ?? "");
+
+    // A question opened now is answered against a still frame.
+    await askQuestion(stepper);
+    await page.waitForTimeout(1500);
+    await expect(frameCounter).toHaveText(frozen ?? "");
+  });
+
   test("(10) stepping back discards an unanswered question", async ({ page }) => {
     await pinOptionOrder(page);
     const stepper = await openStepper(page);
