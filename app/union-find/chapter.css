@@ -63,6 +63,34 @@
   cursor: pointer;
 }
 
+/* The rules above style every circle in a node; these two extra circles need
+   their own look, hence the higher specificity */
+.uf-svg .uf-node circle.uf-hit {
+  fill: transparent;
+  stroke: none;
+  filter: none;
+}
+
+.uf-svg .uf-node circle.uf-root-ring {
+  fill: none;
+  stroke: var(--acc);
+  stroke-width: 1.25;
+  opacity: 0.7;
+  filter: none;
+}
+
+/* Keyboard focus: a thick ring on the node itself instead of a box outline
+   (mobile Chrome also outlines plain :focus after a tap, so clear both) */
+.uf-node:focus,
+.uf-node:focus-visible {
+  outline: none;
+}
+
+.uf-svg .uf-node:focus-visible circle:last-of-type {
+  stroke: var(--acc);
+  stroke-width: 3.5;
+}
+
 .uf-edge {
   stroke: var(--text-3);
   stroke-width: 1.5;
@@ -75,12 +103,6 @@
   stroke: var(--acc);
   opacity: 1;
   stroke-width: 2;
-}
-
-.uf-crown {
-  font-size: 11px;
-  text-anchor: middle;
-  user-select: none;
 }
 
 /* The parent array as a row of small cells */

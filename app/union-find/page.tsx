@@ -443,7 +443,7 @@ const CHIPS = [
     label: { en: "Patterns and problems", zh: "套路与精讲" },
   },
   { id: "problems", n: "07", label: { en: "Problem set", zh: "高频题单" } },
-  { id: "quiz", n: "08", label: { en: "Quiz", zh: "通关测验" } },
+  { id: "quiz", n: "08", label: { en: "Quiz", zh: "本章测验" } },
 ];
 
 export default function UnionFindChapter() {
@@ -831,7 +831,7 @@ export default function UnionFindChapter() {
             zh={
               <>
                 <p>
-                  并查集的全部家当,就是<strong>一个整型数组 parent</strong>,
+                  并查集的全部数据,就是<strong>一个整型数组 parent</strong>,
                   规则只有两条。
                 </p>
                 <ul>
@@ -980,7 +980,7 @@ find(x) {
             zh={
               <p>
                 union(0,1) 把 0 挂到 1 下面,union(1,2) 又把这棵树的根挂到 2 下面,
-                依此类推。每一步都是把已有的根挂到一个新的光杆节点下面,
+                依此类推。每一步都是把已有的根挂到一个新的单节点下面,
                 于是树只长高、不长宽。10 个元素最后连成一条链,find(0)
                 要走 <b>9 步</b>才能到根,复杂度 O(n),
                 并查集赖以成名的速度荡然无存。问题不在结构本身,
@@ -1286,7 +1286,7 @@ find(x) {
                   <b>inverse Ackermann function</b>. The Ackermann function
                   grows faster than any primitive recursive function, so its
                   inverse grows extremely slowly. For every n up to 2^65536,
-                  which no machine can store, <b>α(n) is at most 4</b>. In
+                  far more elements than any machine could hold, <b>α(n) is at most 4</b>. In
                   practice each operation costs a small constant number of
                   steps.
                 </p>
@@ -1307,7 +1307,7 @@ find(x) {
                 <p>
                   两个优化都开时,<b>n 个元素上的 m 次操作总代价是 O(m · α(n))</b>,
                   α 是<b>反阿克曼函数</b>。阿克曼函数比任何原始递归函数增长都快,
-                  所以它的反函数增长慢到极点:直到 n 约为 2^65536(没有任何机器存得下),
+                  所以它的反函数增长慢到极点:直到 n 约为 2^65536(远超任何机器能容纳的元素个数),
                   <b>α(n) 都不超过 4</b>。实践中每次操作就是常数级的几步。
                 </p>
                 <p>
@@ -1353,7 +1353,7 @@ find(x) {
                 这个字段之所以叫「秩」而不叫「高度」,原因就在这里。
                 上界永远成立,所以正确性和复杂度分析都不受影响。
                 实践中也可以只写路径压缩、完全不要 rank,均摊 O(log n),
-                刷题足够用。但面试官问「两个优化各自干什么」时,答案必须准确:
+                做题已经够用。但面试官问「两个优化各自干什么」时,答案必须准确:
                 <b>压缩缩短的是已经存在的路径,按秩合并阻止高树形成,
                 只有两者叠加才有 O(α(n))</b>。
               </p>
@@ -1371,8 +1371,8 @@ find(x) {
           zh: "手写实现:一份值得背下来的模板",
         }}
         desc={{
-          en: "parent, rank and count; five methods; under 40 lines",
-          zh: "parent + rank + count,五个方法,不到 40 行",
+          en: "parent, rank and count; find, union and connected; under 40 lines",
+          zh: "parent + rank + count,find / union / connected 三个核心方法,不到 40 行",
         }}
       >
         <div className="prose">
@@ -1392,7 +1392,7 @@ find(x) {
               <p>
                 并查集是极少数<strong>值得逐字背熟</strong>的数据结构:
                 没有哪个标准库提供它,所以在题目里它永远以「手写模板 + 一点建模」
-                的形式出现。下面这版带满两个优化,外加两个题目里反复用到的方法:
+                的形式出现。下面这版同时带有两个优化,外加两个题目里反复用到的方法:
                 connected 判连通,以及当前连通块数量 count。
               </p>
             }
@@ -1562,17 +1562,23 @@ find(x) {
             note: {
               en: (
                 <>
-                  <b>Easy to get wrong:</b> the default recursion limit in
-                  Python is 1000, so a recursive find raises RecursionError on a
-                  long chain. This version does full path compression with two
-                  iterative passes instead. Keep find iterative in Python.
+                  <b>Easy to get wrong:</b> Python&apos;s default recursion limit
+                  is 1000. With union by rank the tree stays at most log₂n tall,
+                  so recursion would be safe, but with path compression alone a
+                  chain can grow to length n, and a recursive find then raises
+                  RecursionError. This version does full path compression with
+                  two iterative passes, which is safe either way. Java and
+                  JavaScript have larger stacks, but they are finite too, so the
+                  same reasoning applies.
                 </>
               ),
               zh: (
                 <>
-                  <b>易错点:</b>Python 默认递归深度上限是 1000,
-                  递归版 find 在长链数据上会抛 RecursionError。
-                  所以这里用两趟迭代实现完整的路径压缩 —— Python 里请坚持迭代写法。
+                  <b>易错点:</b>Python 默认递归深度上限是 1000。
+                  开启按秩合并时树高不超过 log₂n,递归本来是安全的;
+                  但只写路径压缩时,链长可能达到 n,递归版 find 就会抛 RecursionError。
+                  所以这里用两趟迭代实现完整的路径压缩,两种情况下都安全。
+                  Java 和 JavaScript 的调用栈更大,但同样有限,道理相同。
                 </>
               ),
             },
@@ -1804,27 +1810,27 @@ find(x) {
                 </td>
                 <td>
                   <T
-                    en="Iterative (recursion is safe but pointless)"
-                    zh="迭代(递归也安全,但没必要)"
+                    en="Iterative to be safe (a chain of 10⁵ nodes can overflow the default thread stack)"
+                    zh="宜用迭代(链长到 10⁵ 时可能超出默认线程栈)"
                   />
                 </td>
                 <td>
                   <b>
-                    <T en="Must be iterative" zh="必须迭代" />
+                    <T en="Iterative to be safe" zh="宜用迭代" />
                   </b>{" "}
                   <T en="(recursion limit 1000)" zh="(递归深度上限 1000)" />
                 </td>
                 <td>
                   <T
-                    en="Iterative (deep recursion risks a stack overflow too)"
-                    zh="迭代(深递归同样有爆栈风险)"
+                    en="Iterative to be safe (the engine's stack holds about 10⁴ frames)"
+                    zh="宜用迭代(引擎的调用栈约能容纳 10⁴ 层)"
                   />
                 </td>
               </tr>
               <tr>
                 <td>
                   <b>
-                    <T en="Performance note" zh="性能小抄" />
+                    <T en="Performance note" zh="性能说明" />
                   </b>
                 </td>
                 <td>
@@ -2020,7 +2026,7 @@ uf.union(ids.get("a@x.com"), ids.get("b@x.com"));`,
         <div className="grid-3">
           <div className="card hoverable">
             <div className="card-kicker">
-              <T en="PATTERN 1" zh="套路一" />
+              <T en="Pattern 1" zh="套路一" />
             </div>
             <div className="card-title">
               <T en="Count the components" zh="连通块计数" />
@@ -2043,7 +2049,7 @@ uf.union(ids.get("a@x.com"), ids.get("b@x.com"));`,
           </div>
           <div className="card hoverable">
             <div className="card-kicker">
-              <T en="PATTERN 2" zh="套路二" />
+              <T en="Pattern 2" zh="套路二" />
             </div>
             <div className="card-title">
               <T en="Detect a cycle" zh="找环 / 判冗余" />
@@ -2066,7 +2072,7 @@ uf.union(ids.get("a@x.com"), ids.get("b@x.com"));`,
           </div>
           <div className="card hoverable">
             <div className="card-kicker">
-              <T en="PATTERN 3" zh="套路三" />
+              <T en="Pattern 3" zh="套路三" />
             </div>
             <div className="card-title">
               <T en="Merge equivalence classes" zh="等价类合并" />
@@ -2092,7 +2098,7 @@ uf.union(ids.get("a@x.com"), ids.get("b@x.com"));`,
         {/* — Walkthrough A — */}
         <div className="sec-head" style={{ marginTop: 44 }}>
           <span className="sec-index">
-            <T en="WALKTHROUGH A" zh="精讲 A" />
+            <T en="Walkthrough A" zh="精讲 A" />
           </span>
           <h3 className="sec-title" style={{ fontSize: 20 }}>
             <T en="LC 547 · Number of Provinces" zh="LC 547 · 省份数量" />
@@ -2260,7 +2266,7 @@ uf.union(ids.get("a@x.com"), ids.get("b@x.com"));`,
         {/* — Walkthrough B — */}
         <div className="sec-head" style={{ marginTop: 44 }}>
           <span className="sec-index">
-            <T en="WALKTHROUGH B" zh="精讲 B" />
+            <T en="Walkthrough B" zh="精讲 B" />
           </span>
           <h3 className="sec-title" style={{ fontSize: 20 }}>
             <T en="LC 684 · Redundant Connection" zh="LC 684 · 冗余连接" />
@@ -2473,7 +2479,7 @@ uf.union(ids.get("a@x.com"), ids.get("b@x.com"));`,
         {/* — Walkthrough C — */}
         <div className="sec-head" style={{ marginTop: 44 }}>
           <span className="sec-index">
-            <T en="WALKTHROUGH C" zh="精讲 C" />
+            <T en="Walkthrough C" zh="精讲 C" />
           </span>
           <h3 className="sec-title" style={{ fontSize: 20 }}>
             <T en="LC 200 · Number of Islands" zh="LC 200 · 岛屿数量" />
@@ -2774,14 +2780,14 @@ uf.union(ids.get("a@x.com"), ids.get("b@x.com"));`,
       <Section
         id="quiz"
         index="08"
-        title={{ en: "Quiz", zh: "通关测验" }}
+        title={{ en: "Chapter quiz", zh: "本章测验" }}
         desc={{
           en: "Answer all 7 correctly to mark this chapter as finished",
-          zh: "7 题全对,点亮本章绿灯",
+          zh: "7 题全部答对,即完成本章",
         }}
         badge={
           <span className="chip">
-            <T en="✎ Quiz" zh="✎ 通关测验" />
+            <T en="✎ Chapter quiz" zh="✎ 本章测验" />
           </span>
         }
       >
