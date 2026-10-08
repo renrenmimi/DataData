@@ -142,6 +142,14 @@ Resolve one with `const L = useL(); L(value)`, or switch inline with
   moved but cells unchanged / cells changed but pointers unchanged / a pointer
   one cell too far). Feedback names the axis that was wrong and a score sits in
   the control bar. Styles: section 14 of globals.css (`.pf-*`).
+- **Predict mode and playback.** Turning predict mode on pauses autoplay first,
+  so no frame can advance underneath an open question. While predicting, Play
+  is disabled; on the last frame the same button reads Replay and restarts the
+  walkthrough at frame 1 without autoplay. Focus follows the question: Next →
+  the first option → "Reveal & continue" (whose description is the verdict, so
+  a screen reader announces it) → Next again, or Replay on the last frame.
+  The open question and the score live in one pure reducer, so StrictMode's
+  double invocation cannot score an answer twice.
 - **Score scope: one score belongs to one frame dataset.** Chapters that let the
   learner switch demo case swap the `frames` prop; the score and any unfinished
   question reset at that point, so answers are never attributed to a walkthrough
@@ -158,8 +166,10 @@ Resolve one with `const L = useL(); L(value)`, or switch inline with
   linked-list and trie** therefore have none. Adding it to a hand-built
   animation is a separate piece of work, not a side effect of touching a chapter.
 - `StepControls` accepts optional `onNext` (intercept the advance),
-  `nextDisabled`, `playDisabled` and `extra` (extra controls) — a hand-built
-  animation can reuse those hooks to offer prediction too.
+  `nextDisabled`, `playDisabled`, `extra` (extra controls) and `nextRef` /
+  `playRef` (to return focus to those buttons) — a hand-built animation can
+  reuse those hooks to offer prediction too. `useStepper` also returns
+  `pause()` for stopping autoplay without moving the frame.
 
 ### lib/predict.ts (pure half of predict mode)
 

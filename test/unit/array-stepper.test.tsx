@@ -1,8 +1,9 @@
 // Regression coverage for predict mode as the learner meets it: the stateful
 // rules that live in the ArrayStepper component rather than in lib/predict.ts.
 
+import { StrictMode } from "react";
 import { describe, expect, it, vi } from "vitest";
-import { render, screen, within } from "@testing-library/react";
+import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { LangProvider } from "@/lib/i18n";
 import { ArrayStepper } from "@/lib/stepper";
@@ -400,5 +401,122 @@ describe("option order", () => {
     await user.click(buttonByName(/Back/));
     await user.click(nextButton());
     expect(options().map((b) => b.getAttribute("aria-label"))).toEqual(first);
+  });
+});
+
+/** Answer every question correctly until the walkthrough reaches its last frame. */
+async function predictToTheEnd(user: ReturnType<typeof userEvent.setup>) {
+  await user.click(predictToggle());
+  for (let i = 1; i < FRAMES.length; i++) {
+    await user.click(nextButton());
+    await user.click(optionFor(FRAMES[i]));
+    await user.click(buttonByName(/Reveal & continue/));
+  }
+  expect(screen.getByText(`${FRAMES.length} / ${FRAMES.length}`)).toBeInTheDocument();
+}
+
+describe("(16) entering predict mode stops autoplay", () => {
+  it("pauses a running walkthrough, so no frame advances under a question", () => {
+    // Synchronous fireEvent rather than userEvent: Testing Library's async
+    // wrapper waits on a real setTimeout(0), which never fires under Vitest's
+    // fake timers.
+    vi.useFakeTimers();
+    try {
+      renderStepper();
+      fireEvent.click(buttonByName(/Play/));
+      act(() => vi.advanceTimersByTime(1100));
+      expect(screen.getByText("2 / 3")).toBeInTheDocument();
+
+      fireEvent.click(predictToggle());
+      act(() => vi.advanceTimersByTime(3000));
+      expect(screen.getByText("2 / 3")).toBeInTheDocument();
+      // Playback really stopped: the button reads Play again (disabled while
+      // predicting) instead of a Pause that can no longer be pressed.
+      expect(buttonByName(/Play/)).toBeDisabled();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+});
+
+describe("(17) Replay in predict mode starts the walkthrough over", () => {
+  it("is enabled on the last frame and returns to frame 1 without autoplay", async () => {
+    const user = userEvent.setup();
+    renderStepper();
+    await predictToTheEnd(user);
+
+    const replay = buttonByName(/Replay/);
+    expect(replay).toBeEnabled();
+    await user.click(replay);
+    expect(screen.getByText("1 / 3")).toBeInTheDocument();
+    // Still predicting: autoplay stays unavailable and Next asks again.
+    expect(buttonByName(/Play/)).toBeDisabled();
+    await user.click(nextButton());
+    expect(panel()).not.toBeNull();
+  });
+});
+
+describe("(18) focus follows the question", () => {
+  it("moves to the first option, then to Reveal, then back to Next", async () => {
+    const user = userEvent.setup();
+    renderStepper();
+    await openQuestion(user);
+    expect(options()[0]).toHaveFocus();
+
+    await user.click(optionFor(FRAMES[1]));
+    const reveal = buttonByName(/Reveal & continue/);
+    expect(reveal).toHaveFocus();
+    // The verdict describes the focused button, so a screen reader hears it.
+    expect(reveal).toHaveAccessibleDescription(/Correct/);
+
+    await user.click(reveal);
+    expect(nextButton()).toHaveFocus();
+  });
+
+  it("lands on Replay when the reveal reaches the last frame", async () => {
+    const user = userEvent.setup();
+    renderStepper();
+    await predictToTheEnd(user);
+    expect(buttonByName(/Replay/)).toHaveFocus();
+  });
+
+  it("lets a keyboard user answer with Enter alone", async () => {
+    const user = userEvent.setup();
+    renderStepper();
+    await user.click(predictToggle());
+    nextButton().focus();
+
+    await user.keyboard("{Enter}"); // Next: opens the question
+    expect(options()[0]).toHaveFocus();
+    await user.keyboard("{Enter}"); // picks option A
+    expect(buttonByName(/Reveal & continue/)).toHaveFocus();
+    await user.keyboard("{Enter}"); // reveals
+    expect(screen.getByText("2 / 3")).toBeInTheDocument();
+    expect(nextButton()).toHaveFocus();
+  });
+
+  it("names the question group after its prompt", async () => {
+    const user = userEvent.setup();
+    renderStepper();
+    await openQuestion(user);
+    expect(screen.getByRole("group")).toHaveAccessibleName(/which one is the next frame/);
+  });
+});
+
+describe("(19) scoring is a pure state transition", () => {
+  it("counts an answer once even when React double-invokes updates", async () => {
+    // StrictMode deliberately runs state updaters and reducers twice; a side
+    // effect hidden inside one would score the same answer twice.
+    const user = userEvent.setup();
+    render(
+      <StrictMode>
+        <LangProvider>
+          <ArrayStepper title="Demo" frames={FRAMES} />
+        </LangProvider>
+      </StrictMode>,
+    );
+    await openQuestion(user);
+    await user.click(optionFor(FRAMES[1]));
+    expect(scoreChip()).toHaveTextContent("1/1");
   });
 });
