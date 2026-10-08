@@ -12,7 +12,7 @@
 // Bilingual: titles, narration, buttons, legend, and aria-labels all switch through <T> / useL().
 // Convention: depth is counted in edges, so a chain of 10 nodes has depth 9 and find takes 9 steps.
 
-import { useState, type ReactNode } from "react";
+import { useId, useState, type ReactNode } from "react";
 import { useL, T } from "@/lib/i18n";
 
 const N = 10;
@@ -73,13 +73,15 @@ export function UFLab({
   const [usePC, setUsePC] = useState(defaultPC);
   const [useRank, setUseRank] = useState(defaultRank);
   const [sel, setSel] = useState<number | null>(null);
+  // Two labs share the page, so the arrowhead marker needs a per-instance id
+  const arrowId = `uf-arrow-${useId().replace(/[^a-zA-Z0-9_-]/g, "")}`;
   const [lit, setLit] = useState<Set<number>>(new Set());
   const [bad, setBad] = useState<Set<number>>(new Set());
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<ReactNode>(
     <T
-      en="Ten elements, ten separate sets. parent[i] = i, so every element is its own root. Click two nodes to union them."
-      zh="10 个元素,10 个独立集合。parent[i] = i,每个元素都是自己所在树的根。点两个节点即可 union。"
+      en="Ten elements, ten separate sets. parent[i] = i, so every element is its own root. Choose two nodes to union them."
+      zh="10 个元素,10 个独立集合。parent[i] = i,每个元素都是自己所在树的根。选两个节点即可 union。"
     />,
   );
 
@@ -208,9 +210,14 @@ export function UFLab({
 
     let child = ra.root;
     let boss = rb.root;
+    // Equal ranks: the one case where the merged tree can grow taller
+    let tie = false;
+    let tieRank = 0;
     if (useRank) {
       if (rk[child] > rk[boss]) [child, boss] = [boss, child];
-      if (rk[child] === rk[boss]) rk[boss] += 1;
+      tie = rk[child] === rk[boss];
+      tieRank = rk[boss];
+      if (tie) rk[boss] += 1;
       setRank(rk);
     }
     p[child] = boss;
@@ -221,7 +228,15 @@ export function UFLab({
         en={
           <>
             The two roots differ, so merge: parent[{child}] = {boss}
-            {useRank ? (
+            {useRank && tie ? (
+              <>
+                {" "}
+                (<b>union by rank</b>: both trees have rank {tieRank}, so
+                either may go under the other, and the new root&apos;s rank
+                rises to {tieRank + 1}; this is the only case in which the
+                height can grow)
+              </>
+            ) : useRank ? (
               <>
                 {" "}
                 (<b>union by rank</b>: the shorter tree goes under the taller
@@ -240,7 +255,12 @@ export function UFLab({
         zh={
           <>
             两个根不同 → 合并:parent[{child}] = {boss}
-            {useRank ? (
+            {useRank && tie ? (
+              <>
+                (<b>按秩合并</b>:两棵树的秩都是 {tieRank},谁挂到谁下面都可以,新根的秩升为{" "}
+                {tieRank + 1} —— 这是树高唯一可能增加的情形)
+              </>
+            ) : useRank ? (
               <>
                 (<b>按秩合并</b>:矮的那棵挂到高的下面,树高不会增加)
               </>
@@ -264,12 +284,12 @@ export function UFLab({
         <T
           en={
             <>
-              <b>{i}</b> is selected. Click a second node to run union({i}, ?).
+              <b>{i}</b> is selected. Choose a second node to run union({i}, ?).
             </>
           }
           zh={
             <>
-              已选中 <b>{i}</b>,再点一个节点就执行 union({i}, ?)。
+              已选中 <b>{i}</b>,再选一个节点就执行 union({i}, ?)。
             </>
           }
         />,
@@ -370,7 +390,7 @@ export function UFLab({
           }
           zh={
             <>
-              退化情形:不按秩合并时,每次都把旧的根挂到一个光杆节点下面,
+              退化情形:不按秩合并时,每次都把旧的根挂到一个新的单节点下面,
               10 个元素连成了一条链。最深的节点距离根 <b>{depth}</b> 步,
               此时 find 的代价是 O(n),和扫一遍链表没有区别。
               打开下面的开关再跑一次。
@@ -410,7 +430,7 @@ export function UFLab({
           className="uf-svg"
           viewBox={`0 0 ${width} ${height}`}
           style={{ maxWidth: width }}
-          role="img"
+          role="group"
           aria-label={L({
             en: "Union-Find forest",
             zh: "并查集森林",
@@ -418,7 +438,7 @@ export function UFLab({
         >
           <defs>
             <marker
-              id="uf-arrow"
+              id={arrowId}
               viewBox="0 0 10 10"
               refX="9"
               refY="5"
@@ -451,7 +471,7 @@ export function UFLab({
                 y1={y1}
                 x2={x2}
                 y2={y2}
-                markerEnd="url(#uf-arrow)"
+                markerEnd={`url(#${arrowId})`}
               />
             );
           })}
@@ -466,13 +486,25 @@ export function UFLab({
                 key={i}
                 className={cls}
                 onClick={() => onNodeClick(i)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault(); // Space would otherwise scroll the page
+                    onNodeClick(i);
+                  }
+                }}
                 role="button"
-                aria-label={L({ en: `Node ${i}`, zh: `节点 ${i}` })}
+                tabIndex={0}
+                aria-pressed={sel === i}
+                aria-label={L({
+                  en: `Node ${i}${par === i ? ", root" : ""}`,
+                  zh: `节点 ${i}${par === i ? ",根" : ""}`,
+                })}
               >
+                {/* Invisible hit area: keeps the tap target at least 24px
+                    when the SVG is scaled down on a phone */}
+                <circle className="uf-hit" cx={x} cy={y} r={26} />
                 {par === i && (
-                  <text className="uf-crown" x={x} y={y - 26}>
-                    👑
-                  </text>
+                  <circle className="uf-root-ring" cx={x} cy={y} r={21} />
                 )}
                 <circle cx={x} cy={y} r={17} />
                 <text x={x} y={y}>
@@ -522,7 +554,7 @@ export function UFLab({
           onClick={() => setUsePC((v) => !v)}
           disabled={busy}
         >
-          {usePC ? "✓" : "✗"}{" "}
+          {usePC ? "✓" : "✕"}{" "}
           <T en="Path compression" zh="路径压缩" />
         </button>
         <button
@@ -532,13 +564,13 @@ export function UFLab({
           onClick={() => setUseRank((v) => !v)}
           disabled={busy}
         >
-          {useRank ? "✓" : "✗"} <T en="Union by rank" zh="按秩合并" />
+          {useRank ? "✓" : "✕"} <T en="Union by rank" zh="按秩合并" />
         </button>
         <span className="uf-stat">
           <T en="components" zh="连通块" /> <b>{compCount}</b> ·{" "}
           <T
-            en="👑 = root; a green cell in the parent array points at itself"
-            zh="👑 = 根;parent 数组里的绿格 = 自己指自己"
+            en="a double ring marks a root; a green cell in the parent array points at itself"
+            zh="双圈 = 根;parent 数组里的绿格 = 自己指自己"
           />
         </span>
       </div>

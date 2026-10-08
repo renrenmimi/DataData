@@ -45,7 +45,7 @@ export const PROBLEMS: Problem[] = [
         <>
           把每条边 union 起来,最后返回{" "}
           <code>find(source) === find(destination)</code>。
-          这是并查集最裸的形态 —— 不关心路径长什么样、有多长,只关心两点是否同属一个集合。
+          这是并查集最基本的用法 —— 不关心路径长什么样、有多长,只关心两点是否同属一个集合。
           建议把它当默写模板的第一题:写完 UnionFind 类,主逻辑只有两行。
           两个优化都开时,总代价 O((V + E)·α(V))。
         </>
@@ -115,8 +115,8 @@ export const PROBLEMS: Problem[] = [
           the right only from values whose predecessor x−1 is missing, the
           Union-Find version writes more code but needs less insight: adjacent
           values form an edge, and the question becomes the size of the largest
-          component. Being able to compare the two approaches is worth points in
-          an interview.
+          component. Being able to compare the two approaches makes
+          for a stronger interview answer.
         </>
       ),
       zh: (
@@ -125,7 +125,7 @@ export const PROBLEMS: Problem[] = [
           union(x, x+1) 所在的集合,同时为每个根维护集合大小 size,答案是最大的 size。
           与哈希章的 O(n) 解法(只从 x−1 不存在的起点向右数)相比,并查集写起来更长,
           但需要的洞察更少 ——「相邻即连边,问最大连通块」。一题两解,
-          面试里能对比两种思路是加分项。
+          面试时能对比这两种思路,回答会更完整。
         </>
       ),
     },
@@ -225,9 +225,14 @@ export const PROBLEMS: Problem[] = [
       en: (
         <>
           The key observation: inside one component you can always remove stones
-          in an order that leaves exactly 1, because at each step there is a
-          stone that still shares a row or a column with another one. So the
-          answer is (number of stones) − (number of components). Implementation
+          until exactly 1 is left. Take a spanning tree of the component, for
+          example the DFS tree in which two stones are joined when they share a
+          row or a column, and remove stones leaves first: each removed stone
+          still shares a row or a column with its parent, and only the root
+          remains. (Removing just any stone that shares a line with another can
+          split the component: with (0,0), (0,1) and (1,1), taking (0,1) first
+          leaves two stones that share nothing.) So the answer is (number of
+          stones) − (number of components). Implementation
           detail: instead of comparing every pair in O(n²), treat each row index
           r and each column index c + 10001 as a node, and union the row and the
           column of every stone. The rows and columns act as connectors. What
@@ -237,8 +242,12 @@ export const PROBLEMS: Problem[] = [
       ),
       zh: (
         <>
-          关键洞察:一个连通块里的石头,总能按某个顺序移到只剩 1 颗 ——
-          每一步都还存在一颗与别人同行或同列的石头。所以答案 = 石头总数 − 连通块数。
+          关键洞察:一个连通块里的石头,总能移到只剩 1 颗。取这个连通块的一棵生成树
+          (例如 DFS 树,同行或同列的两颗石头之间有边),从叶子开始倒序移除:
+          每颗被移除的石头都与它的父节点同行或同列,最后只剩根。
+          (随意移走一颗「与别人同行或同列」的石头,可能把连通块拆开:
+          (0,0)、(0,1)、(1,1) 三颗石头,先移走 (0,1),剩下两颗就互不共线了。)
+          所以答案 = 石头总数 − 连通块数。
           实现技巧:不必两两比较 O(n²),把「行号 r」和「列号 c + 10001」
           也当成节点,每颗石头 union(它的行, 它的列),让行列充当中介。
           这题考的不是模板,是<b>把问题翻译成连通块语言</b>的建模能力。
@@ -262,9 +271,12 @@ export const PROBLEMS: Problem[] = [
       en: (
         <>
           Compare every pair of strings. Two of them are similar if they are
-          equal or differ in exactly two positions. Since all the strings are
-          anagrams of each other, the number of differing positions can only be
-          0 or 2. Union each similar pair, and the answer is the number of
+          equal or differ in exactly two positions. That test is enough because
+          all the strings are anagrams of each other: if two of them differ in
+          exactly two positions, swapping those two characters must make them
+          equal. (Two anagrams can also differ in three or more positions, as
+          tars and star do; such a pair is simply not similar.) Union each
+          similar pair, and the answer is the number of
           components. One similarity check is O(L) and there are O(n²) pairs, so
           the total is O(n²·L). Note that A similar to B and B similar to C does
           not make A similar to C, yet all three belong to the same group.
@@ -274,8 +286,10 @@ export const PROBLEMS: Problem[] = [
       ),
       zh: (
         <>
-          两两判断字符串是否相似:相同,或恰好两个位置不同 ——
-          因为所有串互为字母异位词,差异位置数只能是 0 或 2。相似就 union,
+          两两判断字符串是否相似:相同,或恰好两个位置不同。
+          这样判断就够了,因为所有串互为字母异位词:恰好两个位置不同时,交换这两位必然相等。
+          (异位词之间也可能有 3 处或更多处不同,例如 tars 与 star,这样的两个串不相似。)
+          相似就 union,
           答案是连通块数。单次判断 O(L),两两枚举 O(n²),总计 O(n²·L)。
           注意:A 与 B 相似、B 与 C 相似,并不能推出 A 与 C 相似,
           但三者属于同一组 —— 并查集维护的正是这种
@@ -302,7 +316,8 @@ export const PROBLEMS: Problem[] = [
           Adding one bad edge to a rooted tree leaves three cases. (1) Some node
           has in-degree 2 and there is no cycle: remove the later of its two
           incoming edges. (2) In-degree 2 and a cycle: of the two candidates,
-          remove the one that lies on the cycle, which is the earlier one. (3)
+          remove the one that lies on the cycle. It can be the earlier or the
+          later of the two, which is why the Union-Find check below is needed. (3)
           No node with in-degree 2 but there is a cycle: remove the edge that
           closes the cycle. So scan once to find a node with two incoming edges,
           then run Union-Find while skipping the second candidate. If the result
@@ -316,7 +331,8 @@ export const PROBLEMS: Problem[] = [
         <>
           有向树里加一条坏边,只有三种情形:① 某节点入度为 2(两个父节点)且无环
           —— 删两条入边中较晚出现的那条;② 入度 2 且有环 ——
-          删两条候选里位于环上的那条(也就是较早出现的);③ 无入度 2 但有环 ——
+          删两条候选里位于环上的那条,它可能较早出现,也可能较晚出现,
+          所以要靠下面的并查集检验来区分;③ 无入度 2 但有环 ——
           删掉合并时检测到成环的那条。做法是先扫一遍找出入度为 2 的两条候选边,
           再用并查集跳过第二条候选跑一遍:能成树就删它,否则删第一条或成环边。
           684 只要模板,685 考的是把模板嵌进分类讨论的能力。
@@ -542,8 +558,8 @@ export const QUIZ: QuizItem[] = [
       },
     ],
     why: {
-      en: "The Ackermann function grows explosively, so its inverse grows at a crawl: α(n) stays at 4 for every n up to 2^65536, a number no machine can store. That is why the cost is called effectively constant rather than O(1). It is an amortized bound with a proof (Tarjan, 1975), not an approximation.",
-      zh: "阿克曼函数爆炸式增长,它的反函数就慢到极点:直到 n 大约 2^65536,α(n) 都还是 4,而这个数没有任何机器存得下。所以说它「近乎常数」而不写成 O(1) —— 这是一个有证明的均摊上界(Tarjan, 1975),不是随口约等。",
+      en: "The Ackermann function grows extremely fast, so its inverse grows extremely slowly: α(n) does not exceed 4 for any n up to 2^65536, far more elements than any machine could hold. That is why the cost is called effectively constant rather than O(1). It is an amortized bound with a proof (Tarjan, 1975), not an approximation.",
+      zh: "阿克曼函数增长极快,它的反函数因此增长极慢:直到 n 大约为 2^65536,α(n) 都不超过 4,而这么多元素远超任何机器能容纳的数量。所以说它「近乎常数」而不写成 O(1) —— 这是一个有证明的均摊上界(Tarjan, 1975),不是粗略的近似。",
     },
   },
   {
