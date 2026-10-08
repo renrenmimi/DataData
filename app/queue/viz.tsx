@@ -437,8 +437,8 @@ export function RingLab() {
     <div className="viz">
       <div className="viz-title">
         <T
-          en="RingLab — how the modulo makes an array behave like a circle"
-          zh="RingLab —— 取模如何让数组变成一个圈"
+          en="Ring lab: how the modulo makes an array behave like a circle"
+          zh="环形队列实验室 —— 取模如何让数组变成一个圈"
         />
       </div>
       <div className="viz-stage">
@@ -532,6 +532,7 @@ export function RingLab() {
           <button
             type="button"
             className={`seg-btn${scheme === "spare" ? " on" : ""}`}
+            aria-pressed={scheme === "spare"}
             onClick={() => switchScheme("spare")}
           >
             <T en="A · one slot empty" zh="方案A · 留一格空" />
@@ -539,6 +540,7 @@ export function RingLab() {
           <button
             type="button"
             className={`seg-btn${scheme === "count" ? " on" : ""}`}
+            aria-pressed={scheme === "count"}
             onClick={() => switchScheme("count")}
           >
             <T en="B · size counter" zh="方案B · 计数器" />

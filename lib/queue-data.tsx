@@ -442,7 +442,7 @@ export const QUIZ: QuizItem[] = [
       },
       {
         en: "O(log n) comes from tree-shaped structures that halve the work at each step. A deque only moves an index or relinks a node at the end, which is O(1).",
-        zh: "O(log n) 来自树形结构「每步砍一半」。deque 两端操作只挪一个下标或改一个指针,是 O(1)。",
+        zh: "O(log n) 来自树形结构「每步减半」。deque 两端操作只挪一个下标或改一个指针,是 O(1)。",
       },
       {
         en: "O(n) at the front is exactly the shifting cost of a plain array, and removing it is the reason a deque exists.",
@@ -486,7 +486,7 @@ export const QUIZ: QuizItem[] = [
     },
     why: {
       en: "The JavaScript standard library has no queue type, and shift() is O(n) in general. Two stacks pay for it by amortization, a linked list unlinks a node, and the head index only pretends to remove. All three give O(1) dequeue. For interview code the head index is usually enough: three lines and nothing to remember.",
-      zh: "JavaScript 标准库没有队列类型,shift() 一般情况下是 O(n)。双栈靠均摊、链表靠改指针、下标法靠「假装删除」,三者都把出队做到了 O(1)。刷题时下标法通常就够用:三行代码,没有额外心智负担。",
+      zh: "JavaScript 标准库没有队列类型,shift() 一般情况下是 O(n)。双栈靠均摊、链表靠改指针、下标法靠「假装删除」,三者都把出队做到了 O(1)。做题时下标法通常就够用:三行代码,没有额外心智负担。",
     },
   },
   {

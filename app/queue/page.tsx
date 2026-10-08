@@ -308,7 +308,7 @@ const CHIPS = [
     label: { en: "Patterns and monotonic deques", zh: "套路与单调队列" },
   },
   { id: "problems", n: "07", label: { en: "Problem set", zh: "高频题单" } },
-  { id: "quiz", n: "08", label: { en: "Quiz", zh: "通关测验" } },
+  { id: "quiz", n: "08", label: { en: "Quiz", zh: "本章测验" } },
 ];
 
 export default function QueueChapter() {
@@ -362,7 +362,7 @@ export default function QueueChapter() {
         }}
         desc={{
           en: "A stack serves the most recent first. A queue serves the earliest first.",
-          zh: "栈管「最近优先」,队列管「先来先服务」—— 两种秩序,各管半个世界",
+          zh: "栈管「最近优先」,队列管「先来先服务」",
         }}
       >
         <div className="prose">
@@ -441,7 +441,7 @@ export default function QueueChapter() {
           <div className="card hoverable">
             <div className="card-kicker">RULE 02</div>
             <div className="card-title">
-              <T en="⏱️ First in, first out" zh="⏱️ 先进先出" />
+              <T en="First in, first out" zh="先进先出" />
             </div>
             <T
               en={
@@ -460,7 +460,7 @@ export default function QueueChapter() {
           <div className="card hoverable">
             <div className="card-kicker">RULE 03</div>
             <div className="card-title">
-              <T en="No access in the middle" zh="不许插队,也不许乱翻" />
+              <T en="No access in the middle" zh="不能访问中间的元素" />
             </div>
             <T
               en={
@@ -518,7 +518,7 @@ export default function QueueChapter() {
         index="02"
         title={{
           en: "In memory: from a wasteful array to a circular queue",
-          zh: "内存里的样子:从「大坑」到循环队列",
+          zh: "内存里的样子:从浪费空间的数组到循环队列",
         }}
         desc={{
           en: "Both ends of a queue must be O(1). A plain array cannot do that, and the modulo operator is what fixes it.",
@@ -561,8 +561,8 @@ export default function QueueChapter() {
                 with <code>% capacity</code>, which makes the line behave{" "}
                 <strong>logically</strong> like a circle. front consumes from one
                 side, rear wraps around and refills from the other, and as long
-                as the queue is not full there is always a free slot. RingLab in
-                §03 lets you turn the circle yourself.
+                as the queue is not full there is always a free slot. The ring
+                lab in §03 lets you turn the circle yourself.
               </p>
             }
             zh={
@@ -572,7 +572,7 @@ export default function QueueChapter() {
                 数组在内存里仍是一条直线,但所有下标运算都以{" "}
                 <code>% capacity</code> 结尾,于是它在<strong>逻辑上</strong>
                 变成一个圈 —— front 在一头消费,rear 绕回来在另一头补充,
-                只要没装满,永远有格子可用。§03 的 RingLab 可以亲手转这个圈。
+                只要没装满,永远有格子可用。§03 的环形队列实验室可以亲手转这个圈。
               </p>
             }
           />
@@ -681,7 +681,7 @@ export default function QueueChapter() {
           zh: "核心操作:全部 O(1),看清指针怎么绕圈",
         }}
         desc={{
-          en: "A complexity table, RingLab, and the answer to: does front == rear mean full or empty?",
+          en: "A complexity table, the ring lab, and the answer to: does front == rear mean full or empty?",
           zh: "复杂度表 + 环形实验室 —— 顺便解决「满和空长得一样」的悬案",
         }}
       >
@@ -857,7 +857,7 @@ export default function QueueChapter() {
                 <b>Scheme B keeps a size counter</b>: empty is size == 0, full is
                 size == cap. Every slot is usable, and every enqueue and dequeue
                 updates the counter. Both are correct; the implementation in §04
-                uses scheme A, and RingLab lets you switch between them.
+                uses scheme A, and the ring lab lets you switch between them.
               </p>
             }
             zh={
@@ -868,7 +868,7 @@ export default function QueueChapter() {
                 开 k + 1 格,(rear + 1) % cap == front 即为满,不需要额外变量,
                 代价是牺牲一格。<b>方案 B:维护 size 计数器</b> —— 空 = size
                 == 0,满 = size == cap,格子全能用,代价是每次进出都要更新计数器。
-                两种都对;§04 的实现用的是方案 A,RingLab 里可以来回切换。
+                两种都对;§04 的实现用的是方案 A,环形队列实验室里可以来回切换。
               </p>
             }
           />
@@ -884,8 +884,8 @@ export default function QueueChapter() {
           zh: "手写实现:循环队列(就是 LC 622)",
         }}
         desc={{
-          en: "Everything RingLab does, written as code you can submit.",
-          zh: "RingLab 里玩过的一切,现在变成代码 —— 写完可以直接去提交",
+          en: "Everything the ring lab does, written as code you can submit.",
+          zh: "环形队列实验室里的每个操作,现在写成代码 —— 写完可以直接提交",
         }}
       >
         <div className="prose">
@@ -897,14 +897,14 @@ export default function QueueChapter() {
                 fixed-length array, a front and a rear index, and the modulo
                 operator to wrap around. It uses scheme A, keeping one slot
                 empty, which is why the constructor allocates k + 1 slots. Every
-                line matches an action in RingLab:
+                line matches an action in the ring lab:
               </p>
             }
             zh={
               <p>
                 下面这个类<strong>就是 LeetCode 622「设计循环队列」的题解</strong>
                 :定长数组 + front / rear 两个下标 + 取模绕圈,采用方案 A
-                「留一格空」(所以构造时多开一格)。每一行都能对应到 RingLab
+                「留一格空」(所以构造时多开一格)。每一行都能对应到环形队列实验室
                 里的一个动作:
               </p>
             }
@@ -1185,15 +1185,17 @@ MyCircularQueue.prototype.isFull = function () {
             en={
               <p>
                 The <strong>linked queue</strong> is worth writing once as well.
-                It is the form a queue usually takes inside the BFS code of
-                chapter 7, and it hides one boundary case that interviews ask
-                about: resetting tail.
+                The BFS code in chapter 7 uses ArrayDeque, deque, and an array
+                with a read index rather than a linked queue, but this version
+                hides one boundary case that interviews ask about: resetting
+                tail.
               </p>
             }
             zh={
               <p>
-                <strong>链表版队列</strong>也值得手写一遍 —— 它是第 7 章 BFS
-                代码里队列的常见形态,而且藏着一个高频边界坑:tail 的归位。
+                <strong>链表版队列</strong>也值得手写一遍。第 7 章各语言的 BFS
+                分别用 ArrayDeque、deque 和数组加读指针,并不用链表队列;
+                但链表版藏着一个面试常问的边界问题:tail 的归位。
               </p>
             }
           />
@@ -1247,7 +1249,7 @@ MyCircularQueue.prototype.isFull = function () {
         if (head == null) throw new RuntimeException("queue is empty");
         int v = head.val;
         head = head.next;
-        if (head == null) tail = null;  // 删到空:tail 必须一起归位!
+        if (head == null) tail = null;  // 删到空:tail 必须一起归位
         size--;
         return v;
     }
@@ -1265,7 +1267,7 @@ MyCircularQueue.prototype.isFull = function () {
               ),
               zh: (
                 <>
-                  <b>高频坑:</b>删掉最后一个节点时忘记写{" "}
+                  <b>常见错误:</b>删掉最后一个节点时忘记写{" "}
                   <code>tail = null</code>,下一次 offer
                   就会接在一个已经不属于队列的节点后面 —— 队列从此悄悄断裂。
                 </>
@@ -1328,7 +1330,7 @@ class LinkedQueue:
             raise IndexError("queue is empty")
         v = self.head.val
         self.head = self.head.next
-        if self.head is None:           # 删到空:tail 必须一起归位!
+        if self.head is None:           # 删到空:tail 必须一起归位
             self.tail = None
         self.size -= 1
         return v`,
@@ -1384,7 +1386,7 @@ class LinkedQueue:
     if (this.#head === null) throw new Error("queue is empty");
     const v = this.#head.val;
     this.#head = this.#head.next;
-    if (this.#head === null) this.#tail = null; // tail 也要归位!
+    if (this.#head === null) this.#tail = null; // tail 也要归位
     this.#size--;
     return v;
   }
@@ -1524,7 +1526,7 @@ Queue<Integer> slower = new java.util.LinkedList<>();`,
               zh: (
                 <>
                   <b>两套 API:</b>offer / poll / peek 在操作无法完成时返回 false
-                  或 null;add / remove / element 则抛异常。刷题一般用前一组。
+                  或 null;add / remove / element 则抛异常。做题一般用前一组。
                   另外注意 <code>ArrayDeque</code>{" "}
                   <b>不允许存 <code>null</code></b>,因为 null
                   被它用作「没有元素」的信号。
@@ -1569,7 +1571,7 @@ bad = [1, 2, 3]
 bad.pop(0)          # O(n):抽走第一个元素,其余整体左移
 
 # queue.Queue 是另一个类:它用于线程间传递数据,内部带锁,
-# 不是刷题时说的那个"队列"数据结构。`,
+# 不是做题时说的那个"队列"数据结构。`,
             },
             hl: [1, 4, 7, 15],
             note: {
@@ -1593,7 +1595,7 @@ bad.pop(0)          # O(n):抽走第一个元素,其余整体左移
                   内存也比「一个元素一个节点」紧凑;代价是中间随机访问{" "}
                   <code>q[i]</code> 退化为 O(n)。
                   <b>
-                    <code>list.pop(0)</code> 是 Python 刷题里最常见的性能问题。
+                    <code>list.pop(0)</code> 是用 Python 做题时最常见的性能问题。
                   </b>
                 </>
               ),
@@ -1618,7 +1620,7 @@ const empty = head === q.length;
 const bad = [1, 2, 3];
 bad.shift();               // 取走第一个元素,其余前移:一般情况下 O(n)
 
-// 做法一:head 下标(三行,刷题够用)
+// 做法一:head 下标(三行,做题够用)
 const q = [];
 let head = 0;              // 队头下标只前移,从不真正删除
 q.push(1); q.push(2);      // 入队:普通的 push
@@ -1642,7 +1644,7 @@ const empty = head === q.length;
               zh: (
                 <>
                   <b>取舍:</b>下标法里「已出队」的元素仍占着内存,
-                  直到整个数组被回收。刷题时程序只跑几百毫秒,完全无所谓;
+                  直到整个数组被回收。做题时程序只运行几百毫秒,完全无所谓;
                   长期运行的服务里,要么定期用{" "}
                   <code>q = q.slice(head)</code> 整理一次,要么换链表队列。
                 </>
@@ -1812,7 +1814,7 @@ const empty = head === q.length;
         <div className="grid-3">
           <div className="card hoverable">
             <div className="card-kicker">
-              <T en="PATTERN 01" zh="套路一" />
+              <T en="Pattern 1" zh="套路一" />
             </div>
             <div className="card-title">
               <T en="A queue from two stacks" zh="双栈模拟队列" />
@@ -1835,7 +1837,7 @@ const empty = head === q.length;
           </div>
           <div className="card hoverable">
             <div className="card-kicker">
-              <T en="PATTERN 02" zh="套路二" />
+              <T en="Pattern 2" zh="套路二" />
             </div>
             <div className="card-title">
               <T en="Monotonic deque" zh="单调队列" />
@@ -1860,7 +1862,7 @@ const empty = head === q.length;
           </div>
           <div className="card hoverable">
             <div className="card-kicker">
-              <T en="PATTERN 03" zh="套路三" />
+              <T en="Pattern 3" zh="套路三" />
             </div>
             <div className="card-title">
               <T en="Other uses of a deque" zh="deque 的其他用法" />
@@ -1870,7 +1872,8 @@ const empty = head === q.length;
                 <p>
                   Palindrome checking (compare the two ends, then move inward),
                   0-1 BFS (an edge of weight 0 goes to the front, an edge of
-                  weight 1 goes to the back; chapter 12), and work-stealing
+                  weight 1 goes to the back; an advanced topic this course does
+                  not cover), and work-stealing
                   schedulers (a thread uses its own end as a stack while other
                   threads take tasks from the far end).
                 </p>
@@ -1878,8 +1881,7 @@ const empty = head === q.length;
               zh={
                 <p>
                   回文判断(比较两端再向中间收拢)、0-1 BFS(权为 0
-                  的边插队头、权为 1 的边排队尾,第 12
-                  章会讲)、工作窃取调度(线程把自己这端当栈用,
+                  的边插队头、权为 1 的边排队尾,属于进阶话题,本课不展开)、工作窃取调度(线程把自己这端当栈用,
                   其他线程从另一端取走任务)。
                 </p>
               }
@@ -2576,14 +2578,14 @@ class Solution:
       <Section
         id="quiz"
         index="08"
-        title={{ en: "Quiz", zh: "通关测验" }}
+        title={{ en: "Chapter quiz", zh: "本章测验" }}
         desc={{
           en: "All 7 correct turns this chapter green.",
-          zh: "7 题全对,点亮本章绿灯",
+          zh: "7 题全部答对,即完成本章",
         }}
         badge={
           <span className="chip">
-            <T en="✎ Quiz" zh="✎ 通关测验" />
+            <T en="✎ Chapter quiz" zh="✎ 本章测验" />
           </span>
         }
       >
