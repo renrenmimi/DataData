@@ -6,11 +6,17 @@
 // is derived from those: new (untouched) / doing (touched) / done (perfect quiz).
 // Every consumer (sidebar, problem sets, quizzes, the finale's master table)
 // shares this one context — do not keep a second copy anywhere.
+//
+// Several tabs can be open at once, all writing the same key. So every change
+// is applied to what is stored at that moment, not to this tab's copy, and a
+// `storage` listener adopts what other tabs write. Writing this tab's whole
+// in-memory object back would silently erase their work.
 
 import {
   createContext,
   useContext,
   useEffect,
+  useRef,
   useState,
   useCallback,
   type ReactNode,
@@ -50,10 +56,10 @@ const ProgressContext = createContext<Ctx>({
   reset: () => {},
 });
 
-function load(): ProgressData {
+/** Parse a stored value; anything unreadable counts as no progress. */
+function parse(raw: string | null): ProgressData {
+  if (!raw) return EMPTY;
   try {
-    const raw = window.localStorage.getItem(KEY);
-    if (!raw) return EMPTY;
     const parsed = JSON.parse(raw);
     return {
       problems: parsed.problems ?? {},
@@ -64,44 +70,82 @@ function load(): ProgressData {
   }
 }
 
+/** What is stored now, or null when storage cannot be read at all (some private modes). */
+function read(): ProgressData | null {
+  try {
+    return parse(window.localStorage.getItem(KEY));
+  } catch {
+    return null;
+  }
+}
+
 export function ProgressProvider({ children }: { children: ReactNode }) {
   const [data, setData] = useState<ProgressData>(EMPTY);
   const [ready, setReady] = useState(false);
+  // The data handlers act on, kept in step with every state change so a
+  // handler never reasons from an older render's copy
+  const current = useRef<ProgressData>(EMPTY);
+
+  const adopt = useCallback((next: ProgressData) => {
+    current.current = next;
+    setData(next);
+  }, []);
 
   useEffect(() => {
-    setData(load());
+    adopt(read() ?? EMPTY);
     setReady(true);
-  }, []);
 
-  const persist = useCallback((next: ProgressData) => {
-    setData(next);
-    try {
-      window.localStorage.setItem(KEY, JSON.stringify(next));
-    } catch {
-      /* Write failed (private browsing, quota, …) — stay in-memory only */
-    }
-  }, []);
+    // Another tab wrote progress (key null means it cleared storage): show it
+    // here too, so this tab never displays or rewrites stale checkmarks
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === KEY || e.key === null) adopt(parse(e.newValue));
+    };
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
+  }, [adopt]);
+
+  // Apply a change to what is stored now. When storage cannot be read, fall
+  // back to this tab's copy and stay in memory.
+  const update = useCallback(
+    (change: (base: ProgressData) => ProgressData) => {
+      const next = change(read() ?? current.current);
+      try {
+        window.localStorage.setItem(KEY, JSON.stringify(next));
+      } catch {
+        /* Write failed (private browsing, quota, …) — stay in-memory only */
+      }
+      adopt(next);
+    },
+    [adopt],
+  );
 
   const isDone = useCallback((pid: string) => !!data.problems[pid], [data]);
 
   const toggleProblem = useCallback(
     (pid: string) => {
-      const problems = { ...data.problems };
-      if (problems[pid]) delete problems[pid];
-      else problems[pid] = 1;
-      persist({ ...data, problems });
+      // Flip what this tab shows: the learner is reacting to the checkbox in
+      // front of them, whatever another tab did a moment ago
+      const markDone = !current.current.problems[pid];
+      update((base) => {
+        const problems = { ...base.problems };
+        if (markDone) problems[pid] = 1;
+        else delete problems[pid];
+        return { ...base, problems };
+      });
     },
-    [data, persist],
+    [update],
   );
 
   const reportQuiz = useCallback(
     (ch: ChapterId, right: number, total: number) => {
-      const prev = data.quiz[ch];
-      // Keep only the best score
-      if (prev && prev.right / prev.total >= right / total) return;
-      persist({ ...data, quiz: { ...data.quiz, [ch]: { right, total } } });
+      update((base) => {
+        const prev = base.quiz[ch];
+        // Keep only the best score
+        if (prev && prev.right / prev.total >= right / total) return base;
+        return { ...base, quiz: { ...base.quiz, [ch]: { right, total } } };
+      });
     },
-    [data, persist],
+    [update],
   );
 
   const chapterState = useCallback(
@@ -122,7 +166,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
     [data],
   );
 
-  const reset = useCallback(() => persist(EMPTY), [persist]);
+  const reset = useCallback(() => update(() => EMPTY), [update]);
 
   return (
     <ProgressContext.Provider
