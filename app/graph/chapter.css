@@ -56,6 +56,18 @@
   cursor: pointer;
 }
 
+/* Keyboard focus on a pickable vertex: a thick ring rather than a box
+   outline (mobile Chrome also outlines plain :focus after a tap) */
+[data-ch="graph"] .gr-nd.pick:focus,
+[data-ch="graph"] .gr-nd.pick:focus-visible {
+  outline: none;
+}
+
+[data-ch="graph"] .gr-nd.pick:focus-visible circle {
+  stroke: var(--acc);
+  stroke-width: 3.5;
+}
+
 [data-ch="graph"] .gr-nd.lit circle {
   stroke: var(--acc);
   fill: var(--acc-soft);

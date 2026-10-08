@@ -44,9 +44,9 @@ const CHIPS = [
   { id: "traverse", n: "03", label: { en: "BFS and DFS", zh: "遍历 BFS/DFS" } },
   { id: "build", n: "04", label: { en: "Build them", zh: "手写实现" } },
   { id: "langs", n: "05", label: { en: "Three languages", zh: "三语言对照" } },
-  { id: "topics", n: "06", label: { en: "Three patterns", zh: "三大专题" } },
+  { id: "topics", n: "06", label: { en: "Three patterns", zh: "三种套路" } },
   { id: "problems", n: "07", label: { en: "Problem set", zh: "高频题单" } },
-  { id: "quiz", n: "08", label: { en: "Quiz", zh: "通关测验" } },
+  { id: "quiz", n: "08", label: { en: "Quiz", zh: "本章测验" } },
 ];
 
 export default function GraphChapter() {
@@ -270,7 +270,7 @@ export default function GraphChapter() {
                   <T en="Term" zh="术语" />
                 </th>
                 <th>
-                  <T en="In plain words" zh="大白话" />
+                  <T en="In plain words" zh="通俗解释" />
                 </th>
                 <th>
                   <T en="Notation" zh="正式说法" />
@@ -560,7 +560,7 @@ export default function GraphChapter() {
               <T
                 en={
                   <>
-                    A <b>V x V</b> table where <code>matrix[i][j] = 1</code>{" "}
+                    A <b>V × V</b> table where <code>matrix[i][j] = 1</code>{" "}
                     means there is an edge from i to j (a weighted graph stores
                     the weight instead). For an undirected graph the table is{" "}
                     <b>symmetric</b> across the diagonal. Advantage: asking
@@ -571,7 +571,7 @@ export default function GraphChapter() {
                 }
                 zh={
                   <>
-                    一张 <b>V x V</b> 的二维表,<code>matrix[i][j] = 1</code>{" "}
+                    一张 <b>V × V</b> 的二维表,<code>matrix[i][j] = 1</code>{" "}
                     表示 i 到 j 有边(带权图就存权重)。无向图的矩阵沿对角线
                     <b>对称</b>。好处:查「i、j 之间有没有边」一步到位,
                     <BigO o="1" />;坏处:不管图多稀疏,都硬占 <BigO o="n2" />{" "}
@@ -609,7 +609,7 @@ export default function GraphChapter() {
                     <BigO o="n" label="O(V + E)" />;
                     取一个点的所有邻居也很直接。代价:查「i、j 之间有没有边」
                     要扫 i 的邻居串,最坏 O(deg i)。
-                    <b>绝大多数刷题和工程场景都用它。</b>
+                    <b>绝大多数做题和工程场景都用它。</b>
                   </>
                 }
               />
@@ -1254,7 +1254,7 @@ def bfs(g, start, n):
               zh: (
                 <>
                   <b>易错点:</b>队列一定用 <code>collections.deque</code>,
-                  它的 <code>popleft()</code> 是 O(1);千万别用{" "}
+                  它的 <code>popleft()</code> 是 O(1);不要用{" "}
                   <code>list.pop(0)</code>(O(n),会把整个 BFS 拖成 O(V · E))。
                 </>
               ),
@@ -1351,7 +1351,7 @@ function bfs(g, start, n) {
             zh={
               <p>
                 DFS 有两种写法:<strong>递归</strong>(短、直观,
-                但图一深就可能爆调用栈)和<strong>迭代</strong>
+                但图很深时可能导致调用栈溢出)和<strong>迭代</strong>
                 (用显式栈,安全)。两个都要会:
               </p>
             }
@@ -1394,7 +1394,7 @@ void dfs(List<List<Integer>> g, int u, boolean[] visited) {
     }
 }
 
-// DFS 迭代:用显式栈代替递归,深图不会爆调用栈
+// DFS 迭代:用显式栈代替递归,深图也不会栈溢出
 void dfsIter(List<List<Integer>> g, int start) {
     boolean[] visited = new boolean[g.size()];
     Deque<Integer> stack = new ArrayDeque<>();
@@ -1787,7 +1787,7 @@ Set<String> seen = new HashSet<>();`,
               zh: (
                 <>
                   <code>computeIfAbsent</code> 是建 <code>Map</code>{" "}
-                  型邻接表的常用方法:key 不存在就先建空表再 add,一行搞定。
+                  型邻接表的常用方法:key 不存在就先建空表再 add,一行即可完成。
                 </>
               ),
             },
@@ -1878,9 +1878,9 @@ const seen = new Set();`,
               ),
               zh: (
                 <>
-                  <b>易错点:</b>建数组套数组千万别写{" "}
+                  <b>易错点:</b>建数组套数组不要写{" "}
                   <code>new Array(n).fill([])</code> —— n 个格子会共享
-                  <b>同一个</b>数组!必须用{" "}
+                  <b>同一个</b>数组,必须用{" "}
                   <code>Array.from({ "{ length: n }" }, () =&gt; [])</code>{" "}
                   各建各的。
                 </>
@@ -2005,7 +2005,7 @@ const seen = new Set();`,
           tone="warn"
           title={{
             en: "JavaScript has no built-in heap",
-            zh: "JS 选手请注意:没有内置堆",
+            zh: "JavaScript 没有内置堆",
           }}
         >
           <T
@@ -2037,7 +2037,7 @@ const seen = new Set();`,
         index="06"
         title={{
           en: "Three patterns: grids, topological order, shortest paths",
-          zh: "三大专题精讲:网格 · 拓扑 · 最短路",
+          zh: "三种套路精讲:网格 · 拓扑 · 最短路",
         }}
         desc={{
           en: "Graph problems are many, but the frequent ones fall into three groups. Each gets one classic problem, taken apart frame by frame.",
@@ -2052,7 +2052,7 @@ const seen = new Set();`,
         {/* — Pattern 1: grids — */}
         <div className="sec-head" style={{ marginTop: 8 }}>
           <span className="sec-index">
-            <T en="Pattern 1" zh="专题一" />
+            <T en="Pattern 1" zh="套路一" />
           </span>
           <h3 className="sec-title" style={{ fontSize: 20 }}>
             <T en="A grid is a graph" zh="网格也是图" />
@@ -2275,9 +2275,9 @@ const seen = new Set();`,
           <T
             en={
               <p>
-                Time is <b>O(rows x cols)</b>: each cell is entered at most once,
+                Time is <b>O(rows × cols)</b>: each cell is entered at most once,
                 because sinking turns it into 0. The space is the recursion
-                stack, at worst O(rows x cols) when the whole grid is land.
+                stack, at worst O(rows × cols) when the whole grid is land.
                 Common follow-ups: &ldquo;what if you may not modify the
                 grid?&rdquo; (keep a separate visited matrix), &ldquo;what if the
                 recursion overflows?&rdquo; (switch to BFS or iterative DFS), and
@@ -2288,10 +2288,10 @@ const seen = new Set();`,
             }
             zh={
               <p>
-                时间 <b>O(行 x 列)</b>:每个格子最多被进入一次(淹过就变 0)。
-                空间是递归栈,最坏 O(行 x 列)(整张图全是陆地时)。面试常见追问:
+                时间 <b>O(行 × 列)</b>:每个格子最多被进入一次(淹过就变 0)。
+                空间是递归栈,最坏 O(行 × 列)(整张图全是陆地时)。面试常见追问:
                 「不能改原网格怎么办?」(另开 visited 矩阵)、
-                「会爆栈怎么办?」(改 BFS 或迭代 DFS)、
+                「栈溢出怎么办?」(改 BFS 或迭代 DFS)、
                 「要数最大岛面积?」(LC695,让 DFS 返回淹没的格子数)。
                 淹没法是所有网格连通块题的模板。
               </p>
@@ -2302,7 +2302,7 @@ const seen = new Set();`,
         {/* — Pattern 2: topological sort — */}
         <div className="sec-head" style={{ marginTop: 40 }}>
           <span className="sec-index">
-            <T en="Pattern 2" zh="专题二" />
+            <T en="Pattern 2" zh="套路二" />
           </span>
           <h3 className="sec-title" style={{ fontSize: 20 }}>
             <T
@@ -2641,7 +2641,7 @@ class Solution:
         {/* — Pattern 3: shortest path — */}
         <div className="sec-head" style={{ marginTop: 40 }}>
           <span className="sec-index">
-            <T en="Pattern 3" zh="专题三" />
+            <T en="Pattern 3" zh="套路三" />
           </span>
           <h3 className="sec-title" style={{ fontSize: 20 }}>
             <T
@@ -2757,7 +2757,7 @@ class Solution:
                 重点讲 <strong>Dijkstra</strong>。它的规则是:
                 <strong>
                   每次从「未定案的点」里挑 dist 最小的那个,
-                  它的最短距离此刻就能拍板
+                  它的最短距离此刻就能确定
                 </strong>
                 —— 因为边权非负,任何绕远路只会更贵,不可能反超。定案后,用它去
                 <strong>松弛(relax)</strong>邻居:
@@ -3105,8 +3105,8 @@ var networkDelayTime = function (times, n, k) {
             }
             zh={
               <p>
-                无权图(或所有边权相同)求最短路,<b>千万别上 Dijkstra</b> ——
-                直接 BFS 更简单更快。Dijkstra 是「边权不同且非负」时才需要的升级款。
+                无权图(或所有边权相同)求最短路,<b>不要用 Dijkstra</b> ——
+                直接 BFS 更简单更快。Dijkstra 是「边权不同且非负」时才需要的更通用的算法。
                 看到「最少步数 / 最少操作次数」优先想 BFS;
                 看到「最短距离 / 最小花费 + 边权不一」才想 Dijkstra。
               </p>
@@ -3129,7 +3129,7 @@ var networkDelayTime = function (times, n, k) {
         }}
         badge={
           <span className="chip">
-            <T en="Selected" zh="Hot 精选" />
+            <T en="Selected" zh="精选" />
           </span>
         }
       >
@@ -3140,14 +3140,14 @@ var networkDelayTime = function (times, n, k) {
       <Section
         id="quiz"
         index="08"
-        title={{ en: "Quiz", zh: "通关测验" }}
+        title={{ en: "Chapter quiz", zh: "本章测验" }}
         desc={{
           en: "Answer all 8 correctly to mark this chapter complete.",
-          zh: "8 题全对,点亮本章绿灯",
+          zh: "8 题全部答对,即完成本章",
         }}
         badge={
           <span className="chip">
-            <T en="✎ Quiz" zh="✎ 通关测验" />
+            <T en="✎ Chapter quiz" zh="✎ 本章测验" />
           </span>
         }
       >
@@ -3188,7 +3188,7 @@ var networkDelayTime = function (times, n, k) {
               <>
                 两种表示法:<b>邻接矩阵</b> 占 O(V²) 空间、查边 O(1);
                 <b>邻接表</b> 占 O(V + E) 空间、遍历邻居快。
-                <b>稀疏图默认邻接表</b>,这是刷题主力。
+                <b>稀疏图默认邻接表</b>,这也是做题时最常用的表示法。
               </>
             ),
           },
