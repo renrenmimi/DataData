@@ -321,7 +321,8 @@ const F11: ArrayFrame[] = [
       <T
         en={
           <>
-            L and R meet and the answer is <b>49</b>. Why is it safe to skip so
+            L and R are now adjacent: after this last pair they meet, the loop
+            ends, and the answer is <b>49</b>. Why is it safe to skip so
             many pairs? Because every pair that keeps the shorter line has a{" "}
             <b>smaller width and no greater height</b>, so its area cannot beat
             the one just measured. Discarding the shorter line loses nothing,
@@ -330,7 +331,8 @@ const F11: ArrayFrame[] = [
         }
         zh={
           <>
-            L、R 相遇,答案锁定 <b>49</b>。为什么可以跳过这么多组合?因为任何
+            L、R 已经相邻:比较完这最后一组,两者相遇,循环结束,答案是 <b>49</b>。
+            为什么可以跳过这么多组合?因为任何
             <b>仍然保留那条较矮线</b>的组合,宽度更小、高度不会更高,面积不可能超过刚算过的值。
             丢掉较矮的一端不会丢掉答案,这就是 O(n²) 降到 O(n) 的依据。
           </>
@@ -478,15 +480,17 @@ const F209: ArrayFrame[] = [
       <T
         en={
           <>
-            After r = 5 the window shrinks twice more: [4, 3] sums to 7 with
-            length <b>2</b>, the final answer. l and r each move at most n
-            steps, so the total work is at most 2n. That is <b>O(n)</b>, not
-            O(n²).
+            r = 5 brings the sum to 9. Shrinking once drops the 2 and leaves
+            [4, 3], which sums to 7 with length <b>2</b>, the final answer;
+            shrinking again drops the 4 and the sum falls below 7. l and r each
+            move at most n steps, so the total work is at most 2n. That is{" "}
+            <b>O(n)</b>, not O(n²).
           </>
         }
         zh={
           <>
-            r=5 之后再收缩两次:窗口 [4, 3] 和为 7,长度 <b>2</b> —— 最终答案。
+            r=5 使 sum 变为 9。收缩一次移出 2,窗口变为 [4, 3],和为 7,长度 <b>2</b> —— 最终答案;
+            再收缩一次移出 4,和降到 7 以下。
             l 和 r 各自最多走 n 步,总步数不超过 2n,所以是 <b>O(n)</b> 而不是 O(n²)。
           </>
         }
@@ -519,7 +523,7 @@ const CHIPS = [
     label: { en: "Two pointers and window", zh: "双指针与滑窗" },
   },
   { id: "problems", n: "09", label: { en: "Problem set", zh: "高频题单" } },
-  { id: "quiz", n: "10", label: { en: "Quiz", zh: "通关测验" } },
+  { id: "quiz", n: "10", label: { en: "Quiz", zh: "本章测验" } },
 ];
 
 export default function ArrayChapter() {
@@ -704,7 +708,7 @@ export default function ArrayChapter() {
         index="02"
         title={{
           en: "In memory: one formula does all the work",
-          zh: "内存里的样子:一条公式打天下",
+          zh: "内存里的样子:一条公式就够了",
         }}
         desc={{
           en: "address = base address + index × element size. Click a cell below to check it.",
@@ -910,7 +914,7 @@ export default function ArrayChapter() {
                 <td>
                   <T
                     en="Every element to the right shifts one slot left to close the gap. Deleting means filling in, not cutting out."
-                    zh="右侧所有元素整体左移一格填补空位 —— 删除是「补位」不是「抠掉」"
+                    zh="右侧所有元素整体左移一格填补空位 —— 删除靠后面的元素补位,而不是在原处留下空格"
                   />
                 </td>
               </tr>
@@ -1423,7 +1427,7 @@ var search = function (nums, target) {
         title={{ en: "Build a dynamic array yourself", zh: "手写一个动态数组" }}
         desc={{
           en: "Under 50 lines, with the same skeleton the standard libraries use.",
-          zh: "不到 50 行,和真实标准库的骨架一致 —— 造过的东西才真正属于你",
+          zh: "不到 50 行,和真实标准库的骨架一致",
         }}
       >
         <div className="prose">
@@ -1479,12 +1483,18 @@ public class DynArray {
         return data[i];
     }
 
+    public void set(int i, int x) {   // O(1): write through the same formula
+        if (i < 0 || i >= size) throw new IndexOutOfBoundsException();
+        data[i] = x;
+    }
+
     public void push(int x) {         // O(1) amortized
         if (size == data.length) grow();
         data[size++] = x;
     }
 
     public void insert(int i, int x) { // O(n)
+        if (i < 0 || i > size) throw new IndexOutOfBoundsException();
         if (size == data.length) grow();
         for (int j = size; j > i; j--) // copy back to front to free slot i
             data[j] = data[j - 1];
@@ -1493,6 +1503,7 @@ public class DynArray {
     }
 
     public int removeAt(int i) {       // O(n)
+        if (i < 0 || i >= size) throw new IndexOutOfBoundsException();
         int victim = data[i];
         for (int j = i; j < size - 1; j++) // copy front to back to close the gap
             data[j] = data[j + 1];
@@ -1516,12 +1527,18 @@ public class DynArray {
         return data[i];
     }
 
+    public void set(int i, int x) {   // O(1):同一条公式,改为写入
+        if (i < 0 || i >= size) throw new IndexOutOfBoundsException();
+        data[i] = x;
+    }
+
     public void push(int x) {         // 均摊 O(1)
         if (size == data.length) grow();
         data[size++] = x;
     }
 
     public void insert(int i, int x) { // O(n)
+        if (i < 0 || i > size) throw new IndexOutOfBoundsException();
         if (size == data.length) grow();
         for (int j = size; j > i; j--) // 从后往前搬,腾出下标 i
             data[j] = data[j - 1];
@@ -1530,6 +1547,7 @@ public class DynArray {
     }
 
     public int removeAt(int i) {       // O(n)
+        if (i < 0 || i >= size) throw new IndexOutOfBoundsException();
         int victim = data[i];
         for (int j = i; j < size - 1; j++) // 从前往后补位,填上空缺
             data[j] = data[j + 1];
@@ -1575,6 +1593,11 @@ class DynArray:
             raise IndexError(i)
         return self._data[i]
 
+    def set(self, i, x):          # O(1)
+        if not 0 <= i < self._size:
+            raise IndexError(i)
+        self._data[i] = x
+
     def push(self, x):            # O(1) amortized
         if self._size == len(self._data):
             self._grow()
@@ -1582,6 +1605,8 @@ class DynArray:
         self._size += 1
 
     def insert(self, i, x):       # O(n)
+        if not 0 <= i <= self._size:
+            raise IndexError(i)
         if self._size == len(self._data):
             self._grow()
         for j in range(self._size, i, -1):  # copy back to front
@@ -1590,6 +1615,8 @@ class DynArray:
         self._size += 1
 
     def remove_at(self, i):       # O(n)
+        if not 0 <= i < self._size:
+            raise IndexError(i)
         victim = self._data[i]
         for j in range(i, self._size - 1):  # copy front to back
             self._data[j] = self._data[j + 1]
@@ -1612,6 +1639,11 @@ class DynArray:
             raise IndexError(i)
         return self._data[i]
 
+    def set(self, i, x):          # O(1)
+        if not 0 <= i < self._size:
+            raise IndexError(i)
+        self._data[i] = x
+
     def push(self, x):            # 均摊 O(1)
         if self._size == len(self._data):
             self._grow()
@@ -1619,6 +1651,8 @@ class DynArray:
         self._size += 1
 
     def insert(self, i, x):       # O(n)
+        if not 0 <= i <= self._size:
+            raise IndexError(i)
         if self._size == len(self._data):
             self._grow()
         for j in range(self._size, i, -1):  # 从后往前搬
@@ -1627,6 +1661,8 @@ class DynArray:
         self._size += 1
 
     def remove_at(self, i):       # O(n)
+        if not 0 <= i < self._size:
+            raise IndexError(i)
         victim = self._data[i]
         for j in range(i, self._size - 1):  # 从前往后补位
             self._data[j] = self._data[j + 1]
@@ -1667,12 +1703,18 @@ class DynArray {
     return this.#data[i];
   }
 
+  set(i, x) {             // O(1)
+    if (i < 0 || i >= this.#size) throw new RangeError(i);
+    this.#data[i] = x;
+  }
+
   push(x) {               // O(1) amortized
     if (this.#size === this.#data.length) this.#grow();
     this.#data[this.#size++] = x;
   }
 
   insert(i, x) {          // O(n)
+    if (i < 0 || i > this.#size) throw new RangeError(i);
     if (this.#size === this.#data.length) this.#grow();
     for (let j = this.#size; j > i; j--)  // copy back to front
       this.#data[j] = this.#data[j - 1];
@@ -1681,6 +1723,7 @@ class DynArray {
   }
 
   removeAt(i) {           // O(n)
+    if (i < 0 || i >= this.#size) throw new RangeError(i);
     const victim = this.#data[i];
     for (let j = i; j < this.#size - 1; j++)  // copy front to back
       this.#data[j] = this.#data[j + 1];
@@ -1704,12 +1747,18 @@ class DynArray {
     return this.#data[i];
   }
 
+  set(i, x) {             // O(1)
+    if (i < 0 || i >= this.#size) throw new RangeError(i);
+    this.#data[i] = x;
+  }
+
   push(x) {               // 均摊 O(1)
     if (this.#size === this.#data.length) this.#grow();
     this.#data[this.#size++] = x;
   }
 
   insert(i, x) {          // O(n)
+    if (i < 0 || i > this.#size) throw new RangeError(i);
     if (this.#size === this.#data.length) this.#grow();
     for (let j = this.#size; j > i; j--)  // 从后往前搬
       this.#data[j] = this.#data[j - 1];
@@ -1718,6 +1767,7 @@ class DynArray {
   }
 
   removeAt(i) {           // O(n)
+    if (i < 0 || i >= this.#size) throw new RangeError(i);
     const victim = this.#data[i];
     for (let j = i; j < this.#size - 1; j++)  // 从前往后补位
       this.#data[j] = this.#data[j + 1];
@@ -1909,7 +1959,7 @@ class DynArray {
               <p>
                 ① <b>方向数组</b>:上下左右用{" "}
                 <code>dirs = [[-1,0],[1,0],[0,-1],[0,1]]</code>{" "}
-                一个循环搞定,不用写四段 if;② <b>先做边界检查</b>(
+                一个循环就能完成,不用写四段 if;② <b>先做边界检查</b>(
                 <code>0 ≤ i &lt; m</code> 且 <code>0 ≤ j &lt; n</code>)再读格子;
                 ③ 想要 O(1) 额外空间,就用矩阵自身的第一行和第一列当标记(LC 73)。
                 矩阵同时也是「网格图」,图那一章会把它当图来遍历。
@@ -2220,14 +2270,18 @@ for (const v of arr) console.log(v);  // 遍历`,
           <T
             en={
               <>
-                * Java <code>subList</code> returns a view, not a copy. Changing
-                the view changes the original list. This is the one place where
-                the three slice operations differ in meaning.
+                * Java <code>subList</code> returns a view, not a copy: creating
+                it is O(1), and only copying it, as in{" "}
+                <code>new ArrayList&lt;&gt;(list.subList(a, b))</code>, costs
+                O(k). Changing the view changes the original list. This is the
+                one place where the three slice operations differ in meaning.
               </>
             }
             zh={
               <>
-                * Java 的 <code>subList</code> 返回的是视图(view)而不是拷贝 ——
+                * Java 的 <code>subList</code> 返回的是视图(view)而不是拷贝:
+                创建视图是 O(1),复制成新列表(如{" "}
+                <code>new ArrayList&lt;&gt;(list.subList(a, b))</code>)才是 O(k)。
                 改视图会改到原 list,这是三种语言的切片语义里最特殊的一个。
               </>
             }
@@ -2351,7 +2405,7 @@ for (const v of arr) console.log(v);  // 遍历`,
         {/* —— Walkthrough 1 —— */}
         <div className="sec-head" style={{ marginTop: 44 }}>
           <span className="sec-index">
-            <T en="WORKED A" zh="精讲 A" />
+            <T en="Walkthrough A" zh="精讲 A" />
           </span>
           <h3 className="sec-title" style={{ fontSize: 20 }}>
             <T en="LC 283 · Move Zeroes" zh="LC 283 · 移动零" />
@@ -2479,9 +2533,10 @@ for (const v of arr) console.log(v);  // 遍历`,
               <p>
                 Time <b>O(n)</b>, because fast makes one pass. Space{" "}
                 <b>O(1)</b>. Interviewers often follow up: what if the value to
-                move is not 0 but a given value? That is LC 27. What if the
-                order of the zeros also has to be preserved? This solution
-                already does that. The answer they are looking for is the{" "}
+                move is not 0 but a given value? That is LC 27. Can you reduce
+                the number of writes? Swap only when fast ≠ slow, or copy the
+                non-zero values forward and fill the tail with zeros at the
+                end. The answer they are looking for is the{" "}
                 <b>loop invariant</b>: everything left of slow is non-zero and
                 in its original relative order.
               </p>
@@ -2490,7 +2545,7 @@ for (const v of arr) console.log(v);  // 遍历`,
               <p>
                 时间 <b>O(n)</b>(fast 只走一遍),空间 <b>O(1)</b>。
                 面试官常追问:「如果要移动的不是 0 而是某个给定值?」(那就是 LC 27)
-                「如果要求 0 之间的相对顺序也不变?」(本解法天然满足)。
+                「能否减少写操作?」(只在 fast ≠ slow 时才交换;或者先把非零元素依次写到前面,最后统一补 0)。
                 他们真正想听的是<b>循环不变量</b>:slow 左边恒为非零元素,且保持原有相对顺序。
               </p>
             }
@@ -2500,7 +2555,7 @@ for (const v of arr) console.log(v);  // 遍历`,
         {/* —— Walkthrough 2 —— */}
         <div className="sec-head" style={{ marginTop: 44 }}>
           <span className="sec-index">
-            <T en="WORKED B" zh="精讲 B" />
+            <T en="Walkthrough B" zh="精讲 B" />
           </span>
           <h3 className="sec-title" style={{ fontSize: 20 }}>
             <T
@@ -2665,7 +2720,7 @@ for (const v of arr) console.log(v);  // 遍历`,
         {/* —— Walkthrough 3 —— */}
         <div className="sec-head" style={{ marginTop: 44 }}>
           <span className="sec-index">
-            <T en="WORKED C" zh="精讲 C" />
+            <T en="Walkthrough C" zh="精讲 C" />
           </span>
           <h3 className="sec-title" style={{ fontSize: 20 }}>
             <T
@@ -2861,14 +2916,14 @@ for (const v of arr) console.log(v);  // 遍历`,
       <Section
         id="quiz"
         index="10"
-        title={{ en: "Chapter quiz", zh: "通关测验" }}
+        title={{ en: "Chapter quiz", zh: "本章测验" }}
         desc={{
           en: "Answer all 9 correctly to mark this chapter complete.",
-          zh: "9 题全对,点亮本章绿灯",
+          zh: "9 题全部答对,即完成本章",
         }}
         badge={
           <span className="chip">
-            <T en="✎ Chapter quiz" zh="✎ 通关测验" />
+            <T en="✎ Chapter quiz" zh="✎ 本章测验" />
           </span>
         }
       >
