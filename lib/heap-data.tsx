@@ -66,8 +66,8 @@ export const PROBLEMS: Problem[] = [
           O(n log n). In Java use{" "}
           <code>new PriorityQueue&lt;&gt;(Comparator.reverseOrder())</code>. In
           Python store every weight as a negative number, because{" "}
-          <code>heapq</code> is a min-heap only. This problem is a good place to
-          practise both max-heap tricks.
+          <code>heapq</code> is a min-heap only up to Python 3.13. This problem
+          is a good place to practise both max-heap tricks.
         </>
       ),
       zh: (
@@ -75,7 +75,7 @@ export const PROBLEMS: Problem[] = [
           全部石头入大根堆。每回合弹两次得到 x ≥ y;若 x ≠ y,把差值 x − y
           压回去,直到堆里剩下不超过一块。时间 O(n log n)。Java 用{" "}
           <code>new PriorityQueue&lt;&gt;(Comparator.reverseOrder())</code>;
-          Python 因为 <code>heapq</code> 只有小根堆,全程存负数。
+          Python 因为 <code>heapq</code> 到 3.13 为止只有小根堆,全程存负数。
           这题正好把两种「大根堆写法」练熟。
         </>
       ),
@@ -91,7 +91,7 @@ export const PROBLEMS: Problem[] = [
     ],
     hint: {
       en: "You want the k smallest distances, so the element to evict is the farthest one currently kept. Which kind of heap puts that element at the root?",
-      zh: "要留下距离最小的 k 个,那么该被踢掉的是「当前 k 个里最远的」—— 哪种堆能把它放在堆顶?",
+      zh: "要留下距离最小的 k 个,那么该被淘汰的是「当前 k 个里最远的」—— 哪种堆能把它放在堆顶?",
     },
     key: {
       en: (
@@ -185,8 +185,8 @@ export const PROBLEMS: Problem[] = [
           把每行的第一个元素以 (值, 行, 列) 的形式压进小根堆;弹 k − 1 次,
           每弹一次就把同一行的下一个元素补进来,第 k 次的堆顶就是答案。
           时间 O(k log n)。这是「合并 K 路」模板的直接复用。
-          面试加分项是值域二分:猜一个 mid,用 O(n) 数出 ≤ mid 的个数再收缩区间,
-          可做到 O(n log(max − min))。两种都能讲清才算吃透。
+          面试中更进一步的解法是值域二分:猜一个 mid,用 O(n) 数出 ≤ mid 的个数再收缩区间,
+          可做到 O(n log(max − min))。能讲清这两种解法,才算真正掌握。
         </>
       ),
     },
@@ -264,7 +264,7 @@ export const PROBLEMS: Problem[] = [
       ),
       zh: (
         <>
-          <b>对顶堆(本章压轴,务必讲透)。</b>大根堆 <code>small</code>{" "}
+          <b>对顶堆。</b>大根堆 <code>small</code>{" "}
           存较小的一半,堆顶就是左半的最大值;小根堆 <code>large</code>{" "}
           存较大的一半,堆顶就是右半的最小值。两条不变量:
           <code>small</code> 的所有元素 ≤ <code>large</code> 的所有元素;
@@ -351,8 +351,8 @@ export const QUIZ: QuizItem[] = [
       zh: "堆的承诺其实是相关的两条:堆顶是最小值,以及每一对父子有序。你漏掉了其中一条。",
     },
     extraHint: {
-      en: "Siblings are not constrained at all, and the array only satisfies the heap order, not full sorted order. Remove C or D.",
-      zh: "兄弟之间没有任何约束,底层数组也只满足「堆序」而不是「全序」—— 把 C 或 D 去掉。",
+      en: "Siblings are not constrained at all, and the array only satisfies the heap order, not full sorted order. Neither C nor D is guaranteed, so leave both unselected.",
+      zh: "兄弟之间没有任何约束,底层数组也只满足「堆序」而不是「全序」。C 和 D 都无法保证,两项都不应选。",
     },
     why: {
       en: "A heap maintains one rule: parent ≤ child. The root being the minimum follows from that rule. Siblings in any order and an unsorted array are both perfectly legal. Fewer promises means cheaper maintenance: O(log n) per update instead of O(n log n) for a full sort.",
@@ -447,7 +447,7 @@ export const QUIZ: QuizItem[] = [
       undefined,
       {
         en: "A max-heap of size k evicts the largest of the k it holds, so you would end up with the k smallest values. That direction solves the k smallest, not the k largest.",
-        zh: "容量 K 的大根堆每次踢掉的是「这 K 个里最大的」,最后剩下的是 K 个最小值 —— 方向反了。求前 K 小才用大根堆。",
+        zh: "容量 K 的大根堆每次淘汰的是「这 K 个里最大的」,最后剩下的是 K 个最小值 —— 方向反了。求前 K 小才用大根堆。",
       },
       {
         en: "This works, but every element goes into the heap: O(n) space and O(n + k log n) time. In a stream you cannot store everything, while the size-k heap needs only O(k) space.",
@@ -466,8 +466,8 @@ export const QUIZ: QuizItem[] = [
   {
     type: "choice",
     q: {
-      en: "Python's heapq is a min-heap only. What is the usual way to get a max-heap?",
-      zh: "Python 的 heapq 只有小根堆,想要大根堆的惯用技巧是?",
+      en: "Up to Python 3.13, heapq is a min-heap only. What is the usual way to get a max-heap there?",
+      zh: "到 Python 3.13 为止,heapq 只有小根堆。在这些版本里想要大根堆,惯用技巧是?",
     },
     opts: [
       {
