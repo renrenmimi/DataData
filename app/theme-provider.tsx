@@ -49,6 +49,26 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     if (current === "light" || current === "dark") set(current);
   }, []);
 
+  // Paper is light: print with the light palette whatever the screen shows,
+  // then put the reader's theme back
+  useEffect(() => {
+    const d = document.documentElement;
+    let onScreen: string | undefined;
+    const before = () => {
+      onScreen = d.dataset.theme;
+      d.dataset.theme = "light";
+    };
+    const after = () => {
+      if (onScreen) d.dataset.theme = onScreen;
+    };
+    window.addEventListener("beforeprint", before);
+    window.addEventListener("afterprint", after);
+    return () => {
+      window.removeEventListener("beforeprint", before);
+      window.removeEventListener("afterprint", after);
+    };
+  }, []);
+
   const toggleTheme = useCallback(() => {
     set((prev) => {
       const next: Theme = prev === "light" ? "dark" : "light";

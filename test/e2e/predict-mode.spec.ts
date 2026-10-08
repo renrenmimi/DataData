@@ -8,6 +8,7 @@
 // instead of silently picking the wrong option.
 
 import { expect, test, type Locator, type Page } from "@playwright/test";
+import { elementsPastViewport } from "./overflow";
 
 /** The array chapter's first walkthrough (LC 283) is a frame-based stepper. */
 const CHAPTER = "/array";
@@ -203,11 +204,9 @@ test.describe("(15) narrow layout", () => {
 
     const viewportWidth = page.viewportSize()!.width;
 
-    // The page itself must not gain a horizontal scrollbar.
-    const docOverflow = await page.evaluate(
-      () => document.documentElement.scrollWidth - window.innerWidth,
-    );
-    expect(docOverflow, "document should not scroll horizontally").toBeLessThanOrEqual(1);
+    // Nothing on the page is cut off at the right edge. (html and body clip
+    // overflow, so document.scrollWidth would always equal the viewport.)
+    expect(await elementsPastViewport(page)).toEqual([]);
 
     // The panel fits.
     const panelBox = await panel(page).boundingBox();
