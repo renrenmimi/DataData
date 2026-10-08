@@ -10,7 +10,7 @@
 //
 // Bilingual: every title, narration, button and figure label switches through <T> / useL().
 
-import { useState, type ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import { useStepper, StepControls } from "@/lib/stepper";
 import { useL, T } from "@/lib/i18n";
 
@@ -50,6 +50,7 @@ const START_ACC = (
 export function HashLab() {
   const L = useL();
   const [word, setWord] = useState("cat");
+  const inputRef = useRef<HTMLInputElement>(null);
   const [buckets, setBuckets] = useState<string[][]>(() =>
     Array.from({ length: B }, () => []),
   );
@@ -158,7 +159,7 @@ export function HashLab() {
         <T
           en={
             <>
-              💥 <b>Collision.</b> &quot;{w}&quot; and &quot;
+              <b>Collision.</b> &quot;{w}&quot; and &quot;
               {occupants.join(", ")}&quot; were sent to the same bucket {t}:
               different keys, same index. What the table does next is the subject
               of §03.
@@ -166,7 +167,7 @@ export function HashLab() {
           }
           zh={
             <>
-              💥 <b>冲突(collision)!</b>「{w}」和「{occupants.join("、")}
+              <b>冲突(collision)。</b>「{w}」和「{occupants.join("、")}
               」被分进了同一个 {t} 号桶 —— 不同的 key、相同的下标。
               接下来怎么办,就是 §03 的主题。
             </>
@@ -193,6 +194,8 @@ export function HashLab() {
     );
     await sleep(600);
     setBusy(false);
+    // Ready for the next word: typing replaces the one just hashed
+    if (document.activeElement === inputRef.current) inputRef.current?.select();
   };
 
   const reset = () => {
@@ -261,13 +264,18 @@ export function HashLab() {
         {msg}
       </div>
       <div className="viz-ctl">
+        {/* readOnly rather than disabled while animating: a disabled input
+            drops keyboard focus to <body> */}
         <input
+          ref={inputRef}
           className="hs-input"
           value={word}
           maxLength={6}
-          disabled={busy}
+          readOnly={busy}
           onChange={(e) => setWord(e.target.value)}
           onKeyDown={(e) => {
+            // Enter that confirms an IME composition is not a submit
+            if (e.nativeEvent.isComposing || e.keyCode === 229) return;
             if (e.key === "Enter") run();
           }}
           aria-label={L({ en: "Word to hash", zh: "要哈希的单词" })}
@@ -512,8 +520,10 @@ function buildProbeFrames(): ProbeFrame[] {
             into 0 and 1. One collision pushes an entry sideways, which makes the
             next collision more likely, which makes the run longer. This is
             called <b>clustering</b>. It is why open addressing is more sensitive
-            to the load factor than chaining, and why such tables usually grow at
-            around 0.5 to 0.7 rather than 0.75.
+            to the load factor than chaining, and why classic linear probing tables
+            usually grow at around 0.5 to 0.7 rather than 0.75. (Modern designs
+            such as SwissTable, behind Rust&apos;s HashMap, probe in groups and
+            allow up to 0.875.)
           </>
         }
         zh={
@@ -521,7 +531,7 @@ function buildProbeFrames(): ProbeFrame[] {
             4~7 号已经连成一片,而且绕过末尾一直接到 0、1 号。
             一次冲突把元素挤到旁边,让下一次冲突更容易发生,连片就越来越长 ——
             这叫<b>聚集(clustering)</b>。所以开放寻址比链地址法更怕负载因子,
-            通常压到 0.5~0.7 就要扩容,而不是 0.75。
+            经典线性探测通常压到 0.5~0.7 就要扩容,而不是 0.75(SwissTable 等现代实现分组探测,可到 0.875,Rust 的 HashMap 就是一例)。
           </>
         }
       />
@@ -634,12 +644,13 @@ export function CollisionLab() {
       <div className="viz-title">
         <T
           en="Collision lab — the same six words, two strategies"
-          zh="冲突解决实验室 —— 同一批单词,两种活法"
+          zh="冲突解决实验室 —— 同一批单词,两种策略"
         />
         <span className="seg" style={{ marginLeft: "auto" }}>
           <button
             type="button"
             className={`seg-btn${mode === "chain" ? " on" : ""}`}
+            aria-pressed={mode === "chain"}
             onClick={() => setMode("chain")}
           >
             <T en="Chaining" zh="链地址法" />
@@ -647,6 +658,7 @@ export function CollisionLab() {
           <button
             type="button"
             className={`seg-btn${mode === "probe" ? " on" : ""}`}
+            aria-pressed={mode === "probe"}
             onClick={() => setMode("probe")}
           >
             <T en="Linear probing" zh="线性探测" />

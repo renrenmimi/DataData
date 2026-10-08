@@ -125,7 +125,7 @@ const F1: ArrayFrame[] = [
         }
         zh={
           <>
-            i = 3,v = 7:需要 9 − 7 = <b>2</b>。查表:<b>有!</b>2 的下标是 1 →
+            i = 3,v = 7:需要 9 − 7 = <b>2</b>。查表:<b>有</b>,2 的下标是 1 →
             答案 [1, 3]。每个数只被处理一次:一次查 + 一次存,平均都是 O(1),
             整趟 <b>O(n)</b>。
           </>
@@ -456,7 +456,7 @@ const CHIPS = [
   { id: "langs", n: "05", label: { en: "Three languages", zh: "三语言对照" } },
   { id: "patterns", n: "06", label: { en: "Patterns", zh: "套路与精讲" } },
   { id: "problems", n: "07", label: { en: "Problem set", zh: "高频题单" } },
-  { id: "quiz", n: "08", label: { en: "Quiz", zh: "通关测验" } },
+  { id: "quiz", n: "08", label: { en: "Quiz", zh: "本章测验" } },
 ];
 
 export default function HashChapter() {
@@ -650,7 +650,8 @@ export default function HashChapter() {
               <p>
                 Python resolves a variable name in a namespace, and a namespace
                 is a dict. A browser cache finds a file by its URL. A database
-                index answers &quot;which rows hold this value&quot;. Redis is
+                joining two tables on an equal key builds a temporary hash table
+                (a hash join). Redis is
                 close to a hash table with a network interface. Wherever a name
                 leads directly to content, there is usually a hash table behind
                 it. One case is related but different: Git names each commit by
@@ -663,7 +664,7 @@ export default function HashChapter() {
             zh={
               <p>
                 Python 解析一个变量名,查的是命名空间,而命名空间就是 dict;
-                浏览器缓存按 URL 找文件;数据库索引回答「哪些行的这一列等于某个值」;
+                浏览器缓存按 URL 找文件;数据库按相等的键连接两张表时,会临时建一张哈希表(hash join);
                 Redis 几乎就是一张带网络接口的哈希表。凡是「用名字直达内容」的地方,
                 背后多半站着一张哈希表。有一个相关但不同的例子:Git
                 用内容的<b>密码学</b>哈希给每次提交命名 ——
@@ -1035,9 +1036,10 @@ export default function HashChapter() {
                   capacity doubles, that cost is spread over the insertions that
                   follow, so insertion is <b>O(1) amortized</b> rather than O(1)
                   every time. Why 0.75? Higher, and each bucket holds more
-                  entries on average, so the lists grow and the average lookup
-                  stops being constant. Lower, and many buckets stay empty and
-                  waste memory.
+                  entries on average, so every lookup makes more comparisons. It
+                  is still O(1) on average as long as the load factor stays below
+                  a fixed bound, but the constant grows. Lower, and many buckets
+                  stay empty and waste memory.
                 </p>
               </>
             }
@@ -1060,7 +1062,8 @@ export default function HashChapter() {
                   rehash 意味着某一次插入可能要花 O(n)。由于容量是翻倍的,
                   这份代价会摊到之后的插入上,所以插入是<b>均摊 O(1)</b>,
                   而不是每次都 O(1)。为什么是 0.75?再高,每个桶平均挂的元素更多,
-                  链更长,平均查找不再是常数;再低,大片桶空着浪费内存。
+                  每次查找要比较的次数变多 —— 只要负载因子有固定上限,平均仍是 O(1),
+                  只是常数变大、更慢;再低,大片桶空着浪费内存。
                 </p>
               </>
             }
@@ -1614,18 +1617,23 @@ public class MyHashMap<K, V> {
             note: {
               en: (
                 <>
-                  <b>What this toy version gives up:</b> it converts every key
-                  to a string before hashing, so two different objects become
-                  the same key. A real <code>Map</code> does not do that. It
-                  accepts any value as a key, compares object keys by identity,
-                  and iterates in insertion order.
+                  <b>What this toy version gives up:</b> it hashes{" "}
+                  <code>String(key)</code>, and every object turns into{" "}
+                  <code>&quot;[object Object]&quot;</code>, so all object keys
+                  land in one bucket and lookups among them degrade to O(n).
+                  (Keys are still compared with <code>===</code>, so two
+                  different objects stay two keys.) A real <code>Map</code>{" "}
+                  hashes objects by identity, accepts any value as a key, and
+                  iterates in insertion order.
                 </>
               ),
               zh: (
                 <>
-                  <b>这个玩具版放弃了什么:</b>它先把所有 key 转成字符串再哈希,
-                  于是两个不同的对象会变成同一个 key。真正的 <code>Map</code>{" "}
-                  不这样:任何值都能当 key,对象 key 按身份比较,
+                  <b>这个简化版放弃了什么:</b>它对 <code>String(key)</code> 计算哈希,
+                  而任何对象转成字符串都是 <code>&quot;[object Object]&quot;</code>,
+                  于是所有对象 key 都落进同一个桶,在它们之间查找会退化成 O(n)。
+                  (比较 key 时仍用 <code>===</code>,所以两个不同的对象依然是两个 key。)
+                  真正的 <code>Map</code>{" "}按身份对对象做哈希,任何值都能当 key,
                   遍历还保持插入顺序。
                 </>
               ),
@@ -1691,7 +1699,7 @@ public class MyHashMap<K, V> {
                 每种语言都内置了工业级的哈希表,而且都是两副面孔:
                 <strong>Map(字典)</strong>存键值对,<strong>Set(集合)</strong>
                 只存 key —— 它就是不带 value 的同一张哈希表,
-                所以「在不在」查得和查字典一样快。API 大同小异,坑各有各的:
+                所以「在不在」查得和查字典一样快。API 大同小异,陷阱各有不同:
               </p>
             }
           />
@@ -2267,7 +2275,7 @@ obj["1"];            // "a" —— key 被转成字符串,1 和 "1" 是同一个
         {/* —— Walkthrough A —— */}
         <div className="sec-head" style={{ marginTop: 44 }}>
           <span className="sec-index">
-            <T en="Deep dive A" zh="精讲 A" />
+            <T en="Walkthrough A" zh="精讲 A" />
           </span>
           <h3 className="sec-title" style={{ fontSize: 20 }}>
             <T en="LC 1 · Two Sum" zh="LC 1 · 两数之和" />
@@ -2427,7 +2435,7 @@ obj["1"];            // "a" —— key 被转成字符串,1 和 "1" 是同一个
         {/* —— Walkthrough B —— */}
         <div className="sec-head" style={{ marginTop: 44 }}>
           <span className="sec-index">
-            <T en="Deep dive B" zh="精讲 B" />
+            <T en="Walkthrough B" zh="精讲 B" />
           </span>
           <h3 className="sec-title" style={{ fontSize: 20 }}>
             <T en="LC 49 · Group Anagrams" zh="LC 49 · 字母异位词分组" />
@@ -2589,7 +2597,7 @@ class Solution:
         {/* —— Walkthrough C —— */}
         <div className="sec-head" style={{ marginTop: 44 }}>
           <span className="sec-index">
-            <T en="Deep dive C" zh="精讲 C" />
+            <T en="Walkthrough C" zh="精讲 C" />
           </span>
           <h3 className="sec-title" style={{ fontSize: 20 }}>
             <T
@@ -2793,14 +2801,14 @@ class Solution:
       <Section
         id="quiz"
         index="08"
-        title={{ en: "Quiz", zh: "通关测验" }}
+        title={{ en: "Chapter quiz", zh: "本章测验" }}
         desc={{
           en: "Eight questions. Get them all right to mark this chapter as complete.",
-          zh: "8 题全对,点亮本章绿灯",
+          zh: "8 题全部答对,即完成本章",
         }}
         badge={
           <span className="chip">
-            <T en="✎ Quiz" zh="✎ 通关测验" />
+            <T en="✎ Chapter quiz" zh="✎ 本章测验" />
           </span>
         }
       >
@@ -2882,7 +2890,7 @@ class Solution:
             ),
             zh: (
               <>
-                每种语言一个坑。Java:<b>重写 equals 就要重写 hashCode</b>,
+                每种语言各有一个陷阱。Java:<b>重写 equals 就要重写 hashCode</b>,
                 而且 key 放进表后不要再改。Python:可变对象不能当 key(list
                 不行,元素全可哈希的 tuple 可以),3.7 起 dict 保持插入序。
                 JavaScript:<b>用 Map,别用普通 Object</b> —— Object 的 key
