@@ -1588,20 +1588,43 @@ li code {
   border-color: color-mix(in oklab, var(--ok) 32%, transparent);
 }
 
+/* The row holds two sibling buttons: the checkbox and .prob-toggle. The
+   toggle carries the vertical padding, so the whole row outside the checkbox
+   still expands the problem on click. */
 .prob-head {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px 16px;
-  cursor: pointer;
-  user-select: none;
+  padding-left: 16px;
 }
 
 .prob-head:hover {
   background: var(--panel-2);
 }
 
+.prob-toggle {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px 12px 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* .prob clips its overflow, so draw the focus ring inside the row */
+.prob-toggle:focus-visible {
+  outline-offset: -2px;
+}
+
 .prob-check {
+  position: relative;
   flex: 0 0 20px;
   width: 20px;
   height: 20px;
@@ -1617,6 +1640,14 @@ li code {
   font-size: 12px;
 }
 
+/* The box stays 20px, but the tap target grows to 34px (WCAG 2.5.8 asks for
+   at least 24px); the extra 7px falls inside the row padding and the gap */
+.prob-check::after {
+  content: "";
+  position: absolute;
+  inset: -7px;
+}
+
 .prob.done .prob-check {
   background: var(--ok);
   border-color: var(--ok);
@@ -1630,15 +1661,24 @@ li code {
   flex: 0 0 auto;
 }
 
+/* Up to two lines in the list; the full title once the problem is open */
 .prob-title {
   font-size: 14px;
   font-weight: 600;
   color: var(--text);
   flex: 1;
   min-width: 0;
-  white-space: nowrap;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
   overflow: hidden;
-  text-overflow: ellipsis;
+  overflow-wrap: anywhere;
+}
+
+.prob.open .prob-title {
+  -webkit-line-clamp: unset;
+  line-clamp: unset;
 }
 
 .prob.done .prob-title {
