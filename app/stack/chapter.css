@@ -225,6 +225,19 @@
   font-size: 14px;
 }
 
+/* Six 50px columns (320px) are wider than the card on a 360px phone */
+@media (max-width: 420px) {
+  .stk-figptrs,
+  .stk-figcells {
+    grid-template-columns: repeat(6, 40px);
+  }
+  .stk-figcells .cell {
+    width: 36px;
+    height: 36px;
+    font-size: 13px;
+  }
+}
+
 .stk-figlist {
   display: flex;
   align-items: flex-end;

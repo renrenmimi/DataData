@@ -437,7 +437,7 @@ export const QUIZ: QuizItem[] = [
     ],
     why: {
       en: "The test is the one from the array chapter: does this operation move other elements? Appending at the end moves nothing, so an array-backed stack puts the top at the end. A linked-list-backed stack does the opposite and puts the top at the head node, because inserting and deleting at the head is the O(1) end there.",
-      zh: "判断标准还是数组章那句话:这个操作要不要移动其他元素?尾部操作谁也不惊动,所以数组栈的栈顶在尾部。链表栈正好相反,栈顶是头节点 —— 因为链表只有头插头删是 O(1)。",
+      zh: "判断标准还是数组章那句话:这个操作要不要移动其他元素?尾部操作谁也不惊动,所以数组栈的栈顶在尾部。链表栈正好相反,栈顶是头节点 —— 因为单链表头部的插入和删除都是 O(1)。",
     },
   },
   {
@@ -527,7 +527,7 @@ export const QUIZ: QuizItem[] = [
     type: "choice",
     q: {
       en: "Why is java.util.Stack not recommended, in interviews or in production code?",
-      zh: "为什么无论刷题还是工程里,都不建议用 java.util.Stack?",
+      zh: "为什么无论做题还是工程中,都不建议用 java.util.Stack?",
     },
     opts: [
       {

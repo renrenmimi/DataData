@@ -170,7 +170,7 @@ export function StackLab() {
           }
           zh={
             <>
-              栈满(容量 {CAPACITY})!定长数组实现会直接拒绝;
+              栈满(容量 {CAPACITY})。定长数组实现会直接拒绝;
               动态数组实现会先扩容到两倍、复制元素,再收下它 ——
               这次复制正是 push 只能算「均摊 O(1)」而不是最坏 O(1) 的原因。
             </>
@@ -216,7 +216,7 @@ export function StackLab() {
           }
           zh={
             <>
-              ⚠ 空栈 pop!Java(ArrayDeque)抛 NoSuchElementException、Python 抛
+              ⚠ 空栈 pop:Java(ArrayDeque)抛 NoSuchElementException、Python 抛
               IndexError、JS 不报错直接返回 undefined —— 写任何栈代码前,先想好这个边界。
             </>
           }
@@ -285,8 +285,8 @@ export function StackLab() {
     <div className="viz">
       <div className="viz-title">
         <T
-          en="StackLab — push a pile of plates yourself"
-          zh="StackLab —— 亲手压一摞盘子"
+          en="Stack lab: push a pile of plates yourself"
+          zh="栈实验室 —— 亲手压一摞盘子"
         />
       </div>
       <div className="viz-stage">
@@ -418,8 +418,8 @@ const CS_FRAMES: CSFrame[] = [
       {
         fn: "g(3)",
         note: {
-          en: "local y = 3 · return address in f",
-          zh: "局部变量 y=3 · 返回地址 → f",
+          en: "parameter y = 3 · return address in f",
+          zh: "参数 y=3 · 返回地址 → f",
         },
       },
     ],
@@ -538,7 +538,7 @@ const CS_FRAMES: CSFrame[] = [
             再看一种情况:递归忘了写终止条件,栈帧不断堆积 ——
             调用栈的地盘(通常 1~8 MB)几毫秒就被填满,程序崩溃。这就是
             <b>栈溢出</b>:Java 的 StackOverflowError、Python 的 RecursionError。
-            那个著名的程序员问答网站 Stack Overflow,名字就来自它。
+            程序员问答网站 Stack Overflow 的名字就来自它。
           </>
         }
       />
@@ -555,8 +555,8 @@ export function CallStackDemo() {
     <div className="viz">
       <div className="viz-title">
         <T
-          en="CallStackDemo — the call stack, frame by frame"
-          zh="CallStackDemo —— 函数调用栈逐帧"
+          en="Call stack demo: the program above, frame by frame"
+          zh="调用栈演示 —— 上面这段程序的逐帧执行"
         />
       </div>
       <div className="viz-stage">
@@ -564,7 +564,7 @@ export function CallStackDemo() {
           <div className="stk-cs-col">
             {f.boom && (
               <>
-                <div className="stk-cframe boom">💥 StackOverflowError</div>
+                <div className="stk-cframe boom">StackOverflowError</div>
                 <div className="stk-cframe ghosty">
                   <b>f(1)</b>
                   <span>
