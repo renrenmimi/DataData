@@ -67,10 +67,8 @@ const A208_FRAMES: TStepFrame[] = [
         }
         zh={
           <>
-            insert(<b>&quot;app&quot;</b>):从 root 出发。a、p、p 都还不存在,
-            于是每个字母新建一个节点连上边。走到最后一个 p,把它的{" "}
-            <b>isEnd = true</b> —— 只有这个标记能说明「app 是一个单词」。
-            图中 l、e 两个节点是淡的,它们在下一步才出现。
+            insert(<b>&quot;app&quot;</b>):从 root 出发。a、p、p 都还不存在,于是每个字母新建一个节点连上边。走到最后一个 p,把它的{" "}
+            <b>isEnd = true</b> —— 只有这个标记能说明「app 是一个单词」。图中 l、e 两个节点是淡的,它们在下一步才出现。
           </>
         }
       />
@@ -91,8 +89,7 @@ const A208_FRAMES: TStepFrame[] = [
         zh={
           <>
             insert(<b>&quot;apple&quot;</b>):前三个字母 a-p-p{" "}
-            <b>已经存在,直接沿用</b> —— 相同的开头只存一份。只新建 l、e 两个节点,
-            末节点 e 标 isEnd = true。
+            <b>已经存在,直接沿用</b> —— 相同的开头只存一份。只新建 l、e 两个节点,末节点 e 标 isEnd = true。
           </>
         }
       />
@@ -138,8 +135,7 @@ const A208_FRAMES: TStepFrame[] = [
         zh={
           <>
             search(<b>&quot;ap&quot;</b>):路径走得通,但停下的节点{" "}
-            <b>isEnd = false</b> —— ap 只是别的词的开头,不是被插入过的单词。
-            所以 <b>search 返回 false</b>,而 startsWith(&quot;ap&quot;) 返回{" "}
+            <b>isEnd = false</b> —— ap 只是别的词的开头,不是被插入过的单词。所以 <b>search 返回 false</b>,而 startsWith(&quot;ap&quot;) 返回{" "}
             <b>true</b>。一个标记之差,分开了「精确匹配」和「前缀匹配」。
           </>
         }
@@ -182,8 +178,7 @@ const A208_FRAMES: TStepFrame[] = [
         zh={
           <>
             search(<b>&quot;banana&quot;</b>):root 的 children 里没有
-            &apos;b&apos; 这条边,第一个字母就断路,<b>立即返回 false</b>,
-            只花了 1 步。树里存一百万个词,这次查询也还是 1 步。
+            &apos;b&apos; 这条边,第一个字母就断路,<b>立即返回 false</b>,只花了 1 步。树里存一百万个词,这次查询也还是 1 步。
           </>
         }
       />
@@ -233,8 +228,7 @@ const A211_FRAMES: TStepFrame[] = [
         zh={
           <>
             search(<b>&quot;.ad&quot;</b>):第 1 个字符是通配符{" "}
-            <b>&apos;.&apos;</b>,能匹配任意字母。这一步不知道该走哪条边,
-            于是 <b>root 底下的 b、d、m 三条边都要试</b> —— DFS 在这里第一次分叉。
+            <b>&apos;.&apos;</b>,能匹配任意字母。这一步不知道该走哪条边,于是 <b>root 底下的 b、d、m 三条边都要试</b> —— DFS 在这里第一次分叉。
           </>
         }
       />
@@ -255,8 +249,7 @@ const A211_FRAMES: TStepFrame[] = [
         zh={
           <>
             第 2 个字符是普通的 <b>&apos;a&apos;</b>:三条分支各自沿自己的 a
-            边下沉一层,分别到达 bad、dad、mad 路径上的 a 节点。
-            普通字符不分叉,只走对应的那一条边。
+            边下沉一层,分别到达 bad、dad、mad 路径上的 a 节点。普通字符不分叉,只走对应的那一条边。
           </>
         }
       />
@@ -280,10 +273,7 @@ const A211_FRAMES: TStepFrame[] = [
         zh={
           <>
             第 3 个字符 <b>&apos;d&apos;</b>:三条路都停在 <b>isEnd = true</b>{" "}
-            的节点上,所以 &quot;.ad&quot; 匹配 <b>bad、dad、mad</b>。
-            真实的 search 只要第一条分支成功就返回 true,这里把三条都画出来,
-            是为了看清通配符能碰到哪些词。&apos;.&apos; 的代价,
-            就是当前节点的每个 child 都得试一遍。
+            的节点上,所以 &quot;.ad&quot; 匹配 <b>bad、dad、mad</b>。真实的 search 只要第一条分支成功就返回 true,这里把三条都画出来,是为了看清通配符能碰到哪些词。&apos;.&apos; 的代价,就是当前节点的每个 child 都得试一遍。
           </>
         }
       />
@@ -334,9 +324,7 @@ export default function TrieChapter() {
           ),
           zh: (
             <>
-              Trie 把一组单词存成一棵树:<strong>从根走下来的路径拼出单词</strong>,
-              开头相同的词因此共用同一段节点,每一段相同的开头只存一份。
-              它花掉的是内存,换来的是哈希表答不了的一个问题:
+              Trie 把一组单词存成一棵树:<strong>从根走下来的路径拼出单词</strong>,开头相同的词因此共用同一段节点,每一段相同的开头只存一份。它花掉的是内存,换来的是哈希表答不了的一个问题:
               <strong>哪些已存的词以这段开头?</strong>
             </>
           ),
@@ -397,13 +385,10 @@ export default function TrieChapter() {
                 </p>
                 <p>
                   第 6 章的<strong>哈希表</strong>是为精确查找而生的:判断{" "}
-                  <code>cat</code> 在不在词典里,它把整个单词算成一个数,
-                  直接跳到那个槽位。就「已存词数」而言,这是平均 O(1) ——
-                  尽管它仍要读完整个单词才能算出哈希。可正是这次计算,
-                  让前缀查询没了指望:<code>cat</code> 和 <code>car</code>{" "}
+                  <code>cat</code> 在不在词典里,它把整个单词算成一个数,直接跳到那个槽位。就「已存词数」而言,这是平均 O(1) ——
+                  尽管它仍要读完整个单词才能算出哈希。可正是这次计算,让前缀查询没了指望:<code>cat</code> 和 <code>car</code>{" "}
                   算出的哈希值毫不相干,表里
-                  <strong>没有任何东西记得它俩共享 ca 这个开头</strong>。
-                  想列出以 ca 开头的词,它只能读遍全部 N 个词、逐个比对开头 ——
+                  <strong>没有任何东西记得它俩共享 ca 这个开头</strong>。想列出以 ca 开头的词,它只能读遍全部 N 个词、逐个比对开头 ——
                   O(N·L)。词典越大越慢。
                 </p>
               </>
@@ -454,11 +439,7 @@ export default function TrieChapter() {
             }
             zh={
               <p>
-                主意很朴素:把 <code>cat、car、card</code> 三个词竖着写,
-                前两个字母 <code>ca</code> 一模一样 —— 那就<strong>只存一次</strong>,
-                在 a 之后再分叉。一万个单词这么存下来,就长成了一棵树。
-                从根走到任意节点,一路读到的字符<strong>就是一个前缀</strong>;
-                想找所有以 <code>ca</code> 开头的词,走到 ca 那个节点,
+                主意很朴素:把 <code>cat、car、card</code> 三个词竖着写,前两个字母 <code>ca</code> 一模一样 —— 那就<strong>只存一次</strong>,在 a 之后再分叉。一万个单词这么存下来,就长成了一棵树。从根走到任意节点,一路读到的字符<strong>就是一个前缀</strong>;想找所有以 <code>ca</code> 开头的词,走到 ca 那个节点,
                 <strong>它下面整棵子树就是答案</strong>,别的词一眼都不用看。
               </p>
             }
@@ -482,8 +463,7 @@ export default function TrieChapter() {
             zh: (
               <>
                 由 car、card、cat、dog 建成的 Trie。
-                <b>car / card / cat 共享 c-a 这个开头</b>(只存一份),
-                到 a 之后才分叉;dog 开头不同,自成一支。绿色双圈 =
+                <b>car / card / cat 共享 c-a 这个开头</b>(只存一份),到 a 之后才分叉;dog 开头不同,自成一支。绿色双圈 =
                 有单词在此结束(isEnd)。注意
                 <b>car 结束的那个 r 节点还带着孩子</b>(通向 card)—— §02 会用到这个细节。
               </>
@@ -513,8 +493,7 @@ export default function TrieChapter() {
               zh={
                 <p>
                   每条边上贴着一个字符,从根读到任意节点,
-                  <b>拼出来就是一个前缀</b>。前缀查询在别的结构里很别扭,
-                  在 Trie 里就是「顺着路往下走」。
+                  <b>拼出来就是一个前缀</b>。前缀查询在别的结构里很别扭,在 Trie 里就是「顺着路往下走」。
                 </p>
               }
             />
@@ -537,8 +516,7 @@ export default function TrieChapter() {
               }
               zh={
                 <p>
-                  开头相同的词共用同一批节点。词与词在开头重叠得越多(自然语言单词、
-                  URL、文件路径),共享的节点就越多。它的另一个名字
+                  开头相同的词共用同一批节点。词与词在开头重叠得越多(自然语言单词、URL、文件路径),共享的节点就越多。它的另一个名字
                   <b>「字典树 / 前缀树」</b>就是这么来的。
                 </p>
               }
@@ -564,9 +542,7 @@ export default function TrieChapter() {
               }
               zh={
                 <p>
-                  插入或查询一个词的代价 = <b>这个词的长度 L</b>。
-                  树里已经有 10 个词还是 1000 万个词,<b>不出现在这个代价里</b>。
-                  §03 讲清楚为什么。
+                  插入或查询一个词的代价 = <b>这个词的长度 L</b>。树里已经有 10 个词还是 1000 万个词,<b>不出现在这个代价里</b>。§03 讲清楚为什么。
                 </p>
               }
             />
@@ -595,9 +571,7 @@ export default function TrieChapter() {
             zh={
               <p>
                 Trie 一词由 Edward Fredkin 在 1960 年提出,取自单词 re<b>trie</b>
-                val(检索)的中间四个字母。于是有点尴尬:按词源应该读作
-                “tree”,可 tree 已经是另一种结构的名字了,所以多数人读它作
-                “try”。两种读法你都会听到,不必纠结;它的中文名是「前缀树 / 字典树」。
+                val(检索)的中间四个字母。于是有点尴尬:按词源应该读作“tree”,可 tree 已经是另一种结构的名字了,所以多数人读它作“try”。两种读法你都会听到,不必纠结;它的中文名是「前缀树 / 字典树」。
               </p>
             }
           />
@@ -650,12 +624,8 @@ export default function TrieChapter() {
                 }
                 zh={
                   <>
-                    <strong>children(孩子表)</strong>:从「字符」到「子节点」的映射。
-                    二叉树固定两个孩子,Trie 的孩子数由字符集决定:
-                    只处理小写英文字母就是最多 26 个,可以用长度 26 的数组
-                    <code>TrieNode[26]</code>(下标 = 字母 − &apos;a&apos;),
-                    也可以用哈希表 <code>Map&lt;Character, Node&gt;</code>。
-                    两者的取舍见 §03。
+                    <strong>children(孩子表)</strong>:从「字符」到「子节点」的映射。二叉树固定两个孩子,Trie 的孩子数由字符集决定:只处理小写英文字母就是最多 26 个,可以用长度 26 的数组
+                    <code>TrieNode[26]</code>(下标 = 字母 − &apos;a&apos;),也可以用哈希表 <code>Map&lt;Character, Node&gt;</code>。两者的取舍见 §03。
                   </>
                 }
               />
@@ -692,11 +662,7 @@ export default function TrieChapter() {
             }
             zh={
               <p>
-                有一点容易看漏:<strong>字符并不存在节点里</strong>,
-                它贴在边上 —— 等价地说,一个节点是由「父亲用哪个字符找到它」来标识的。
-                所以<strong>拼出 key 的是路径,不是节点</strong>。
-                根节点不代表任何字符,它是所有词共同的起点,一个空前缀。
-                从根往下走 k 条边,读到的 k 个字符,就是一个长度为 k 的前缀。
+                有一点容易看漏:<strong>字符并不存在节点里</strong>,它贴在边上 —— 等价地说,一个节点是由「父亲用哪个字符找到它」来标识的。所以<strong>拼出 key 的是路径,不是节点</strong>。根节点不代表任何字符,它是所有词共同的起点,一个空前缀。从根往下走 k 条边,读到的 k 个字符,就是一个长度为 k 的前缀。
               </p>
             }
           />
@@ -731,9 +697,7 @@ export default function TrieChapter() {
                 (继续接 t-l-e)。现在问:<code>cat</code> 是一个词吗?没有 isEnd
                 就<b>无从回答</b>。「这个节点有没有孩子」帮不上忙 ——
                 它确实有孩子(为了 cattle),可 cat 确确实实是个词;反过来,
-                <code>catt</code> 也走得通、也有孩子,却<b>不是</b>词。
-                节点本身并不存词,所以这个答案没有别的地方可放,
-                只能是节点上的一个标记 <b>isEnd = true</b>:有词在此结束。
+                <code>catt</code> 也走得通、也有孩子,却<b>不是</b>词。节点本身并不存词,所以这个答案没有别的地方可放,只能是节点上的一个标记 <b>isEnd = true</b>:有词在此结束。
               </p>
             }
           />
@@ -754,9 +718,7 @@ export default function TrieChapter() {
             ),
             zh: (
               <>
-                cat 与 cattle 共享 c-a-t。高亮的 <b>t 节点 isEnd = true</b>,
-                说明 cat 是一个已存的词,而它<b>同时还有孩子</b>继续通向 cattle。
-                没有这个标记,就分不清「一个已存的词」和「只是路过的节点」。
+                cat 与 cattle 共享 c-a-t。高亮的 <b>t 节点 isEnd = true</b>,说明 cat 是一个已存的词,而它<b>同时还有孩子</b>继续通向 cattle。没有这个标记,就分不清「一个已存的词」和「只是路过的节点」。
               </>
             ),
           }}
@@ -776,8 +738,7 @@ export default function TrieChapter() {
             }
             zh={
               <p>
-                下面这个实验室里已经住着 5 个词。插入新词,看路径哪一段被复用;
-                查询单词或前缀,看路径怎么逐节点点亮。有三种结局值得亲手制造一遍:
+                下面这个实验室里已经住着 5 个词。插入新词,看路径哪一段被复用;查询单词或前缀,看路径怎么逐节点点亮。有三种结局值得亲手制造一遍:
                 <b>命中一个已存的词</b>、<b>是前缀但不是词</b>、
                 <b>中途断路</b>。
               </p>
@@ -810,15 +771,11 @@ export default function TrieChapter() {
             }
             zh={
               <p>
-                Trie 藏在你每天用的东西里:搜索引擎和输入法的<b>自动补全</b>、
-                路由器转发 IP 包时的<b>最长前缀匹配</b>、拼写检查。
-                数据库和文件系统里用的多是它的压缩形态 —— <b>基数树 Radix Tree</b>
+                Trie 藏在你每天用的东西里:搜索引擎和输入法的<b>自动补全</b>、路由器转发 IP 包时的<b>最长前缀匹配</b>、拼写检查。数据库和文件系统里用的多是它的压缩形态 —— <b>基数树 Radix Tree</b>
                 (也叫 Patricia trie):
-                <b>把「只有一个孩子的节点链」合并成一条边</b>,一条边上带多个字符,
-                省掉大部分空转节点。代价是插入更复杂 ——
+                <b>把「只有一个孩子的节点链」合并成一条边</b>,一条边上带多个字符,省掉大部分空转节点。代价是插入更复杂 ——
                 加一个词可能需要把已有的边一分为二。Redis 用基数树存 stream ID,
-                Linux 内核也曾用它做页缓存索引。朴素 Trie 想明白了,
-                这些不过是它的压缩版。
+                Linux 内核也曾用它做页缓存索引。朴素 Trie 想明白了,这些不过是它的压缩版。
               </p>
             }
           />
@@ -859,8 +816,7 @@ export default function TrieChapter() {
             zh={
               <p>
                 Trie 的三个操作骨架完全一样:
-                <strong>从根出发,拿着输入串的字符一个一个往下走</strong>。
-                区别只在两处:路上缺边怎么办,以及到达终点后检查什么。
+                <strong>从根出发,拿着输入串的字符一个一个往下走</strong>。区别只在两处:路上缺边怎么办,以及到达终点后检查什么。
               </p>
             }
           />
@@ -1048,12 +1004,9 @@ export default function TrieChapter() {
             }
             zh={
               <p>
-                每一步只是一次 child 查找(数组下标,或平均 O(1) 的哈希表查找)。
-                走多少步?L 步 —— <b>你传进来的字符串有多长</b>。
-                词典里是 10 个词还是 5000 万个词,查 <code>apple</code>{" "}
+                每一步只是一次 child 查找(数组下标,或平均 O(1) 的哈希表查找)。走多少步?L 步 —— <b>你传进来的字符串有多长</b>。词典里是 10 个词还是 5000 万个词,查 <code>apple</code>{" "}
                 永远是 5 步。哈希表做一次精确查找也是 O(L)(它要读完整个 key
-                才能算哈希),所以 Trie <b>在精确匹配上并不更快</b>。
-                Trie 多出来的是<b>前缀查询</b>,选它就是为了这个。
+                才能算哈希),所以 Trie <b>在精确匹配上并不更快</b>。Trie 多出来的是<b>前缀查询</b>,选它就是为了这个。
               </p>
             }
           />
@@ -1077,9 +1030,7 @@ export default function TrieChapter() {
             }
             zh={
               <p>
-                这份速度是拿<strong>内存</strong>换的:每条路径上的每个字符都要一个节点,
-                而每个节点都得带一张 children 表。这张表怎么存,
-                是 Trie 唯一真正的设计抉择:
+                这份速度是拿<strong>内存</strong>换的:每条路径上的每个字符都要一个节点,而每个节点都得带一张 children 表。这张表怎么存,是 Trie 唯一真正的设计抉择:
               </p>
             }
           />
@@ -1107,12 +1058,9 @@ export default function TrieChapter() {
               }
               zh={
                 <p>
-                  下标 = <code>字符 − &apos;a&apos;</code>,一次数组读取就拿到孩子,
-                  常数最小。代价有两个:
-                  <b>每个节点无论用不用,都占着 26 个指针</b>,
-                  词稀疏时浪费惊人;而且 26 只覆盖小写 ASCII 字母 ——
-                  输入里有数字、大写字母或非 ASCII 文本,就得换一张表。
-                  适合明确「只有小写字母」的做题场景。
+                  下标 = <code>字符 − &apos;a&apos;</code>,一次数组读取就拿到孩子,常数最小。代价有两个:
+                  <b>每个节点无论用不用,都占着 26 个指针</b>,词稀疏时浪费惊人;而且 26 只覆盖小写 ASCII 字母 ——
+                  输入里有数字、大写字母或非 ASCII 文本,就得换一张表。适合明确「只有小写字母」的做题场景。
                 </p>
               }
             />
@@ -1136,9 +1084,7 @@ export default function TrieChapter() {
               }
               zh={
                 <p>
-                  <b>有几个孩子就存几个</b>,稀疏数据省下大量内存;
-                  而且任何字符都能当键:大写、数字、中文、任意非 ASCII 文本都行。
-                  代价是单次查找的常数比数组下标略大。面对真实输入,它是更稳的默认选择。
+                  <b>有几个孩子就存几个</b>,稀疏数据省下大量内存;而且任何字符都能当键:大写、数字、中文、任意非 ASCII 文本都行。代价是单次查找的常数比数组下标略大。面对真实输入,它是更稳的默认选择。
                 </p>
               }
             />
@@ -1325,9 +1271,7 @@ export default function TrieChapter() {
             zh={
               <p>
                 下面这段代码,
-                <strong>逐字就是 LeetCode 208「实现 Trie」的满分答案</strong>。
-                三个方法共用一个私有小工具 <code>find</code>:沿路径走,
-                缺边就返回空。<code>search</code> 和 <code>startsWith</code>{" "}
+                <strong>逐字就是 LeetCode 208「实现 Trie」的满分答案</strong>。三个方法共用一个私有小工具 <code>find</code>:沿路径走,缺边就返回空。<code>search</code> 和 <code>startsWith</code>{" "}
                 都调它,只在最后一步分道扬镳。对着注释读一遍,再盖住默写一遍{" "}
                 <code>insert</code>,它就是你的了。
               </p>
@@ -1430,8 +1374,7 @@ class Trie {
                 <>
                   <b>26 槽数组版:</b>把 <code>Map&lt;Character, Node&gt;</code>{" "}
                   换成 <code>Node[] children = new Node[26]</code>,用{" "}
-                  <code>c - &apos;a&apos;</code> 当下标。更快、常数更小,
-                  但每个节点从此固定占 26 个指针,而且只在输入为小写 ASCII 时成立。
+                  <code>c - &apos;a&apos;</code> 当下标。更快、常数更小,但每个节点从此固定占 26 个指针,而且只在输入为小写 ASCII 时成立。
                 </>
               ),
             },
@@ -1602,8 +1545,7 @@ class Trie {
               zh: (
                 <>
                   <b>易错点:</b>用普通对象 <code>{"{}"}</code> 存 children
-                  也能跑,但键若是 <code>__proto__</code> 之类,
-                  取到的会是原型而不是子节点。建议用{" "}
+                  也能跑,但键若是 <code>__proto__</code> 之类,取到的会是原型而不是子节点。建议用{" "}
                   <code>Object.create(null)</code> 或 <code>Map</code>。
                   <b>26 槽数组版:</b>
                   <code>new Array(26)</code> + <code>c.charCodeAt(0) - 97</code>。
@@ -1679,10 +1621,7 @@ class Trie {
               <p>
                 和数组、哈希表不同,<strong>三种语言的标准库里都没有 Trie</strong>
                 —— 面试要用就得手写(§04)。所以这一节比的不是 API,而是
-                <strong>同一个节点的 children 用什么容器装</strong>,
-                以及各自要注意什么。抉择还是那两条:<b>定长数组</b>(最快、
-                费内存、只认小写 ASCII)vs <b>哈希表</b>(稀疏数据省内存、
-                任意字符集)。
+                <strong>同一个节点的 children 用什么容器装</strong>,以及各自要注意什么。抉择还是那两条:<b>定长数组</b>(最快、费内存、只认小写 ASCII)vs <b>哈希表</b>(稀疏数据省内存、任意字符集)。
               </p>
             }
           />
@@ -1829,14 +1768,10 @@ class Trie {
             zh={
               <p>
                 「共享前缀 → 省空间」这个直觉,要看数据。词与词
-                <b>在开头重叠得多</b>(自然语言、URL、文件路径、电话号码),
-                折叠公共开头确实省;可若词很短、彼此几乎没有共同开头,
-                Trie 比直接存字符串<b>更费</b>:每个字符一个节点,
-                每个节点还带一张 children 表(数组版一律 26 个指针)。
+                <b>在开头重叠得多</b>(自然语言、URL、文件路径、电话号码),折叠公共开头确实省;可若词很短、彼此几乎没有共同开头,
+                Trie 比直接存字符串<b>更费</b>:每个字符一个节点,每个节点还带一张 children 表(数组版一律 26 个指针)。
                 <b>指针开销很容易超过省下的字符。</b>所以工程里常用它的压缩形态 ——
-                <b>基数树 Radix Tree</b> 或<b>双数组 Trie</b>:
-                把「只有一个孩子的节点链」合并成一条边,代价是插入更复杂。
-                结论:选 Trie 是为了前缀查询,不是为了省内存。
+                <b>基数树 Radix Tree</b> 或<b>双数组 Trie</b>:把「只有一个孩子的节点链」合并成一条边,代价是插入更复杂。结论:选 Trie 是为了前缀查询,不是为了省内存。
               </p>
             }
           />
@@ -1879,9 +1814,7 @@ class Trie {
               <p>
                 Trie 的题目几乎都是「208 模板 + 一点新东西」。<strong>A</strong>{" "}
                 把模板本身逐帧走一遍:插入怎么复用前缀,查询有哪三种结局。
-                <strong>B</strong> 给查询加一个通配符,逼着「走」在节点处分叉,
-                变成 DFS。<strong>C</strong> 把 Trie 和网格回溯结合,
-                用它<strong>提前砍掉分支</strong> —— 这是 Trie 最有价值的用法。
+                <strong>B</strong> 给查询加一个通配符,逼着「走」在节点处分叉,变成 DFS。<strong>C</strong> 把 Trie 和网格回溯结合,用它<strong>提前砍掉分支</strong> —— 这是 Trie 最有价值的用法。
               </p>
             }
           />
@@ -1924,13 +1857,10 @@ class Trie {
             zh={
               <p>
                 <b>题意:</b>实现 insert / search / startsWith 三个方法。
-                <b> 暴力:</b>用一个 <code>HashSet&lt;String&gt;</code> 存所有词 ——
+                <b>暴力:</b>用一个 <code>HashSet&lt;String&gt;</code> 存所有词 ——
                 search 确实 O(L),但 startsWith 只能读遍集合里每个词、逐个比对开头,
                 <b>O(N·L)</b>,词典一大就无法接受。
-                <b> 正解:</b>就是 §04 那份 Trie。代码不再重复,
-                我们把它<strong>跑一遍</strong>:先插入 <code>app</code>,
-                再插入 <code>apple</code>(看前缀怎么复用),然后做四次查询,
-                把三种结局都看一遍。
+                <b>正解:</b>就是 §04 那份 Trie。代码不再重复,我们把它<strong>跑一遍</strong>:先插入 <code>app</code>,再插入 <code>apple</code>(看前缀怎么复用),然后做四次查询,把三种结局都看一遍。
               </p>
             }
           />
@@ -1976,8 +1906,7 @@ class Trie {
                 × 一张 children 表的大小。追问预备:①{" "}
                 <b>「startsWith 和 search 差在哪?」</b>—— 差一个{" "}
                 <code>isEnd</code> 判断。②<b>「怎么删除一个词?」</b>——
-                走到末节点清掉 isEnd;若要回收内存,自底向上删掉
-                「没有孩子、也不是任何词尾」的节点。③
+                走到末节点清掉 isEnd;若要回收内存,自底向上删掉「没有孩子、也不是任何词尾」的节点。③
                 <b>「怎么统计某前缀下有几个词?」</b>—— 在节点上存一个计数,
                 insert 时沿路每个节点 +1(这就是 LC 677 的思路)。
               </p>
@@ -2026,14 +1955,11 @@ class Trie {
                 <b>题意:</b>设计一个结构支持 addWord,以及 search —— search
                 的字符串里可能出现 <code>&apos;.&apos;</code>,它
                 <strong>匹配任意一个字母</strong>。
-                <b> 卡点:</b>普通字符告诉你该走哪条边,而{" "}
+                <b>卡点:</b>普通字符告诉你该走哪条边,而{" "}
                 <code>&apos;.&apos;</code>
-                <strong>不告诉你</strong>,于是<strong>每条子边都得试</strong>。
-                「对所有分支各递归一次」的循环,就是带回溯的 DFS。
-                <b> 正解:</b>addWord 照搬 LC 208;search 改成递归:
-                普通字符只钻对应的那个 child,遇到 <code>&apos;.&apos;</code>{" "}
-                就遍历当前节点的<strong>所有</strong> child 分别递归,
-                任意一条成功就返回 true。
+                <strong>不告诉你</strong>,于是<strong>每条子边都得试</strong>。「对所有分支各递归一次」的循环,就是带回溯的 DFS。
+                <b>正解:</b>addWord 照搬 LC 208;search 改成递归:普通字符只钻对应的那个 child,遇到 <code>&apos;.&apos;</code>{" "}
+                就遍历当前节点的<strong>所有</strong> child 分别递归,任意一条成功就返回 true。
               </p>
             }
           />
@@ -2127,9 +2053,7 @@ class WordDictionary {
               ),
               zh: (
                 <>
-                  <b>复杂度:</b>addWord O(L);没有通配符时 search 也是 O(L)。
-                  开头是一串 &apos;.&apos; 的模式会朝 <b>O(26^L)</b> 扇出,
-                  但搜索访问的节点数不会超过整棵树的节点数,而且缺边会立刻中断一条分支。
+                  <b>复杂度:</b>addWord O(L);没有通配符时 search 也是 O(L)。开头是一串 &apos;.&apos; 的模式会朝 <b>O(26^L)</b> 扇出,但搜索访问的节点数不会超过整棵树的节点数,而且缺边会立刻中断一条分支。
                 </>
               ),
             },
@@ -2191,8 +2115,7 @@ class WordDictionary:
               ),
               zh: (
                 <>
-                  <code>any(...)</code> 天然短路:第一条返回 True 的分支之后,
-                  其余分支不再尝试。
+                  <code>any(...)</code> 天然短路:第一条返回 True 的分支之后,其余分支不再尝试。
                 </>
               ),
             },
@@ -2324,18 +2247,12 @@ class WordDictionary {
             zh={
               <>
                 <p>
-                  <b>题意:</b>给一个字母网格 board 和一个词表 words,
-                  找出所有能在网格中<strong>沿相邻格子</strong>(上下左右、
-                  同一格不重复用)拼出的单词。
-                  <b> 暴力:</b>对 words 里<strong>每个词</strong>各做一次网格搜索。
-                  词表一大(几千个词)、很多词开头还相同,
-                  「从某个 c 出发」这件事会被<strong>重复搜千百遍</strong>,必然超时。
+                  <b>题意:</b>给一个字母网格 board 和一个词表 words,找出所有能在网格中<strong>沿相邻格子</strong>(上下左右、同一格不重复用)拼出的单词。
+                  <b>暴力:</b>对 words 里<strong>每个词</strong>各做一次网格搜索。词表一大(几千个词)、很多词开头还相同,「从某个 c 出发」这件事会被<strong>重复搜千百遍</strong>,必然超时。
                 </p>
                 <p>
-                  <b>为什么 Trie 能解决这个问题:</b>先把所有词建成一棵 Trie,
-                  然后<strong>只在网格上走一次</strong>,
-                  <strong>DFS 每走一步,就在 Trie 上同步下沉一步</strong>。
-                  两个结果随之而来:
+                  <b>为什么 Trie 能解决这个问题:</b>先把所有词建成一棵 Trie,然后<strong>只在网格上走一次</strong>,
+                  <strong>DFS 每走一步,就在 Trie 上同步下沉一步</strong>。两个结果随之而来:
                 </p>
               </>
             }
@@ -2378,8 +2295,7 @@ class WordDictionary {
                 zh={
                   <>
                     <strong>缺边就立刻结束这条分支 —— 这就是剪枝。</strong>
-                    如果当前字母在当前 Trie 节点上<strong>没有对应的 child</strong>,
-                    说明没有任何词这样开头,从这里再往下走都是白走。
+                    如果当前字母在当前 Trie 节点上<strong>没有对应的 child</strong>,说明没有任何词这样开头,从这里再往下走都是白走。
                     <b>立即返回</b>,整条分支消失。正是这一步把搜索拉回可接受的范围。
                   </>
                 }
@@ -2424,10 +2340,8 @@ class WordDictionary {
             zh={
               <p>
                 实现上有两个小技巧。其一,
-                <strong>在词尾节点直接存整个单词</strong>(而不是只放一个布尔位),
-                命中时不必回头拼字符串。其二,
-                <strong>收集之后把该字段清空</strong>,
-                不用额外记录就完成了去重。
+                <strong>在词尾节点直接存整个单词</strong>(而不是只放一个布尔位),命中时不必回头拼字符串。其二,
+                <strong>收集之后把该字段清空</strong>,不用额外记录就完成了去重。
               </p>
             }
           />
@@ -2631,9 +2545,7 @@ class Solution:
               ),
               zh: (
                 <>
-                  嵌套 dict 是 Python 里最省事的 Trie 写法 —— 连节点类都不用定义。
-                  用一个非字母的键(这里是 <code>&apos;#&apos;</code>)存整词,
-                  不会和普通字符键冲突。
+                  嵌套 dict 是 Python 里最省事的 Trie 写法 —— 连节点类都不用定义。用一个非字母的键(这里是 <code>&apos;#&apos;</code>)存整词,不会和普通字符键冲突。
                 </>
               ),
             },
@@ -2710,10 +2622,7 @@ var findWords = function (board, words) {
               ),
               zh: (
                 <>
-                  <code>node[c] ??= {"{}"}</code> 就是「有就复用,没有就建」。
-                  用 <code>word</code> 字段存整词、收集后置 null,
-                  一举完成「收集」和「去重」。这里的键都是单个字符,
-                  所以用普通对象是安全的。
+                  <code>node[c] ??= {"{}"}</code> 就是「有就复用,没有就建」。用 <code>word</code> 字段存整词、收集后置 null,一举完成「收集」和「去重」。这里的键都是单个字符,所以用普通对象是安全的。
                 </>
               ),
             },
@@ -2747,10 +2656,7 @@ var findWords = function (board, words) {
                   不是「为每个词搜一遍网格」,而是「网格上的一次 DFS 沿着 Trie
                   走,顺路把所有词都测了」。
                 </b>{" "}
-                Trie 在这里担两个角色:开头相同的词共用一条路径;
-                没有任何词有的开头,立刻结束这条分支。这是「多模式串匹配」的通用形状。
-                再往前一步就是 AC 自动机(Aho-Corasick):在 Trie 上加失配指针,
-                让搜索永远不必从头重来。
+                Trie 在这里担两个角色:开头相同的词共用一条路径;没有任何词有的开头,立刻结束这条分支。这是「多模式串匹配」的通用形状。再往前一步就是 AC 自动机(Aho-Corasick):在 Trie 上加失配指针,让搜索永远不必从头重来。
               </p>
             }
           />
@@ -2814,9 +2720,7 @@ var findWords = function (board, words) {
             zh: (
               <>
                 Trie 的存在只有一个理由:
-                <b>哈希表把整个 key 算成一个数,丢掉了「开头」这个信息</b>,
-                因此答不了前缀问题。Trie 让开头相同的词待在同一条路径上,
-                「以 X 开头」就退化成「顺着这条路往下走」。
+                <b>哈希表把整个 key 算成一个数,丢掉了「开头」这个信息</b>,因此答不了前缀问题。Trie 让开头相同的词待在同一条路径上,「以 X 开头」就退化成「顺着这条路往下走」。
               </>
             ),
           },
@@ -2835,9 +2739,7 @@ var findWords = function (board, words) {
             zh: (
               <>
                 结构极简:节点 = <b>children(字符 → 子节点)</b> +{" "}
-                <b>isEnd(布尔)</b>。字符贴在<b>边</b>上,拼出词的是路径,
-                节点本身不存词。<b>isEnd 必不可少</b> —— 没有它,
-                就分不清 cat 和「cattle 路过同一批节点」这两回事。
+                <b>isEnd(布尔)</b>。字符贴在<b>边</b>上,拼出词的是路径,节点本身不存词。<b>isEnd 必不可少</b> —— 没有它,就分不清 cat 和「cattle 路过同一批节点」这两回事。
               </>
             ),
           },
@@ -2854,8 +2756,7 @@ var findWords = function (board, words) {
             zh: (
               <>
                 insert / search / startsWith 全是 <b>O(L)</b>,L 是
-                <b>字符串长度,不是词数</b>。这份「与词典大小无关」正是这个结构的意义所在。
-                search 比 startsWith 只多一个 <code>isEnd</code> 判断。
+                <b>字符串长度,不是词数</b>。这份「与词典大小无关」正是这个结构的意义所在。search 比 startsWith 只多一个 <code>isEnd</code> 判断。
               </>
             ),
           },
@@ -2872,10 +2773,8 @@ var findWords = function (board, words) {
             ),
             zh: (
               <>
-                children 表是唯一的设计抉择:<b>定长 26 槽数组</b>最快,
-                但每个节点占 26 个指针,而且只认小写 ASCII;
-                <b>哈希表</b>只存实际存在的孩子、任意字符都能用,常数略大。
-                Trie 是用内存买前缀查询,不是反过来。
+                children 表是唯一的设计抉择:<b>定长 26 槽数组</b>最快,但每个节点占 26 个指针,而且只认小写 ASCII;
+                <b>哈希表</b>只存实际存在的孩子、任意字符都能用,常数略大。Trie 是用内存买前缀查询,不是反过来。
               </>
             ),
           },
@@ -2894,9 +2793,7 @@ var findWords = function (board, words) {
               <>
                 三大套路:<b>LC 208 模板</b> →{" "}
                 <b>LC 211,通配符让「走」在节点处分叉成 DFS</b> →{" "}
-                <b>LC 212,前缀不存在就立刻结束这条网格分支</b>;
-                再加一个 <b>0/1 Trie</b>(把整数按比特建树)解最大异或。
-                题面里出现「前缀 / 补全 / 共同开头」,就该想到它。
+                <b>LC 212,前缀不存在就立刻结束这条网格分支</b>;再加一个 <b>0/1 Trie</b>(把整数按比特建树)解最大异或。题面里出现「前缀 / 补全 / 共同开头」,就该想到它。
               </>
             ),
           },

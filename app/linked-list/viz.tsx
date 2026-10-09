@@ -373,10 +373,8 @@ export function ScatterMap() {
           }
           zh={
             <>
-              数组的三个值排在 1000–1011 这段连续地址上,第 i 个用算式直接算出来;
-              链表的三个节点分别在 2096 / 3120 / 1432,逻辑顺序 7 → 2 → 9{" "}
-              <b>只存在于 next 引用里</b>,与地址毫无关系。想找第 2 个节点?
-              只能从 head 出发,一次跟一根引用。
+              数组的三个值排在 1000–1011 这段连续地址上,第 i 个用算式直接算出来;链表的三个节点分别在 2096 / 3120 / 1432,逻辑顺序 7 → 2 → 9{" "}
+              <b>只存在于 next 引用里</b>,与地址毫无关系。想找第 2 个节点?只能从 head 出发,一次跟一根引用。
             </>
           }
         />
@@ -439,8 +437,7 @@ export function LinkedLab() {
           }
           zh={
             <>
-              头插第 ① 步 <b>先接</b>:<code>newNode.next = head</code>。
-              新节点先牵住整条链,此刻什么都没丢。
+              头插第 ① 步 <b>先接</b>:<code>newNode.next = head</code>。新节点先牵住整条链,此刻什么都没丢。
             </>
           }
         />,
@@ -458,8 +455,7 @@ export function LinkedLab() {
           }
           zh={
             <>
-              第 ② 步 <b>换头</b>:<code>head = newNode</code>。两次引用写入,
-              成本与链表长度无关 —— 头插是 <b>O(1)</b>。
+              第 ② 步 <b>换头</b>:<code>head = newNode</code>。两次引用写入,成本与链表长度无关 —— 头插是 <b>O(1)</b>。
             </>
           }
         />,
@@ -479,8 +475,7 @@ export function LinkedLab() {
           }
           zh={
             <>
-              第 ① 步 <b>先接</b>:<code>newNode.next</code> 指向位置 {k} 的节点。
-              旧链完好无损,这一步随时可以反悔。
+              第 ① 步 <b>先接</b>:<code>newNode.next</code> 指向位置 {k} 的节点。旧链完好无损,这一步随时可以反悔。
             </>
           }
         />,
@@ -498,8 +493,7 @@ export function LinkedLab() {
           }
           zh={
             <>
-              第 ② 步 <b>后断</b>:<code>prev.next = newNode</code>,旧边(虚线)作废。
-              两次指针写入,O(1)。但别忘了:<b>走到 prev</b> 花了 O(n)。
+              第 ② 步 <b>后断</b>:<code>prev.next = newNode</code>,旧边(虚线)作废。两次指针写入,O(1)。但别忘了:<b>走到 prev</b> 花了 O(n)。
             </>
           }
         />,
@@ -543,8 +537,7 @@ export function LinkedLab() {
           }
           zh={
             <>
-              第 ① 步 <b>绕过</b>:<code>prev.next = target.next</code>。
-              只改这一根指针,目标节点就已经不在链上了。
+              第 ① 步 <b>绕过</b>:<code>prev.next = target.next</code>。只改这一根指针,目标节点就已经不在链上了。
             </>
           }
         />
@@ -602,8 +595,7 @@ export function LinkedLab() {
         }
         zh={
           <>
-            ⚠ 顺序反了。<b>先断</b>:<code>prev.next = newNode</code>。
-            可是 <code>newNode.next</code> 还是空的(?),而且再没人记得位置 {k} 在哪。
+            ⚠ 顺序反了。<b>先断</b>:<code>prev.next = newNode</code>。可是 <code>newNode.next</code> 还是空的(?),而且再没人记得位置 {k} 在哪。
           </>
         }
       />,
@@ -621,8 +613,7 @@ export function LinkedLab() {
         }
         zh={
           <>
-            位置 {k} 起的整条后半链<b>已经不可达</b>:没有任何引用能到达它们,
-            数据等于丢失。这就是「先接后断」四个字要防的事。
+            位置 {k} 起的整条后半链<b>已经不可达</b>:没有任何引用能到达它们,数据等于丢失。这就是「先接后断」四个字要防的事。
           </>
         }
       />,
@@ -888,8 +879,7 @@ const REV_FRAMES: RevFrame[] = [
         }
         zh={
           <>
-            初始:<code>prev = null</code>,<code>cur = head</code>。
-            prev 是已反转部分的头,cur 是正在处理的节点。目标是把每一根 next
+            初始:<code>prev = null</code>,<code>cur = head</code>。prev 是已反转部分的头,cur 是正在处理的节点。目标是把每一根 next
             引用<b>原地调头</b>,不新建任何节点。
           </>
         }
@@ -914,8 +904,7 @@ const REV_FRAMES: RevFrame[] = [
         }
         zh={
           <>
-            第 ① 步 <b>备份</b>:<code>nxt = cur.next</code>,先记住节点 2 在哪。
-            不备份的话,下一行改掉 cur.next,后半条链就再也找不到了 ——
+            第 ① 步 <b>备份</b>:<code>nxt = cur.next</code>,先记住节点 2 在哪。不备份的话,下一行改掉 cur.next,后半条链就再也找不到了 ——
             和上面的反面教材是同一个问题。
           </>
         }
@@ -940,8 +929,7 @@ const REV_FRAMES: RevFrame[] = [
         }
         zh={
           <>
-            第 ② 步 <b>调头</b>:<code>cur.next = prev</code>。prev 是 null,
-            所以节点 1 现在指向 null —— 它将是新链的最后一个节点。
+            第 ② 步 <b>调头</b>:<code>cur.next = prev</code>。prev 是 null,所以节点 1 现在指向 null —— 它将是新链的最后一个节点。
           </>
         }
       />
@@ -963,8 +951,7 @@ const REV_FRAMES: RevFrame[] = [
         }
         zh={
           <>
-            第 ③ 步 <b>前移</b>:<code>prev = cur</code>,<code>cur = nxt</code>。
-            两个指针一起右移一格。绿色部分已经反转完毕,它的头永远是 prev。
+            第 ③ 步 <b>前移</b>:<code>prev = cur</code>,<code>cur = nxt</code>。两个指针一起右移一格。绿色部分已经反转完毕,它的头永远是 prev。
           </>
         }
       />
@@ -988,8 +975,7 @@ const REV_FRAMES: RevFrame[] = [
         }
         zh={
           <>
-            第二轮,同样三步:备份 nxt = 节点 3,把节点 2 的引用调头指向节点 1,再前移。
-            每一轮只改<b>一根引用</b>,其余原封不动。
+            第二轮,同样三步:备份 nxt = 节点 3,把节点 2 的引用调头指向节点 1,再前移。每一轮只改<b>一根引用</b>,其余原封不动。
           </>
         }
       />
@@ -1012,8 +998,7 @@ const REV_FRAMES: RevFrame[] = [
         }
         zh={
           <>
-            第三轮完成:节点 3 指向节点 2,prev 走到节点 3,cur 走到节点 4。
-            已反转的 [1 ← 2 ← 3] 与未处理的 [4 → ∅] 界限分明。
+            第三轮完成:节点 3 指向节点 2,prev 走到节点 3,cur 走到节点 4。已反转的 [1 ← 2 ← 3] 与未处理的 [4 → ∅] 界限分明。
           </>
         }
       />
@@ -1036,8 +1021,7 @@ const REV_FRAMES: RevFrame[] = [
         }
         zh={
           <>
-            第四轮:nxt 为 null,节点 4 调头指向节点 3,cur 变成 null。
-            循环条件 <code>cur != null</code> 不再成立,循环结束。
+            第四轮:nxt 为 null,节点 4 调头指向节点 3,cur 变成 null。循环条件 <code>cur != null</code> 不再成立,循环结束。
           </>
         }
       />
@@ -1061,8 +1045,7 @@ const REV_FRAMES: RevFrame[] = [
         }
         zh={
           <>
-            返回 <b>prev</b> 而不是 cur:cur 已经是 null,prev 停在原链的最后一个节点上,
-            那正是新的头。结果是 4 → 3 → 2 → 1 → ∅。每个节点只处理一次,时间{" "}
+            返回 <b>prev</b> 而不是 cur:cur 已经是 null,prev 停在原链的最后一个节点上,那正是新的头。结果是 4 → 3 → 2 → 1 → ∅。每个节点只处理一次,时间{" "}
             <b>O(n)</b>;只用了三个指针变量,额外空间 <b>O(1)</b>。
           </>
         }
@@ -1221,9 +1204,7 @@ const CYC_FRAMES: CycFrame[] = [
         }
         zh={
           <>
-            第 2 步:slow 到节点 3,fast 到节点 5,两个指针都进入了环。
-            如果没有环,节点 5 就是最后一个节点,<code>fast.next</code> 为 null,
-            循环条件 <code>fast != null &amp;&amp; fast.next != null</code>{" "}
+            第 2 步:slow 到节点 3,fast 到节点 5,两个指针都进入了环。如果没有环,节点 5 就是最后一个节点,<code>fast.next</code> 为 null,循环条件 <code>fast != null &amp;&amp; fast.next != null</code>{" "}
             会让循环停下并返回 false。
           </>
         }
@@ -1272,10 +1253,7 @@ const CYC_FRAMES: CycFrame[] = [
         }
         zh={
           <>
-            为什么一定会相遇?沿着环量「从 fast 往前走到 slow」的距离:
-            第 2 步时这个距离是 1(5 → 3)。此后每一步 fast 前进 2、slow 前进 1,
-            距离<b>恰好减 1</b>。它是一个不会变成负数的整数,所以必然减到 0,
-            而 0 就意味着两个指针停在同一个节点上。时间 <b>O(n)</b>,额外空间{" "}
+            为什么一定会相遇?沿着环量「从 fast 往前走到 slow」的距离:第 2 步时这个距离是 1(5 → 3)。此后每一步 fast 前进 2、slow 前进 1,距离<b>恰好减 1</b>。它是一个不会变成负数的整数,所以必然减到 0,而 0 就意味着两个指针停在同一个节点上。时间 <b>O(n)</b>,额外空间{" "}
             <b>O(1)</b>。用哈希集合记录访问过的节点同样是 O(n) 时间,但要 O(n) 空间。
           </>
         }
@@ -1409,8 +1387,7 @@ const MRG_FRAMES: MrgFrame[] = [
         zh={
           <>
             1 vs 1:用 <code>&lt;=</code> 时相等取 l1,合并保持稳定。
-            <code>tail.next</code> 指向这个节点,tail 前移到它上面。
-            节点是<b>整个重新挂接</b>,不拷贝值 —— 这一步是 O(1)。
+            <code>tail.next</code> 指向这个节点,tail 前移到它上面。节点是<b>整个重新挂接</b>,不拷贝值 —— 这一步是 O(1)。
           </>
         }
       />
@@ -1508,9 +1485,7 @@ const MRG_FRAMES: MrgFrame[] = [
         zh={
           <>
             收尾:l2 剩下的部分用 <code>tail.next = l2</code>{" "}
-            <b>整段直接挂上</b>。这只是一次指针写入,O(1);换成数组合并,
-            剩余元素还得逐个复制。最后返回 <code>dummy.next</code>,哨兵本身丢弃。
-            时间 O(n + m),额外空间 O(1)。
+            <b>整段直接挂上</b>。这只是一次指针写入,O(1);换成数组合并,剩余元素还得逐个复制。最后返回 <code>dummy.next</code>,哨兵本身丢弃。时间 O(n + m),额外空间 O(1)。
           </>
         }
       />

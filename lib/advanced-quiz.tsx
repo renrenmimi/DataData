@@ -60,8 +60,7 @@ export const QUIZ: QuizItem[] = [
       zh: (
         <>
           Java 里 <code>new LinkedHashMap&lt;&gt;(cap, 0.75f, true)</code> 加一个{" "}
-          <code>removeEldestEntry</code> 覆写,就是一个现成的 LRU。它能做到这一点,
-          靠的是内部本来就维护着什么?
+          <code>removeEldestEntry</code> 覆写,就是一个现成的 LRU。它能做到这一点,靠的是内部本来就维护着什么?
         </>
       ),
     },
