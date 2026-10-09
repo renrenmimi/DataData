@@ -67,11 +67,14 @@ Next.js 15 (App Router) + TypeScript + React 19, plain CSS. There are no API rou
 pages.
 
 Each chapter is one folder under `app/` holding its page, its visualizations (`viz.tsx`) and
-its own stylesheet, paired with a data file under `lib/` for the problem sets.
+its own stylesheet, paired with two data files under `lib/`: its problem set
+(`<chapter>-problems.tsx`) and its quiz (`<chapter>-quiz.tsx`).
 
 Shared pieces: the frame-by-frame player in `lib/stepper.tsx`, the quiz component in
 `lib/quiz.tsx`, progress tracking in `lib/progress.tsx`, and design tokens in
 `app/globals.css`.
+
+Changes are recorded in [`CHANGELOG.md`](CHANGELOG.md).
 
 ---
 
