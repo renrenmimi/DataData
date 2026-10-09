@@ -2334,6 +2334,19 @@ li code {
   .nodec { width: 40px; height: 40px; font-size: 12.5px; }
 }
 
+/* iOS Safari zooms the whole page when it focuses a text field whose text
+   is smaller than 16px. Phones get 16px in every text field; !important
+   because chapter styles size their lab inputs with more specific selectors. */
+@media (max-width: 560px) {
+  input:not([type]),
+  input[type="text"],
+  input[type="search"],
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

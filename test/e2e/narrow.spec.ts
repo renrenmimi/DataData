@@ -1,5 +1,6 @@
-// On a phone nothing is cut off at the right edge of any page, and printing
-// shows every section, without the shell chrome, in the light palette.
+// On a phone nothing is cut off at the right edge of any page and text fields
+// are large enough that iOS does not zoom in; printing shows every section,
+// without the shell chrome, in the light palette.
 
 import { expect, test } from "@playwright/test";
 import { elementsPastViewport } from "./overflow";
@@ -35,6 +36,35 @@ for (const width of [360, 390]) {
     }
   });
 }
+
+test.describe("text fields on a phone", () => {
+  test.use({ viewport: { width: 390, height: 844 } });
+
+  test("are at least 16px, so iOS Safari does not zoom in on focus", async ({ page }) => {
+    // The labs' inputs are on the page from the start
+    for (const route of ["/string", "/hash", "/bst", "/heap", "/trie", "/advanced"]) {
+      await page.goto(route);
+      const sizes = await page
+        .locator('input:not([type]), input[type="text"]')
+        .evaluateAll((els) => els.map((e) => parseFloat(getComputedStyle(e).fontSize)));
+      expect(sizes.length, route).toBeGreaterThan(0);
+      for (const size of sizes) expect(size, route).toBeGreaterThanOrEqual(16);
+    }
+    // A quiz fill-in appears only on its question, and the palette only when
+    // open, so measure a field with each of their classes instead
+    const shared = await page.evaluate(() =>
+      ["q-input", "cmdk-input"].map((cls) => {
+        const field = document.createElement("input");
+        field.className = cls;
+        document.body.append(field);
+        const size = parseFloat(getComputedStyle(field).fontSize);
+        field.remove();
+        return size;
+      }),
+    );
+    for (const size of shared) expect(size).toBeGreaterThanOrEqual(16);
+  });
+});
 
 test("printing shows every section, without the shell chrome, in the light palette", async ({
   page,
