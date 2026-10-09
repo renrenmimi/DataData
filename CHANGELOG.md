@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-09 — hydration follow-up
+
+- Cold loads no longer fail to hydrate now and then: the two pre-paint scripts
+  moved from `<head>` to the top of `<body>` ([#43]). On production, 2 of 120
+  cold loads hit React error #418 before (the settings restore from [#36] kept
+  the reader's choices); afterwards, 0 of 240.
+
 ## 2026-10-08 to 2026-10-09 — audit fixes
 
 An audit of the site covered bugs, UI and UX, accessibility, performance and
@@ -95,3 +102,4 @@ and all are merged into `main`.
 [#38]: https://github.com/renrenmimi/DataData/pull/38
 [#39]: https://github.com/renrenmimi/DataData/pull/39
 [#40]: https://github.com/renrenmimi/DataData/pull/40
+[#43]: https://github.com/renrenmimi/DataData/pull/43
