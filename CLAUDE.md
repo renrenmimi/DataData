@@ -10,6 +10,12 @@ Read this file end to end before touching anything.
   with a 中文 toggle, so user-facing copy is authored as `{ en, zh }` pairs
   (type `Loc<T>` from `lib/i18n.tsx`) — never English-only, never Chinese-only.
 - Chinese inside a `zh:` value is content, not a comment. Never "clean it up".
+- Keep a Chinese sentence in JSX on one line, or break it only next to a tag or
+  a `{…}` expression. JSX joins the lines of a text block with a space, and
+  Chinese shows it as a stray gap ("算。 建议"). Spaces belong only between
+  Chinese and Latin letters, digits or expressions ("第 3 章", "O(1) 随机访问"),
+  around "——" and around math operators — never after full-width punctuation.
+  `test/unit/zh-copy-spacing.test.ts` fails on any other.
 
 ## What this is
 

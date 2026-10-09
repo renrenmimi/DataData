@@ -161,8 +161,7 @@ export const QUIZ: QuizItem[] = [
       ),
       zh: (
         <>
-          children 用「<b>定长 26 槽数组</b>」还是「<b>哈希表 Map</b>」,
-          以下说法正确的有?(多选)
+          children 用「<b>定长 26 槽数组</b>」还是「<b>哈希表 Map</b>」,以下说法正确的有?(多选)
         </>
       ),
     },

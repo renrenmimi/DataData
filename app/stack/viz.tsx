@@ -111,8 +111,7 @@ export function StackMemFig() {
             }
             zh={
               <>
-                ✓ 栈顶 = <b>头节点</b>:头插 / 头删只改一根指针,最坏情况也是 O(1),
-                而且永不扩容。
+                ✓ 栈顶 = <b>头节点</b>:头插 / 头删只改一根指针,最坏情况也是 O(1),而且永不扩容。
                 <br />△ 代价:每次 push 都要分配一个节点,每个节点多背一个 next
                 指针,节点散落在堆上,访问不如数组缓存友好(链表章讲过)。
               </>
@@ -170,8 +169,7 @@ export function StackLab() {
           }
           zh={
             <>
-              栈满(容量 {CAPACITY})。定长数组实现会直接拒绝;
-              动态数组实现会先扩容到两倍、复制元素,再收下它 ——
+              栈满(容量 {CAPACITY})。定长数组实现会直接拒绝;动态数组实现会先扩容到两倍、复制元素,再收下它 ——
               这次复制正是 push 只能算「均摊 O(1)」而不是最坏 O(1) 的原因。
             </>
           }
@@ -193,8 +191,7 @@ export function StackLab() {
         }
         zh={
           <>
-            push({v}):新盘子只能放到<b>最上面</b>,不惊动下面任何人 —— <b>O(1)</b>。
-            top 自动上移一层。
+            push({v}):新盘子只能放到<b>最上面</b>,不惊动下面任何人 —— <b>O(1)</b>。top 自动上移一层。
           </>
         }
       />,
@@ -238,8 +235,7 @@ export function StackLab() {
         }
         zh={
           <>
-            pop() = <b>{top.v}</b>:只能拿<b>最上面</b>的盘子 —— <b>O(1)</b>。
-            想拿栈底的?先把上面的全拿走。这不是缺陷,是纪律。
+            pop() = <b>{top.v}</b>:只能拿<b>最上面</b>的盘子 —— <b>O(1)</b>。想拿栈底的?先把上面的全拿走。这不是缺陷,是纪律。
           </>
         }
       />,
@@ -273,8 +269,7 @@ export function StackLab() {
         }
         zh={
           <>
-            peek() = <b>{items[items.length - 1].v}</b>:只看不拿,栈保持原样。
-            LC 20、LC 739 这类算法每一步都靠它先看一眼栈顶。
+            peek() = <b>{items[items.length - 1].v}</b>:只看不拿,栈保持原样。LC 20、LC 739 这类算法每一步都靠它先看一眼栈顶。
           </>
         }
       />,
@@ -369,8 +364,7 @@ const CS_FRAMES: CSFrame[] = [
         }
         zh={
           <>
-            程序一启动,main 的<b>栈帧(stack frame)</b>率先入栈。
-            帧里装着这个函数的参数、局部变量,以及「回到哪一行继续」的返回地址。
+            程序一启动,main 的<b>栈帧(stack frame)</b>率先入栈。帧里装着这个函数的参数、局部变量,以及「回到哪一行继续」的返回地址。
           </>
         }
       />
@@ -537,8 +531,7 @@ const CS_FRAMES: CSFrame[] = [
           <>
             再看一种情况:递归忘了写终止条件,栈帧不断堆积 ——
             调用栈的地盘(通常 1~8 MB)几毫秒就被填满,程序崩溃。这就是
-            <b>栈溢出</b>:Java 的 StackOverflowError、Python 的 RecursionError。
-            程序员问答网站 Stack Overflow 的名字就来自它。
+            <b>栈溢出</b>:Java 的 StackOverflowError、Python 的 RecursionError。程序员问答网站 Stack Overflow 的名字就来自它。
           </>
         }
       />

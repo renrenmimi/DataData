@@ -36,8 +36,7 @@ export const PROBLEMS: Problem[] = [
         <>
           单指针一次遍历。若 <code>cur.val == cur.next.val</code>,就{" "}
           <code>cur.next = cur.next.next</code> 绕过重复节点,并且{" "}
-          <b>cur 原地不动</b> —— 后面可能还连着重复;否则 cur 前进一格。
-          头节点永远不会被删,所以这题不需要 dummy。时间 O(n),空间 O(1)。
+          <b>cur 原地不动</b> —— 后面可能还连着重复;否则 cur 前进一格。头节点永远不会被删,所以这题不需要 dummy。时间 O(n),空间 O(1)。
         </>
       ),
     },
@@ -71,8 +70,7 @@ export const PROBLEMS: Problem[] = [
           建一个 dummy,让它的 next 指向 head,cur 从 dummy 出发。若{" "}
           <code>cur.next.val == val</code> 就 <code>cur.next = cur.next.next</code>
           ,否则 cur 前进。有了 dummy,「删头」和「删中间」是同一行代码 ——
-          就是 §04 那组对照示例。最后返回 <code>dummy.next</code> 而不是 head,
-          因为原来的头可能已经被删掉了。
+          就是 §04 那组对照示例。最后返回 <code>dummy.next</code> 而不是 head,因为原来的头可能已经被删掉了。
         </>
       ),
     },
@@ -105,10 +103,8 @@ export const PROBLEMS: Problem[] = [
           快慢指针。两者都从 head 出发,slow 每步 1 格、fast 每步 2 格,循环条件{" "}
           <code>fast != null &amp;&amp; fast.next != null</code>。fast 走不动时,
           slow 正好停在中点。长度为<b>偶数</b>时,这种写法停在两个中点里的
-          <b>第二个</b>,正合本题要求。如果你要的是第一个中点(比如把链表切成两半),
-          循环条件改成{" "}
-          <code>fast.next != null &amp;&amp; fast.next.next != null</code>。
-          时间 O(n),空间 O(1)。
+          <b>第二个</b>,正合本题要求。如果你要的是第一个中点(比如把链表切成两半),循环条件改成{" "}
+          <code>fast.next != null &amp;&amp; fast.next.next != null</code>。时间 O(n),空间 O(1)。
         </>
       ),
     },
@@ -142,10 +138,7 @@ export const PROBLEMS: Problem[] = [
       ),
       zh: (
         <>
-          pA 从 A 链头出发,pB 从 B 链头出发;谁走到尾,就跳到<b>另一条</b>链的头继续走。
-          于是两个指针走过的总长度都是 lenA + lenB,走完之后它们距离链尾一样远。
-          结果只有两种:在交点相遇,或者同时变成 null(不相交)。既不用数长度,
-          也不用哈希表。时间 O(n + m),空间 O(1)。
+          pA 从 A 链头出发,pB 从 B 链头出发;谁走到尾,就跳到<b>另一条</b>链的头继续走。于是两个指针走过的总长度都是 lenA + lenB,走完之后它们距离链尾一样远。结果只有两种:在交点相遇,或者同时变成 null(不相交)。既不用数长度,也不用哈希表。时间 O(n + m),空间 O(1)。
         </>
       ),
     },
@@ -175,9 +168,7 @@ export const PROBLEMS: Problem[] = [
       ),
       zh: (
         <>
-          三步组合:快慢指针找中点 → 反转后半段 → 两个指针分别从两段的头部同步比较。
-          时间 O(n),空间 O(1),比「把值拷进数组再左右对撞」省掉 O(n) 空间。
-          注意它<b>改动了原链表</b>,严谨的写法会在返回前把后半段再反转回去。
+          三步组合:快慢指针找中点 → 反转后半段 → 两个指针分别从两段的头部同步比较。时间 O(n),空间 O(1),比「把值拷进数组再左右对撞」省掉 O(n) 空间。注意它<b>改动了原链表</b>,严谨的写法会在返回前把后半段再反转回去。
         </>
       ),
     },
@@ -212,10 +203,8 @@ export const PROBLEMS: Problem[] = [
       ),
       zh: (
         <>
-          两个指针都从 dummy 出发:fast 先走 n + 1 步,然后两人同步前进,直到 fast 为 null。
-          间隔全程不变,所以此刻 slow 正停在<b>待删节点的前驱</b>上,一行{" "}
-          <code>slow.next = slow.next.next</code> 就完成删除。dummy 兜住了
-          「要删的正是头节点」这种情况。一次遍历,时间 O(n),空间 O(1)。
+          两个指针都从 dummy 出发:fast 先走 n + 1 步,然后两人同步前进,直到 fast 为 null。间隔全程不变,所以此刻 slow 正停在<b>待删节点的前驱</b>上,一行{" "}
+          <code>slow.next = slow.next.next</code> 就完成删除。dummy 兜住了「要删的正是头节点」这种情况。一次遍历,时间 O(n),空间 O(1)。
         </>
       ),
     },
@@ -249,8 +238,7 @@ export const PROBLEMS: Problem[] = [
           dummy 站到 head 前面,prev 每次盯住一对 (a, b)。三次写入按顺序是{" "}
           <code>prev.next = b</code>、<code>a.next = b.next</code>、
           <code>b.next = a</code>,然后 prev 跳到 a。要点是先读 <code>b.next</code>{" "}
-          再覆盖它 —— 和「先接后断」是同一条规矩。递归版更短,但要 O(n) 栈空间;
-          迭代版才是 O(1)。
+          再覆盖它 —— 和「先接后断」是同一条规矩。递归版更短,但要 O(n) 栈空间;迭代版才是 O(1)。
         </>
       ),
     },
@@ -283,10 +271,8 @@ export const PROBLEMS: Problem[] = [
       zh: (
         <>
           Floyd 判圈的第二阶段:快慢相遇后,把一个指针放回 head,两个指针改为
-          <b>每步一格</b>同速前进,再次相遇处就是环的入口。推导:设头到入口为 a、
-          入口到相遇点为 b、环的剩余部分为 c,由「fast 路程 = 2 × slow 路程」可得
-          a = c + k × 环长(k 为非负整数)。面试常要求当场写出这条等式,
-          所以先把 §06 精讲 B 的相遇原理弄透。
+          <b>每步一格</b>同速前进,再次相遇处就是环的入口。推导:设头到入口为 a、入口到相遇点为 b、环的剩余部分为 c,由「fast 路程 = 2 × slow 路程」可得
+          a = c + k × 环长(k 为非负整数)。面试常要求当场写出这条等式,所以先把 §06 精讲 B 的相遇原理弄透。
         </>
       ),
     },
@@ -318,11 +304,9 @@ export const PROBLEMS: Problem[] = [
       ),
       zh: (
         <>
-          用 dummy + tail 边算边建结果链。每一步 <code>sum = a + b + carry</code>,
-          某条链走完了就按 0 计;挂上 <code>sum % 10</code>,并令{" "}
+          用 dummy + tail 边算边建结果链。每一步 <code>sum = a + b + carry</code>,某条链走完了就按 0 计;挂上 <code>sum % 10</code>,并令{" "}
           <code>carry = sum / 10</code>(整数除法)。循环条件是「l1、l2 <b>或 carry</b>
-          还有货」。漏挂最后一次进位是这题最常见的错误:5 + 5 必须产生两个节点。
-          时间 O(max(n, m))。
+          还有货」。漏挂最后一次进位是这题最常见的错误:5 + 5 必须产生两个节点。时间 O(max(n, m))。
         </>
       ),
     },
@@ -354,11 +338,7 @@ export const PROBLEMS: Problem[] = [
       ),
       zh: (
         <>
-          先用 dummy 让 left = 1 不再是特例,然后走到 pre(位置 left 的前一个节点)。
-          接着重复 right − left 次:把 <code>cur.next</code> 摘下来,插到 pre 的正后方。
-          每挪一次就有一个节点被顶到更前面,一趟下来区间自然反转。
-          这比「切段 + 反转 + 缝回」少写一半指针。每一步都建议画图。
-          时间 O(n),空间 O(1)。
+          先用 dummy 让 left = 1 不再是特例,然后走到 pre(位置 left 的前一个节点)。接着重复 right − left 次:把 <code>cur.next</code> 摘下来,插到 pre 的正后方。每挪一次就有一个节点被顶到更前面,一趟下来区间自然反转。这比「切段 + 反转 + 缝回」少写一半指针。每一步都建议画图。时间 O(n),空间 O(1)。
         </>
       ),
     },
@@ -392,9 +372,7 @@ export const PROBLEMS: Problem[] = [
       zh: (
         <>
           dummy 起手,每轮三件事:① 探查剩余节点是否够 k 个(不够就停,保持原序);
-          ② 用三指针反转这 k 个;③ 缝合 —— 上一段的尾接本段的新头,本段的尾接下一段的头。
-          用 groupPrev / groupNext 两个锚点变量能挡掉大半混乱。它 Hard 在工程化拆解,
-          而不是新算法。时间 O(n),空间 O(1)。
+          ② 用三指针反转这 k 个;③ 缝合 —— 上一段的尾接本段的新头,本段的尾接下一段的头。用 groupPrev / groupNext 两个锚点变量能挡掉大半混乱。它 Hard 在工程化拆解,而不是新算法。时间 O(n),空间 O(1)。
         </>
       ),
     },

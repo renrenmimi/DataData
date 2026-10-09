@@ -206,8 +206,7 @@ export function TrieLab() {
       zh={
         <>
           这棵 Trie 里已经存了 <b>car、card、cat、do、dog</b> 五个词。试着插入{" "}
-          <b>care</b> 或 <b>cab</b>,看路径哪一段被复用;再查询 <b>ca</b>,
-          看看「前缀」长什么样。
+          <b>care</b> 或 <b>cab</b>,看路径哪一段被复用;再查询 <b>ca</b>,看看「前缀」长什么样。
         </>
       }
     />,
@@ -313,8 +312,7 @@ export function TrieLab() {
           }
           zh={
             <>
-              <b>{w}</b> 之前就插入过。这次只是把同一个末节点的 isEnd 又标了一遍,
-              树的形状没有变化。
+              <b>{w}</b> 之前就插入过。这次只是把同一个末节点的 isEnd 又标了一遍,树的形状没有变化。
             </>
           }
         />
@@ -385,9 +383,7 @@ export function TrieLab() {
           }
           zh={
             <>
-              查询 <b>{w}</b>:算上根节点走到第 <b>{acc.length}</b> 个节点时,
-              下一个字母没有对应的 child,路径到此为止。<b>未命中</b>,
-              而且整棵树里不可能有以 {w} 开头的词 —— 有的话,它必然长在这条路径上。
+              查询 <b>{w}</b>:算上根节点走到第 <b>{acc.length}</b> 个节点时,下一个字母没有对应的 child,路径到此为止。<b>未命中</b>,而且整棵树里不可能有以 {w} 开头的词 —— 有的话,它必然长在这条路径上。
             </>
           }
         />,
@@ -447,8 +443,7 @@ export function TrieLab() {
           zh={
             <>
               search(<b>{w}</b>):路径走得通,但末节点 <b>isEnd = false</b> —— {w}{" "}
-              只是<b>别的词的开头</b>,不是被插入过的单词。所以 search 返回 false,
-              而 startsWith 会返回 true。isEnd 就是为这种情况存在的。
+              只是<b>别的词的开头</b>,不是被插入过的单词。所以 search 返回 false,而 startsWith 会返回 true。isEnd 就是为这种情况存在的。
             </>
           }
         />,
