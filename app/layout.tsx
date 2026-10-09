@@ -67,11 +67,16 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${syne.variable} ${grotesk.variable} ${jetbrains.variable}`}
     >
-      <head>
+      <body>
+        {/* These run before the first paint. They sit at the top of <body>,
+            not in <head>: while React was still hydrating hand-written nodes in
+            <head>, the webpack runtime could remove the chunk <script> tags it
+            had finished loading from there, and on a cold load hydration then
+            failed now and then (React error #418) and the whole root was
+            rendered again on the client. Moving these two scripts out of
+            <head> removed that failure in AlgoAlgo, whose shell is the same. */}
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <script dangerouslySetInnerHTML={{ __html: langScript }} />
-      </head>
-      <body>
         <LangProvider>
           <ThemeProvider>
             <ShellProvider>
