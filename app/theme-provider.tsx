@@ -2,8 +2,9 @@
 
 // App-level client providers.
 //  - ThemeProvider: mirrors data-theme ("dark" | "light") onto <html> and
-//    persists it in localStorage. The inline script in <head> (themeScript)
-//    sets it before the first paint, so the wrong theme never flashes.
+//    persists it in localStorage. The inline script at the top of <body>
+//    (themeScript) sets it before the first paint, so the wrong theme never
+//    flashes.
 //    The providers read their settings back from localStorage, not from the
 //    <html> attributes: if React gives up hydrating the root, it renders it
 //    again on the client and drops the attributes the inline script wrote,
